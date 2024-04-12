@@ -1,0 +1,74 @@
+// This is a placeholder for now, but we will likely create a interaction between model supplier and 
+// tasks, so that users do not need to create the model handling
+// A Model Container needs to implement one of the following methods
+
+syntax = "proto3";
+
+// A model Request. The request must follow the following (textual) json conversion
+// { "data" : { "text" : [ { "role" : "user|assistant", "content" : "Content" } ... ], "image" : "base64 encoded image", "system" : "The system prompt for the model" } }
+message taskRequest { 
+    string request = 1;   
+    string modelID = 2;    
+}
+// The answer (again a json)
+// the answer is a json object with the following structure
+// { "data" : { "text" : "Some text returned by the model", "image" : "base64 encoded image returned by the model, if any" } }
+message modelAnswer { 
+    string answer = 1
+}
+
+// Task Input (the string needss to be a json encoding data)
+// Structure is: 
+// { "data" : { "text" : [ { "role" : "user|assistant", "content" : "Content" } ... ], "image" : "base64 encoded image", "system" : "The system prompt for the model" } }
+message modelRequest { 
+    string request = 1;   
+}
+
+// define model Properties
+message modelProps {
+    bool needs_text = 1;
+    bool needs_image = 2;
+    bool can_text = 3;
+    bool can_image = 4;
+}
+
+// define model Properties
+message modelDefinition {
+    bool needs_text = 1;
+    bool needs_image = 2;
+    bool can_text = 3;
+    bool can_image = 4;
+    string model_name = 5;
+}
+
+// How an ID response looks like
+message idResponse { 
+    string id = 1;   
+}
+// the metrics Json (a json object properly formatted for the metrics)
+message metricsJson { 
+    string metrics = 1;   
+}
+
+// the metrics Json (a json object properly formatted for the metrics)
+message taskMetrics { 
+    string id = 1;
+    string metrics = 2;   
+}
+
+
+service TaskStarter {
+    rpc startTask (modelProps) returns (idResponse);
+}
+
+service TaskFinisher {
+    rpc finish(taskMetrics) returns (idResponse);
+}
+
+service Processor {
+    rpc predict(taskRequest) returns (modelAnswer);
+}
+
+service ModelRegistrar {
+    rpc registerModel(modelDefinition) returns (idResponse);    
+}
