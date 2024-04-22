@@ -12,6 +12,11 @@ class QueueHandler:
         if sessionID not in self.response_queues:
             self.response_queues[sessionID] = queue.Queue()
 
+    def get_response_queue(self, sessionID) -> queue.Queue:
+        if sessionID not in self.response_queues:
+            self.response_queues[sessionID] = queue.Queue()
+        return self.response_queues[sessionID]
+
     def remove_response_queue(self, sessionID):
         if sessionID in self.response_queues:
             self.response_queues.pop(sessionID)

@@ -6,8 +6,8 @@ from models import SessionData
 import random
 import grpc
 import logging
-from gprc_server.queue_handler import queue_handler
 
+4
 logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/api/v1/session")
@@ -45,9 +45,6 @@ def get_session(request: Request):
             "apiKey": "",
             "history": [],
         }
-        queue_handler.add_response_queue(session_id)
-        queue_handler.start_queue.put(session_id)
-
     return sessions[session_id]
 
 
@@ -57,7 +54,6 @@ def clear_session(request: Request):
         pass
     else:
         sessions.pop(session_id)
-        queue_handler.remove_response_queue(session_id)
         return True
 
 

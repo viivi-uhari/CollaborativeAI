@@ -1,81 +1,49 @@
-from models import TaskDataRequest
-from routers.session import get_session, sessions
-from typing import Dict
 import logging
+import models
+from typing import Any, List, Optional
+from gprc_server.queue_handler import queue_handler
+import json
 
 logger = logging.getLogger(__name__)
 
-"""
-example of a TaskDataRequest
-    {
-        "taskID": 1,
-        "data": {
-            "pieces": [
-                {
-                    "id": "Big_triangle_1",
-                    "shape": "triangle",
-                    "size": "Big",
-                    "color": "red",
-                    "position": ...
-                },
-                ...
-            ]
-        },
-        "objective": "make a boat"
-    }
-"""
 
-
-def process_tangram_data(tangram_data):
-    logger.debug(tangram_data)
-    requestData = tangram_data["data"]["tangramData"]
-    for piece in requestData.keys():
-        if piece == "Big Triangle 1":
-            large_triangle_1 = requestData[piece]
-        elif piece == "Big Triangle 2":
-            large_triangle_2 = requestData[piece]
-        elif piece == "Medium Triangle":
-            medium_triangle = requestData[piece]
-        elif piece == "Small Triangle 1":
-            small_triangle_1 = requestData[piece]
-        elif piece == "Small Triangle 2":
-            small_triangle_2 = requestData[piece]
-        elif piece == "Square":
-            square = requestData[piece]
-        else:
-            parallelogram = requestData[piece]
-
-    prompt = f"""
-        Here are the current positions and rotations of the pieces:
-        Big Triangle 1: {large_triangle_1[0:1]}
-        Big Triangle 2: {large_triangle_2[0:1]}
-        Medium Triangle: {medium_triangle[0:1]}
-        Small Triangle 1: {small_triangle_1[0:1]}
-        Small Triangle 2: {small_triangle_2[0:1]}
-        Square: {square[0:1]}
-        Parallelogram: {parallelogram[0:1]}        
-    """
+def process_tangram_data(pieces: List[models.Piece]):
+    prompt = "Here are the current positions and rotations of the pieces:\n"
+    for piece in pieces:
+        prompt += f"{piece.name}: {piece.position.x}, {piece.position.y}, {piece.position.rotation}\n"
     return prompt
 
 
-async def call(data, objective, history, modelID: str):
+def convert_model_response(response: Any) -> models.Piece:
+    try:
+        element = json.loads(response)
+        name, position_values = list(element.items())[0]
+        position = models.Position(
+            x=position_values[0], y=position_values[1], rotation=position_values[2]
+        )
+        piece = models.Piece(name=name, position=position)
+        return piece
+    except:
+        logger.error("Error converting model response to Piece")
+        return None
+
+
+async def build_model_request(
+    pieces: List[models.Piece], objective: str, history: List, image: str
+) -> models.modelRequest:
     """Generate prompt endpoint:
     process pieces' data and plug them into the prompt
     """
-
-    prompt = process_tangram_data(data)
-    logger.debug(prompt)
-
-    # Model ID will need to be changed at some point to allow non GPT/openAI models
-    response = await get_model_response(history, objective, model)
-    history.append(response)
-    # Post process response:
-    response_message = "{" + response.content + "}"
-    # assuming the response the model gives follows the template and return a json string
-    return {"tangram": response_message}
+    prompt_content = process_tangram_data(pieces)
+    system_prompt = get_system_prompt(objective)
+    prompt = {"role": "user", "content": prompt_content}
+    model_request = models.modelRequest(
+        text=history.extend([prompt]), image=image, system=system_prompt
+    )
+    return model_request
 
 
-async def get_model_response(prompt, objective: str, model: BaseLLM):
+def get_system_prompt(objective: str, hasImage: bool = False) -> str:
     """Generate response endpoint:
     generate the response based on given prompt and store the conversation
     in the history of the session (based on the session_id cookie)
@@ -93,13 +61,12 @@ async def get_model_response(prompt, objective: str, model: BaseLLM):
         5. Small Triangle 2: (-45,-45),(-45,45),(45,45)
         6. Square: (-45,-45), (-45,45), (45,45), (45,-45)
         7. Parallelogram: (-40,-24), (88,-24), (24, 40), (-104,40)
-        The information you will get, are the central points along with a rotation (in degrees) s follows:
-        ["(4,5)",45]
-        You should only modify one piece in each of your turns. A Move can consist of both roatting and movig the piece.
+        The information you will get, are the central points along with a rotation (in degrees) as follows:
+        [4,5,45]
+        You should only modify one piece in each of your turns. A move can consist of both roatting and movig the piece.
         You should respond with the new location and rotation of the element you modified in the following format, 
         similar to the positions provided by the user. 
-        "Piece Name" : ["(x,y)", rotation]
+        {"Piece Name" : [x,y, rotation]}
         Your answer must only contain one line.
         """
-    res = model([SystemMessage(content=system_prompt)] + prompt)
-    return res
+    return system_prompt

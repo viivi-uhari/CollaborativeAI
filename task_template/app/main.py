@@ -2,13 +2,11 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 import logging
 from routers.task_router import router as task_router
-from routers.chat import router as chat_router
 from routers.session import router as session_router
 
 app = FastAPI()
 
 app.include_router(task_router)
-app.include_router(chat_router)
 app.include_router(session_router)
 
 origins = ["http://localhost", "http:/localhost:5173"]

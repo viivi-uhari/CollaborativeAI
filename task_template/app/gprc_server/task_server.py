@@ -1,17 +1,17 @@
-import tasks_pb2_grpc
-import tasks_pb2
+import gprc_server.tasks_pb2_grpc as tasks_pb2_grpc
+import gprc_server.tasks_pb2 as tasks_pb2
 import queue
 import logging
 import traceback
-import queue_handler
+import gprc_server.queue_handler as queue_handler
 
-required_properties = tasks_pb2.modelProps()
+required_properties = tasks_pb2.modelRequirements()
 required_properties.needs_text = True
 required_properties.needs_image = False
 
 
 def get_required_props():
-    required_properties = tasks_pb2.modelProps()
+    required_properties = tasks_pb2.modelRequirements()
     required_properties.needs_text = True
     required_properties.needs_image = False
     return required_properties
@@ -57,8 +57,8 @@ class TaskServicer(tasks_pb2_grpc.taskServiceServicer):
                 try:
                     data = self.queue_handler.task_queue.get(timeout=1.0)
                     job = tasks_pb2.taskRequest()
-                    job.sessionID = data.session
-                    job.request = data.request
+                    job.sessionID = data["sessionID"]
+                    job.request = data["request"]
                 except queue.Empty:
                     # leave if orchestrator disconnected
                     if not context.is_active():

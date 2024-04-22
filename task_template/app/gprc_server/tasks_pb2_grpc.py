@@ -2,7 +2,7 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-import tasks_pb2 as tasks__pb2
+import gprc_server.tasks_pb2 as tasks__pb2
 
 
 class taskServiceStub(object):
@@ -15,25 +15,25 @@ class taskServiceStub(object):
             channel: A grpc.Channel.
         """
         self.startTask = channel.unary_stream(
-                '/taskService/startTask',
-                request_serializer=tasks__pb2.Empty.SerializeToString,
-                response_deserializer=tasks__pb2.modelProps.FromString,
-                )
+            "/taskService/startTask",
+            request_serializer=tasks__pb2.Empty.SerializeToString,
+            response_deserializer=tasks__pb2.modelRequirements.FromString,
+        )
         self.runTask = channel.unary_stream(
-                '/taskService/runTask',
-                request_serializer=tasks__pb2.Empty.SerializeToString,
-                response_deserializer=tasks__pb2.taskRequest.FromString,
-                )
+            "/taskService/runTask",
+            request_serializer=tasks__pb2.Empty.SerializeToString,
+            response_deserializer=tasks__pb2.taskRequest.FromString,
+        )
         self.finishTask = channel.unary_stream(
-                '/taskService/finishTask',
-                request_serializer=tasks__pb2.Empty.SerializeToString,
-                response_deserializer=tasks__pb2.taskMetrics.FromString,
-                )
+            "/taskService/finishTask",
+            request_serializer=tasks__pb2.Empty.SerializeToString,
+            response_deserializer=tasks__pb2.taskMetrics.FromString,
+        )
         self.getModelResponse = channel.unary_unary(
-                '/taskService/getModelResponse',
-                request_serializer=tasks__pb2.modelAnswer.SerializeToString,
-                response_deserializer=tasks__pb2.Empty.FromString,
-                )
+            "/taskService/getModelResponse",
+            request_serializer=tasks__pb2.modelAnswer.SerializeToString,
+            response_deserializer=tasks__pb2.Empty.FromString,
+        )
 
 
 class taskServiceServicer(object):
@@ -42,124 +42,173 @@ class taskServiceServicer(object):
     def startTask(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
     def runTask(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
     def finishTask(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
     def getModelResponse(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
 
 def add_taskServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
-            'startTask': grpc.unary_stream_rpc_method_handler(
-                    servicer.startTask,
-                    request_deserializer=tasks__pb2.Empty.FromString,
-                    response_serializer=tasks__pb2.modelProps.SerializeToString,
-            ),
-            'runTask': grpc.unary_stream_rpc_method_handler(
-                    servicer.runTask,
-                    request_deserializer=tasks__pb2.Empty.FromString,
-                    response_serializer=tasks__pb2.taskRequest.SerializeToString,
-            ),
-            'finishTask': grpc.unary_stream_rpc_method_handler(
-                    servicer.finishTask,
-                    request_deserializer=tasks__pb2.Empty.FromString,
-                    response_serializer=tasks__pb2.taskMetrics.SerializeToString,
-            ),
-            'getModelResponse': grpc.unary_unary_rpc_method_handler(
-                    servicer.getModelResponse,
-                    request_deserializer=tasks__pb2.modelAnswer.FromString,
-                    response_serializer=tasks__pb2.Empty.SerializeToString,
-            ),
+        "startTask": grpc.unary_stream_rpc_method_handler(
+            servicer.startTask,
+            request_deserializer=tasks__pb2.Empty.FromString,
+            response_serializer=tasks__pb2.modelRequirements.SerializeToString,
+        ),
+        "runTask": grpc.unary_stream_rpc_method_handler(
+            servicer.runTask,
+            request_deserializer=tasks__pb2.Empty.FromString,
+            response_serializer=tasks__pb2.taskRequest.SerializeToString,
+        ),
+        "finishTask": grpc.unary_stream_rpc_method_handler(
+            servicer.finishTask,
+            request_deserializer=tasks__pb2.Empty.FromString,
+            response_serializer=tasks__pb2.taskMetrics.SerializeToString,
+        ),
+        "getModelResponse": grpc.unary_unary_rpc_method_handler(
+            servicer.getModelResponse,
+            request_deserializer=tasks__pb2.modelAnswer.FromString,
+            response_serializer=tasks__pb2.Empty.SerializeToString,
+        ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'taskService', rpc_method_handlers)
+        "taskService", rpc_method_handlers
+    )
     server.add_generic_rpc_handlers((generic_handler,))
 
 
- # This class is part of an EXPERIMENTAL API.
+# This class is part of an EXPERIMENTAL API.
 class taskService(object):
     """Missing associated documentation comment in .proto file."""
 
     @staticmethod
-    def startTask(request,
+    def startTask(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        insecure=False,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
+        return grpc.experimental.unary_stream(
+            request,
             target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_stream(request, target, '/taskService/startTask',
+            "/taskService/startTask",
             tasks__pb2.Empty.SerializeToString,
-            tasks__pb2.modelProps.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+            tasks__pb2.modelRequirements.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+        )
 
     @staticmethod
-    def runTask(request,
+    def runTask(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        insecure=False,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
+        return grpc.experimental.unary_stream(
+            request,
             target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_stream(request, target, '/taskService/runTask',
+            "/taskService/runTask",
             tasks__pb2.Empty.SerializeToString,
             tasks__pb2.taskRequest.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+        )
 
     @staticmethod
-    def finishTask(request,
+    def finishTask(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        insecure=False,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
+        return grpc.experimental.unary_stream(
+            request,
             target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_stream(request, target, '/taskService/finishTask',
+            "/taskService/finishTask",
             tasks__pb2.Empty.SerializeToString,
             tasks__pb2.taskMetrics.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+        )
 
     @staticmethod
-    def getModelResponse(request,
+    def getModelResponse(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        insecure=False,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
+        return grpc.experimental.unary_unary(
+            request,
             target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/taskService/getModelResponse',
+            "/taskService/getModelResponse",
             tasks__pb2.modelAnswer.SerializeToString,
             tasks__pb2.Empty.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+        )
