@@ -18,15 +18,6 @@ message modelAnswer {
     string sessionID = 2;
 }
 
-// define model Properties
-message modelProps {
-    bool needs_text = 1;
-    bool needs_image = 2;
-    bool can_text = 3;
-    bool can_image = 4;
-    string sessionID = 5;
-}
-
 // How an ID response looks like
 message idMessage { 
     string sessionID = 1;       
