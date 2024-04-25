@@ -4,6 +4,7 @@ from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain.chains.combine_documents import create_stuff_documents_chain
 import os
 import logging
+import model_pb2
 from data_models import *
 
 logger = logging.getLogger(__name__)
@@ -16,6 +17,14 @@ ChatOpenAI(
     base_url="https://aalto-openai-apigw.azure-api.net/v1/openai/gpt4-1106-preview/",
     default_headers=default_headers,
 )
+
+
+model_definition = model_pb2.modelDefinition()
+model_definition.needs_text = True
+model_definition.needs_image = False
+model_definition.can_text = True
+model_definition.can_image = False
+model_definition.modelID = "GPT4_turbo"
 
 
 def publish_metrics(metrics_json: str):

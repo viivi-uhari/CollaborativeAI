@@ -9,8 +9,8 @@ class TaskMessage(BaseModel):
 
 class TaskInput(BaseModel):
     text: List[TaskMessage]  # The history of the conversation
-    image: bytes  # The image to be processed
-    system: str  # A System message that indicates the Task
+    image: bytes = Field(default=None)  # The image to be processed
+    system: str = Field(default=str)  # A System message that indicates the Task
 
 
 class TaskOutput(BaseModel):

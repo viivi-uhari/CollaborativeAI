@@ -39,7 +39,8 @@ message Empty {
 }
 
 service Model {
-    rpc predict(modelRequest) returns (modelAnswer);
+    rpc predict(modelRequest) returns (Empty);
+    rpc sendPrediction(Empty) returns (stream modelAnswer);
     rpc publishMetrics(metricsJson) returns (Empty); 
     rpc registerModel(Empty) returns (modelDefinition);
 }

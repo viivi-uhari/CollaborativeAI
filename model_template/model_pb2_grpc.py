@@ -17,6 +17,11 @@ class ModelStub(object):
         self.predict = channel.unary_unary(
                 '/Model/predict',
                 request_serializer=model__pb2.modelRequest.SerializeToString,
+                response_deserializer=model__pb2.Empty.FromString,
+                )
+        self.sendPrediction = channel.unary_stream(
+                '/Model/sendPrediction',
+                request_serializer=model__pb2.Empty.SerializeToString,
                 response_deserializer=model__pb2.modelAnswer.FromString,
                 )
         self.publishMetrics = channel.unary_unary(
@@ -40,6 +45,12 @@ class ModelServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def sendPrediction(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
     def publishMetrics(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -58,6 +69,11 @@ def add_ModelServicer_to_server(servicer, server):
             'predict': grpc.unary_unary_rpc_method_handler(
                     servicer.predict,
                     request_deserializer=model__pb2.modelRequest.FromString,
+                    response_serializer=model__pb2.Empty.SerializeToString,
+            ),
+            'sendPrediction': grpc.unary_stream_rpc_method_handler(
+                    servicer.sendPrediction,
+                    request_deserializer=model__pb2.Empty.FromString,
                     response_serializer=model__pb2.modelAnswer.SerializeToString,
             ),
             'publishMetrics': grpc.unary_unary_rpc_method_handler(
@@ -93,6 +109,23 @@ class Model(object):
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/Model/predict',
             model__pb2.modelRequest.SerializeToString,
+            model__pb2.Empty.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def sendPrediction(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_stream(request, target, '/Model/sendPrediction',
+            model__pb2.Empty.SerializeToString,
             model__pb2.modelAnswer.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
