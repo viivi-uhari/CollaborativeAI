@@ -9,10 +9,10 @@ class TaskMessage(BaseModel):
 
 class TaskInput(BaseModel):
     text: List[TaskMessage]  # The history of the conversation
-    image: bytes = Field(default=None)  # The image to be processed
-    system: str = Field(default=str)  # A System message that indicates the Task
+    image: str = Field(default=None)  # The image to be processed
+    system: str = Field(default="")  # A System message that indicates the Task
 
 
 class TaskOutput(BaseModel):
     text: str = Field(default="")  # The response Message
-    image: bytes = Field(default=None)  # The image to be processed
+    image: str = Field(default=None)  # The image to be processed
