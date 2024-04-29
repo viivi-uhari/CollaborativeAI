@@ -1,9 +1,18 @@
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 import logging
-from routers.task_router import router as task_router
+from routers.task_router import task_router, task_handler
 from routers.session import router as session_router
+from grpc_server import task_server
 
+
+# This will need to be adapted by the individual task!
+from tasks.tangram import Tangram
+
+tangram_task = Tangram()
+task_handler.set_Task(tangram_task)
+
+# Router handling.
 app = FastAPI()
 
 app.include_router(task_router)

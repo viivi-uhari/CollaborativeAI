@@ -2,27 +2,29 @@ from typing import Any, List, Optional
 from pydantic import BaseModel
 
 
-class ChatMessage(BaseModel):
-    message: str
-
-
 class TaskDataRequest(BaseModel):
     text: str
     inputData: Any
     image: Optional[str] = None
     objective: str
 
-class TaskDataResponse(BaseModel):
-    text: str    
-    image: Optional[str] = None    
 
-
-class textHistory(BaseModel):
-    role: str
-    content: str
-
-
-class modelRequest(BaseModel):
-    text: List[textHistory]
-    image: str
+class TaskRequest(BaseModel):
+    # The text of the request
+    text: str
+    # the image of the request
+    image: Optional[str] = None
+    # The system message of the request
     system: str
+
+
+class ModelResponse(BaseModel):
+    # The text of the request
+    text: str
+    # the image of the request
+    image: Optional[str] = None
+
+
+class TaskDataResponse(BaseModel):
+    text: str
+    image: Optional[str] = None

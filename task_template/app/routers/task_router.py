@@ -1,17 +1,51 @@
 from fastapi import APIRouter, Depends, Request
-from models import TaskDataRequest
+from models import TaskDataRequest, TaskDataResponse, ModelResponse
+from router_models import ConversationItem, TaskRequest
 from routers.session import get_session, clear_session
-from tasks.tangram import build_model_request, convert_model_response
-from typing import Dict
+from typing import Dict, List
+from grpc_server.task_interface import Task
 import asyncio
 import logging
-from gprc_server.queue_handler import queue_handler
+from grpc_server.queue_handler import queue_handler
+import grpc_server.tasks_pb2 as grpc_models
 
 logger = logging.getLogger(__name__)
-router = APIRouter(prefix="/api/v1/task")
+task_router = APIRouter(prefix="/api/v1/task")
 
 
-@router.post("/process")
+class TaskRouter:
+    def _init__(self):
+        pass
+
+    def set_Task(self, task: Task):
+        self.task = task
+
+    def build_model_request(
+        self, request: TaskDataRequest, history: List[ConversationItem]
+    ) -> grpc_models.taskRequest:
+        currentElement = self.task.generate_model_request(request)
+        grpc_taskRequest = grpc_models.taskRequest()
+        # Extend the history by the current request.
+        history.extend(currentElement.text)
+        # Now, we convert this into the taskRequest
+        currentRequestObject = TaskRequest(
+            text=history, image=currentElement.image, system=currentElement.system
+        )
+        grpc_taskRequest.request = currentRequestObject.model_dump_json()
+        return grpc_taskRequest
+
+    def interpret_model_response(
+        self, response: grpc_models.modelAnswer
+    ) -> TaskDataResponse:
+        # Load the json
+        data = ModelResponse().load_json(response.answer)
+        return self.task.process_model_answer(data)
+
+
+task_handler = TaskRouter()
+
+
+@task_router.post("/process")
 async def process_task_data(
     task_data: TaskDataRequest, session: Dict = Depends(get_session)
 ):
@@ -27,9 +61,7 @@ async def process_task_data(
     while not sessionID in queue_handler.response_queues:
         await asyncio.sleep(1)
     # Submit the task to the model
-    model_request = build_model_request(
-        task_data.pieces, task_data.objective, history, task_data.image
-    )
+    model_request = task_handler.build_model_request(task_data, history)
     queue_handler.task_queue.put({"data": model_request, "sessionID": sessionID})
 
     # And wait for the response to arrive:
@@ -38,27 +70,11 @@ async def process_task_data(
             await asyncio.sleep(1)
         else:
             ret = queue_handler.response_queues[sessionID].get(block=True)
-            update = convert_model_response(ret)
+            update = task_handler.interpret_model_response(ret)
             return update
 
 
-# @router.get("/update")
-# async def get_model_update(session: Dict = Depends(get_session)):
-#    """Get model update endpoint:
-#    get the model's response to the user's input
-#    """
-#    sessionID = session["key"]
-#    current_queue = queue_handler.get_response_queue(sessionID)
-#    ret = None
-#    if current_queue.empty():
-#        return {"status": "waiting"}
-#    else:
-#        ret = current_queue.get(block=True)
-#        update = convert_model_response(ret)
-#        return update
-
-
-@router.delete("/finish")
+@task_router.delete("/finish")
 async def clear_session(request: Request, session: Dict = Depends(get_session)):
     """Finish task endpoint:
     delete the session based on the session_id cookie when the user decides

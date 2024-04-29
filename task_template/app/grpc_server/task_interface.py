@@ -1,13 +1,15 @@
-from grpc_server.queue_handler import QueueHandler
-from models import TaskDataRequest, TaskDataResponse
-import grpc_server.tasks_pb2 as gprc_models
+from models import TaskDataRequest, TaskDataResponse, TaskRequest, ModelResponse
 
-class Task():
-    def __init__(self, queue_handler : QueueHandler ):
+
+class Task:
+    def __init__(self):
         pass
 
-    def generate_model_request(self, request : TaskDataRequest) -> gprc_models.taskRequest:
+    def generate_model_request(
+        self,
+        request: TaskDataRequest,
+    ) -> TaskRequest:
         raise NotImplementedError()
-    
-    def process_model_answer(self, answer : gprc_models.modelAnswer) -> TaskDataResponse:
+
+    def process_model_answer(self, answer: ModelResponse) -> TaskDataResponse:
         raise NotImplementedError()

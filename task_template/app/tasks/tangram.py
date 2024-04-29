@@ -1,66 +1,44 @@
 import logging
-import models
+import tangram_models
 from typing import Any, List
 import json
 from grpc_server.task_interface import Task
-import grpc_server.tasks_pb2 as grpc_models
-from models import TaskDataRequest, TaskDataResponse
+from models import TaskDataRequest, TaskRequest, TaskDataResponse, ModelResponse
 
 logger = logging.getLogger(__name__)
 
 
 class Tangram(Task):
-    
 
-    def convert_task_data_to_tangram_data(task_data: Any) -> List[models.Piece]:
+    def convert_task_data_to_tangram_data(task_data: Any) -> List[tangram_models.Piece]:
         pieces = []
         for piece in task_data:
             name, position_values = list(piece.items())[0]
-            position = models.Position(
+            position = tangram_models.Position(
                 x=position_values[0], y=position_values[1], rotation=position_values[2]
             )
-            piece = models.Piece(name=name, position=position)
+            piece = tangram_models.Piece(name=name, position=position)
             pieces.append(piece)
         return pieces
 
-    def process_tangram_data(pieces: List[models.Piece]):
+    def process_tangram_data(pieces: List[tangram_models.Piece]):
         prompt = "Here are the current positions and rotations of the pieces:\n"
         for piece in pieces:
             prompt += f"{piece.name}: {piece.position.x}, {piece.position.y}, {piece.position.rotation}\n"
         return prompt
 
-
-    def convert_model_response(response: Any) -> models.Piece:
+    def convert_model_response(response: Any) -> tangram_models.Piece:
         try:
             element = json.loads(response)
             name, position_values = list(element.items())[0]
-            position = models.Position(
+            position = tangram_models.Position(
                 x=position_values[0], y=position_values[1], rotation=position_values[2]
             )
-            piece = models.Piece(name=name, position=position)
+            piece = tangram_models.Piece(name=name, position=position)
             return piece
         except:
             logger.error("Error converting model response to Piece")
             return None
-
-
-    def generate_model_request(
-        self, request : TaskDataRequest
-    ) -> grpc_models.taskRequest:
-        """Generate prompt endpoint:
-        process pieces' data and plug them into the prompt
-        """
-        request = grpc_models.taskRequest()
-        prompt_content = self.process_tangram_data(pieces)
-        taskData = request.inputData
-        pieces = self.convert_task_data_to_tangram_data(taskData)        
-        system_prompt = self.get_system_prompt(request.objective)
-        prompt = {"role": "user", "content": prompt_content}
-        model_request = models.modelRequest(
-            text=history.extend([prompt]), image=image, system=system_prompt
-        )
-        return model_request
-
 
     def get_system_prompt(objective: str, hasImage: bool = False) -> str:
         """Generate response endpoint:
@@ -89,3 +67,19 @@ class Tangram(Task):
             Your answer must only contain one line.
             """
         return system_prompt
+
+    def process_model_answer(self, answer: ModelResponse) -> TaskDataResponse:
+        # Again, we ignore the potential image here...
+        return TaskDataResponse(text=answer.text)
+
+    def generate_model_request(self, request: TaskDataRequest) -> TaskRequest:
+        """Generate prompt endpoint:
+        process pieces' data and plug them into the prompt
+        """
+        prompt_content = self.process_tangram_data(pieces)
+        taskData = request.inputData
+        pieces = self.convert_task_data_to_tangram_data(taskData)
+        system_prompt = self.get_system_prompt(request.objective)
+        prompt = {"role": "user", "content": prompt_content}
+        # This could include an image, but for this task, we currently don't supply one
+        return TaskRequest(text=prompt, system=system_prompt)
