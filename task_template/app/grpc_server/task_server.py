@@ -4,6 +4,7 @@ import queue
 import logging
 import traceback
 import gprc_server.queue_handler as queue_handler
+import asyncio
 
 required_properties = tasks_pb2.modelRequirements()
 required_properties.needs_text = True
@@ -24,7 +25,7 @@ class TaskServicer(tasks_pb2_grpc.taskServiceServicer):
     ):
         self.queue_handler = queue_handler
 
-    def startTask(self, request, context):
+    async def startTask(self, request, context):
         _ = request
         while True:
             try:
@@ -39,7 +40,11 @@ class TaskServicer(tasks_pb2_grpc.taskServiceServicer):
                     if not context.is_active():
                         logging.info("RPC inactive - leaving startTask")
                         break
+                    # Sleep a bit and let other parts continue
+                    await asyncio.sleep(1)
                 else:
+                    # Init the response queue, and yield the job, to have the model handler work properly.
+                    self.queue_handler.response_queues[job.sessionID] = queue.Queue()
                     yield job
 
             except Exception as e:
@@ -49,7 +54,7 @@ class TaskServicer(tasks_pb2_grpc.taskServiceServicer):
                 # allow new call to start
                 break
 
-    def runTask(self, request, context):
+    async def runTask(self, request, context):
         _ = request
         while True:
             try:
@@ -64,6 +69,7 @@ class TaskServicer(tasks_pb2_grpc.taskServiceServicer):
                     if not context.is_active():
                         logging.info("RPC inactive - leaving runTask")
                         break
+                    await asyncio.sleep(1)
                 else:
                     yield job
 
@@ -72,7 +78,7 @@ class TaskServicer(tasks_pb2_grpc.taskServiceServicer):
                 # allow new call to start
                 break
 
-    def finishTask(self, request, context):
+    async def finishTask(self, request, context):
         # get the value of the response by calling the desired function :
         _ = request
         while True:
@@ -88,6 +94,7 @@ class TaskServicer(tasks_pb2_grpc.taskServiceServicer):
                     if not context.is_active():
                         logging.info("RPC inactive - leaving finishTask")
                         break
+                    await asyncio.sleep(1)
                 else:
                     yield job
 
