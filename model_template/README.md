@@ -12,25 +12,27 @@ The messages along with their fields are:
 
 - Incoming Messages
   - `modelRequest`
-    - request : A string represnting a json object with the following fields:
-      - text : An array of messages with a syntax resembling OpenAI messages. Each message has a field `role` and a field `content` where role can be either `"assistant"` or `"user"`
-      - image: a base64 encoded image.
-      - system: A String representing a system message to the model (i.e. the task description)
-    - modelID: A string representing which model this request is for
-    - sessionID: An ID of the session that generated this resource
+    - `request` : A string represnting a json object with the following fields:
+      - `text` : An array of messages with a syntax resembling OpenAI messages. Each message has a field `role` and a field `content` where role can be either `"assistant"` or `"user"`
+      - `image`: a base64 encoded image.
+      - `system`: A String representing a system message to the model (i.e. the task description)
+    - `modelID`: A string representing which model this request is for
+    - `sessionID`: An ID of the session that generated this resource
   - `metricsJson`:
-    - metrics: A String that is alredy formatted and just needs to be put into the models log, so that it can be interpreted by AIBuilder for the leaderboard
-    - modelID: A string representing which model this request is for
+    - `metrics`: A String that is alredy formatted and just needs to be put into the models log, so that it can be interpreted by AIBuilder for the leaderboard
+    - `modelID`: A string representing which model this request is for
 - Outgoing Messages:
-  - modelDefinition:
-    - needs_text: A Bool indicating whether the model needs text for processing
-    - needs_image: A Bool indicating whether the model needs an image for processing
-    - can_text: A Bool indicating whether the model can handle text
-    - can_image: A Bool indicating whether the model can handle images
-    - modelID: The ID of this model
-  - modelAnswer:
-    - request : A string represnting a json object with the following fields: - text : The text of the answer of the model - image: a base64 encoded image.
-    - sessionID: An ID of the session that prompted this response
+  - `modelDefinition`:
+    - `needs_text`: A Bool indicating whether the model needs text for processing
+    - `needs_image`: A Bool indicating whether the model needs an image for processing
+    - `can_text`: A Bool indicating whether the model can handle text
+    - `can_image`: A Bool indicating whether the model can handle images
+    - `modelID`: The ID of this model
+  - `modelAnswer`:
+    - `answer` : A string represnting a json object with the following fields: 
+      - `text` : The text of the answer of the model 
+      - `image`: a base64 encoded image.
+    - `sessionID`: An ID of the session that prompted this response
 
 ## Model Services
 
