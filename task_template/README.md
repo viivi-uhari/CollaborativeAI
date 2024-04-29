@@ -50,9 +50,9 @@ Finally, when a session (i.e. running one task) ends, the task needs to emit one
 
 We provide a sample implementation of a Task Server in the `model_server.py` class.
 The `main.py` file further implements a FastAPI server which can serve a ready to serve front-end along with three end-points that can be used as a basis and implementation example for tasks and the communication logic.
-Finally, the `model.py` file 
 
-### Models:
+
+### API Models:
 
 For simplicty, we have defined three pydantic models, that we use for interaction between the model server and the actual model implementation in the data_models class:
 
