@@ -10,7 +10,7 @@ syntax = "proto3";
 //   "system" : "The system prompt for the model" 
 //   }
 
-message taskRequest { 
+messaRge taskRequest { 
     string request = 1;   
     string sessionID = 2;    
 }
