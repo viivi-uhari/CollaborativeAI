@@ -6,10 +6,10 @@ from grpc_server import task_server
 
 
 # This will need to be adapted by the individual task!
-from tasks.tangram import Tangram
+from tasks.task import ActiveTask
 
-tangram_task = Tangram()
-task_handler.set_Task(tangram_task)
+current_task = ActiveTask()
+task_handler.set_Task(current_task)
 
 # Router handling.
 app = FastAPI()
@@ -32,6 +32,12 @@ async def logger_middleware(request: Request, call_next):
     logging.info(request.headers)
     response = await call_next(request)
     return response
+
+
+# Serve the frontend
+from static_files import SPAStaticFiles
+
+app.mount("/", SPAStaticFiles(directory="dist", html=True), name="FrontEnd")
 
 
 # Start the GRPC Server

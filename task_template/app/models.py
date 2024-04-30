@@ -3,10 +3,10 @@ from pydantic import BaseModel
 
 
 class TaskDataRequest(BaseModel):
-    text: str
+    text: Optional[str] = None
     inputData: Any
     image: Optional[str] = None
-    objective: str
+    objective: Optional[str] = None
 
 
 class TaskRequest(BaseModel):
@@ -26,5 +26,11 @@ class ModelResponse(BaseModel):
 
 
 class TaskDataResponse(BaseModel):
-    text: str
+    text: Optional[str] = None
     image: Optional[str] = None
+    outputData: Optional[Any] = None
+
+
+class TaskRequirements(BaseModel):
+    needs_text: bool
+    needs_image: bool

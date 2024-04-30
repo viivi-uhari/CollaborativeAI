@@ -1,4 +1,10 @@
-from models import TaskDataRequest, TaskDataResponse, TaskRequest, ModelResponse
+from models import (
+    TaskDataRequest,
+    TaskDataResponse,
+    TaskRequest,
+    ModelResponse,
+    TaskRequirements,
+)
 
 
 class Task:
@@ -12,4 +18,7 @@ class Task:
         raise NotImplementedError()
 
     def process_model_answer(self, answer: ModelResponse) -> TaskDataResponse:
+        raise NotImplementedError()
+
+    def get_requirements(self) -> TaskRequirements:
         raise NotImplementedError()

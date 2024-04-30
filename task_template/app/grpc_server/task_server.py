@@ -11,13 +11,6 @@ required_properties.needs_text = True
 required_properties.needs_image = False
 
 
-def get_required_props():
-    required_properties = tasks_pb2.modelRequirements()
-    required_properties.needs_text = True
-    required_properties.needs_image = False
-    return required_properties
-
-
 class TaskServicer(tasks_pb2_grpc.taskServiceServicer):
     def __init__(
         self,
@@ -31,10 +24,7 @@ class TaskServicer(tasks_pb2_grpc.taskServiceServicer):
             try:
                 # with timeout to permit detection of interrupted connection
                 try:
-                    session = self.queue_handler.start_queue.get(timeout=1.0)
-                    job = get_required_props()
-                    job.sessionID = session
-
+                    job = self.queue_handler.start_queue.get(timeout=1.0)
                 except queue.Empty:
                     # leave if orchestrator disconnected
                     if not context.is_active():

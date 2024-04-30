@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, Request
-from models import TaskDataRequest, TaskDataResponse, ModelResponse
+from models import TaskDataRequest, TaskDataResponse, ModelResponse, TaskRequirements
 from routers.router_models import ConversationItem, TaskRequest
 from routers.session import get_session, clear_session
 from typing import Dict, List
@@ -19,6 +19,9 @@ class TaskRouter:
 
     def set_Task(self, task: Task):
         self.task = task
+
+    def get_requirements(self) -> TaskRequirements:
+        return self.task.get_requirements()
 
     def build_model_request(
         self, request: TaskDataRequest, history: List[ConversationItem]
@@ -54,8 +57,13 @@ async def process_task_data(
     """
     history = session["history"]
     sessionID = session["key"]
+    task_props = task_handler.get_requirements()
+    startRequest = grpc_models.modelRequirements()
+    startRequest.sessionID = sessionID
+    startRequest.needs_text = task_props.needs_text
+    startRequest.needs_image = task_props.needs_image
     if not sessionID in queue_handler.response_queues:
-        queue_handler.start_queue.put(sessionID)
+        queue_handler.start_queue.put(startRequest)
 
     # Wait for the response queue to be created
     while not sessionID in queue_handler.response_queues:
