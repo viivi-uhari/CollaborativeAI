@@ -3,7 +3,7 @@
 This model serves as a template model ( and as a suggestion on how to set up communication pathes)
 The aim of this model template is to allow concurrent processing of requests and implement the flow for the Model component as detailed in the following diagram:
 
-![A diagram showing the flow of messages from the model perspective](docs/model-flow.svg)
+![A diagram showing the flow of messages from the model perspective](docs/threecomp_layout.svg)
 
 ## Model Messages
 
@@ -29,8 +29,8 @@ The messages along with their fields are:
     - `can_image`: A Bool indicating whether the model can handle images
     - `modelID`: The ID of this model
   - `modelAnswer`:
-    - `answer` : A string represnting a json object with the following fields: 
-      - `text` : The text of the answer of the model 
+    - `answer` : A string represnting a json object with the following fields:
+      - `text` : The text of the answer of the model
       - `image`: a base64 encoded image.
     - `sessionID`: An ID of the session that prompted this response
 
