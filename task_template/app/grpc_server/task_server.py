@@ -1,9 +1,9 @@
-import gprc_server.tasks_pb2_grpc as tasks_pb2_grpc
-import gprc_server.tasks_pb2 as tasks_pb2
+import grpc_server.tasks_pb2_grpc as tasks_pb2_grpc
+import grpc_server.tasks_pb2 as tasks_pb2
 import queue
 import logging
 import traceback
-import gprc_server.queue_handler as queue_handler
+import grpc_server.queue_handler as queue_handler
 import asyncio
 
 required_properties = tasks_pb2.modelRequirements()

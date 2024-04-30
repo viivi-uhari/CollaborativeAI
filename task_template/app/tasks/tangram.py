@@ -1,8 +1,8 @@
 import logging
-import tangram_models
+import tasks.tangram_models as tangram_models
 from typing import Any, List
 import json
-from grpc_server.task_interface import Task
+from tasks.task_interface import Task
 from models import TaskDataRequest, TaskRequest, TaskDataResponse, ModelResponse
 
 logger = logging.getLogger(__name__)

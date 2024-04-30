@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends, Request
 from models import TaskDataRequest, TaskDataResponse, ModelResponse
-from router_models import ConversationItem, TaskRequest
+from routers.router_models import ConversationItem, TaskRequest
 from routers.session import get_session, clear_session
 from typing import Dict, List
-from grpc_server.task_interface import Task
+from tasks.task_interface import Task
 import asyncio
 import logging
 from grpc_server.queue_handler import queue_handler
