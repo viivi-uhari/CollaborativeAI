@@ -2,46 +2,35 @@ from typing import Any, List, Optional
 from pydantic import BaseModel
 
 
-class ChatMessage(BaseModel):
-    message: str
-
-
-class Position(BaseModel):
-    x: float
-    y: float
-    rotation: int
-
-
-class Piece(BaseModel):
-    name: str
-    position: Position
-
-
 class TaskDataRequest(BaseModel):
-    comment: Optional[str] = ""
-    pieces: List[Piece]
+    text: Optional[str] = None
+    inputData: Any
     image: Optional[str] = None
-    objective: str
+    objective: Optional[str] = None
 
 
-class SessionData(BaseModel):
-    """
-    I dont know yet if we're going to use AI Builder for the demo. If we are then I think we need to
-    provide the apiKey to the session and then extract it to make the call. If not, we can just use the
-    api key from the .env file
-    """
-
-    apiKey: str
-    modelId: str
-    history: List[dict] = []
-
-
-class textHistory(BaseModel):
-    role: str
-    content: str
-
-
-class modelRequest(BaseModel):
-    text: List[textHistory]
-    image: str
+class TaskRequest(BaseModel):
+    # The text of the request
+    text: str
+    # the image of the request
+    image: Optional[str] = None
+    # The system message of the request
     system: str
+
+
+class ModelResponse(BaseModel):
+    # The text of the request
+    text: str
+    # the image of the request
+    image: Optional[str] = None
+
+
+class TaskDataResponse(BaseModel):
+    text: Optional[str] = None
+    image: Optional[str] = None
+    outputData: Optional[Any] = None
+
+
+class TaskRequirements(BaseModel):
+    needs_text: bool
+    needs_image: bool
