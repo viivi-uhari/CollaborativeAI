@@ -16,24 +16,29 @@ logger = logging.getLogger(__name__)
 
 class ActiveTask(Task):
 
-    def convert_task_data_to_tangram_data(task_data: Any) -> List[tangram_models.Piece]:
+    def convert_task_data_to_tangram_data(
+        self, task_data: Any
+    ) -> List[tangram_models.Piece]:
+        logger.info(task_data)
         pieces = []
-        for piece in task_data:
-            name, position_values = list(piece.items())[0]
-            position = tangram_models.Position(
-                x=position_values[0], y=position_values[1], rotation=position_values[2]
-            )
+        tangram_data = task_data["tangramData"]
+        for name in tangram_data:
+            position_values = tangram_data[name]
+            xy_values = position_values[0]
+            x = int(xy_values.split(",")[0].replace("(", ""))
+            y = int(xy_values.split(",")[1].replace(")", ""))
+            position = tangram_models.Position(x=x, y=y, rotation=position_values[1])
             piece = tangram_models.Piece(name=name, position=position)
             pieces.append(piece)
         return pieces
 
-    def process_tangram_data(pieces: List[tangram_models.Piece]):
+    def process_tangram_data(self, pieces: List[tangram_models.Piece]):
         prompt = "Here are the current positions and rotations of the pieces:\n"
         for piece in pieces:
             prompt += f"{piece.name}: {piece.position.x}, {piece.position.y}, {piece.position.rotation}\n"
         return prompt
 
-    def convert_model_response(response: Any) -> tangram_models.Piece:
+    def convert_model_response(self, response: Any) -> tangram_models.Piece:
         try:
             element = json.loads(response)
             name, position_values = list(element.items())[0]
@@ -46,14 +51,13 @@ class ActiveTask(Task):
             logger.error("Error converting model response to Piece")
             return None
 
-    def get_system_prompt(objective: str, hasImage: bool = False) -> str:
+    def get_system_prompt(self, objective: str, hasImage: bool = False) -> str:
         """Generate response endpoint:
         generate the response based on given prompt and store the conversation
         in the history of the session (based on the session_id cookie)
         """
 
-        system_prompt = f"""
-            Your are working with a user to solve some task with a tangram puzzle. 
+        system_prompt = f"""Your are working with a user to solve some task with a tangram puzzle. 
             The stated task is : {objective}
             You will be given central points for the objects of the tangram puzzle.         
             The corners of the objects are as follows (relative to their central points):
@@ -69,7 +73,7 @@ class ActiveTask(Task):
             You should only modify one piece in each of your turns. A move can consist of both roatting and movig the piece.
             You should respond with the new location and rotation of the element you modified in the following format, 
             similar to the positions provided by the user. 
-            {"Piece Name" : [x,y, rotation]}
+            {{"Piece Name" : [x,y, rotation]}}
             Your answer must only contain one line.
             """
         return system_prompt
@@ -82,11 +86,11 @@ class ActiveTask(Task):
         """Generate prompt endpoint:
         process pieces' data and plug them into the prompt
         """
-        prompt_content = self.process_tangram_data(pieces)
         taskData = request.inputData
         pieces = self.convert_task_data_to_tangram_data(taskData)
+        prompt = self.process_tangram_data(pieces)
         system_prompt = self.get_system_prompt(request.objective)
-        prompt = {"role": "user", "content": prompt_content}
+
         # This could include an image, but for this task, we currently don't supply one
         return TaskRequest(text=prompt, system=system_prompt)
 

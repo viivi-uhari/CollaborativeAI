@@ -6,7 +6,6 @@ import hashlib
 import grpc
 import logging
 
-4
 logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/api/v1/session")
@@ -26,14 +25,15 @@ sessions[<session_id>] = {
 """
 
 
-def get_session(request: Request):
+def get_session(request: Request) -> SessionData:
     session_id = request.session["key"] if "key" in request.session else None
     if session_id is None or session_id not in sessions:
         session_id = hashlib.sha256(
             (request.client.host + str(time.time())).encode()
         ).hexdigest()
         request.session["key"] = session_id
-        sessions[session_id] = SessionData(history=[])
+        sessions[session_id] = SessionData(history=[], id=session_id)
+        logger.info(sessions[session_id])
     return sessions[session_id]
 
 

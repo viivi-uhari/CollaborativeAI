@@ -89,8 +89,8 @@ export const useTaskStore = defineStore({
         this.currentInteraction.history.push(data.displayData)
         this.currentInteraction.submissionHistory.push(data.submission)
         this.storeInteraction()
-        
-/*        const responseData = { data: { tangram: '{"Big Triangle 1" : ["(723,140)", 45]}' } }
+
+        /*        const responseData = { data: { tangram: '{"Big Triangle 1" : ["(723,140)", 45]}' } }
             const AISubmission = {
               role: 'AI',
               data: responseData.data
@@ -102,8 +102,7 @@ export const useTaskStore = defineStore({
 */
         axios
           .post(`/api/v1/task/process`, {
-            taskId: this.selectedTask.id,
-            data: data.submission,
+            inputData: data.submission.data,
             objective: this.currentInteraction.objective
           })
           .then((response) => {
@@ -124,7 +123,8 @@ export const useTaskStore = defineStore({
      * Finish the task, resetting history and everything.
      */
     finishTask(rating: any) {
-      axios.delete(`/api/v1/task/finish`, rating).then((response) => {
+      const ratingjson = { metrics: rating }
+      axios.post(`/api/v1/task/finish`, ratingjson).then((response) => {
         // successfully submitted data.
         this.selectedTask = {} as Task
         this.currentInteraction = {} as TaskInteraction
