@@ -1,6 +1,12 @@
 from fastapi import APIRouter, Depends, Request
-from models import TaskDataRequest, TaskDataResponse, ModelResponse, TaskRequirements
-from routers.router_models import ConversationItem, TaskRequest
+from models import (
+    TaskDataRequest,
+    TaskDataResponse,
+    ModelResponse,
+    TaskRequirements,
+    TaskMetrics,
+)
+from routers.router_models import ConversationItem, TaskRequest, SessionData
 from routers.session import get_session, clear_session
 from typing import Dict, List
 from tasks.task_interface import Task
@@ -29,7 +35,8 @@ class TaskRouter:
         currentElement = self.task.generate_model_request(request)
         grpc_taskRequest = grpc_models.taskRequest()
         # Extend the history by the current request.
-        history.extend(currentElement.text)
+        logger.info(currentElement)
+        history.append(ConversationItem(role="user", content=currentElement.text))
         # Now, we convert this into the taskRequest
         currentRequestObject = TaskRequest(
             text=history, image=currentElement.image, system=currentElement.system
@@ -38,10 +45,11 @@ class TaskRouter:
         return grpc_taskRequest
 
     def interpret_model_response(
-        self, response: grpc_models.modelAnswer
+        self, response: grpc_models.modelAnswer, history: List[ConversationItem]
     ) -> TaskDataResponse:
         # Load the json
         data = ModelResponse().load_json(response.answer)
+        history.append({"role": "assistant", "content": data.text})
         return self.task.process_model_answer(data)
 
 
@@ -50,18 +58,19 @@ task_handler = TaskRouter()
 
 @task_router.post("/process")
 async def process_task_data(
-    task_data: TaskDataRequest, session: Dict = Depends(get_session)
+    task_data: TaskDataRequest, session: SessionData = Depends(get_session)
 ):
     """Generate prompt endpoint:
     process pieces' data and plug them into the prompt
     """
-    history = session["history"]
-    sessionID = session["key"]
+    history = session.history
+    sessionID = session.id
     task_props = task_handler.get_requirements()
     startRequest = grpc_models.modelRequirements()
     startRequest.sessionID = sessionID
     startRequest.needs_text = task_props.needs_text
     startRequest.needs_image = task_props.needs_image
+    logger.info(startRequest)
     if not sessionID in queue_handler.response_queues:
         queue_handler.start_queue.put(startRequest)
 
@@ -69,24 +78,33 @@ async def process_task_data(
     while not sessionID in queue_handler.response_queues:
         await asyncio.sleep(1)
     # Submit the task to the model
+    logger.info("Task started, submitting to model")
     model_request = task_handler.build_model_request(task_data, history)
-    queue_handler.task_queue.put({"data": model_request, "sessionID": sessionID})
-
+    logger.info(model_request)
+    # Add the session ID to the model request
+    model_request.sessionID = sessionID
+    queue_handler.task_queue.put(model_request)
+    logger.info("Submitted, awaiting response")
     # And wait for the response to arrive:
     while True:
         if queue_handler.response_queues[sessionID].empty():
             await asyncio.sleep(1)
         else:
+            logger.info("Supplying response")
             ret = queue_handler.response_queues[sessionID].get(block=True)
-            update = task_handler.interpret_model_response(ret)
+            update = task_handler.interpret_model_response(ret, history)
             return update
 
 
-@task_router.delete("/finish")
-async def clear_session(request: Request, session: Dict = Depends(get_session)):
+@task_router.post("/finish")
+async def clear_session(
+    request: TaskMetrics, session: SessionData = Depends(get_session)
+):
     """Finish task endpoint:
     delete the session based on the session_id cookie when the user decides
     their task is done
     """
+    finishObj = {"sessionID": session.id, "metrics": request.metrics.json()}
+    queue_handler.finish_queue.put(finishObj)
     clear_session(request)
     return {"response": "session cleared"}

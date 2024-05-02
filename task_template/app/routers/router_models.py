@@ -9,6 +9,7 @@ class ConversationItem(BaseModel):
 
 class SessionData(BaseModel):
     history: List[ConversationItem]
+    id: str
 
 
 class TaskRequest(BaseModel):
