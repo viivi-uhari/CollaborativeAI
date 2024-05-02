@@ -1,16 +1,57 @@
-import grpc
+import grpc.aio as grpc
+from concurrent import futures
+import asyncio
+import random
+
+# import the generated classes :
 import model_handler_pb2
 import model_handler_pb2_grpc
 
-
-from concurrent import futures
-
 port = 8061
 
-# class ModelHandler(model_handler_pb2_grpc.CollaborateServicer):
+class ModelHandler(model_handler_pb2_grpc.CollaborateServicer):
+  def __init__(self):
+    self.model_list = []
 
+  def startTask(self, request, context):
+    modelRequirements = request.modelRequirements
+    suitable_models_list = []
+
+    #Scan in the model list for the suitable model
+    for model in self.model_list:
+      if (modelRequirements.need_text == model.can_text and modelRequirements.need_image == model.can_image):
+        suitable_models_list.append(model)
+
+    #choose a random model if there are multiple that sastisfy the requirements
+    chosen_model = random.choice(suitable_models_list)
+
+    #assign the modelID to the session
+    request.session["modelID"] = chosen_model.modelID
     
-server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
-model_handler_pb2_grpc.add_ModelHandlerServicer_to_server(ModelHandler(), server)
-server.add_insecure_port("0.0.0.0:{}".format(port))
-server.start()
+    return model_handler_pb2.Empty()
+
+  # def finishTask(self, request, context):
+      
+  #   return model_handler_pb2.metricsJson()
+  
+  # def sendToModel(self, request, context):
+      
+  #   return
+  
+  # def returnToTask(self, request, context):
+      
+  #   return
+  
+  def registerModel(self, request, context):
+    self.model_list.append(request)
+    return model_handler_pb2.Empty();
+
+async def serve():
+  server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
+  model_handler_pb2_grpc.add_ModelHandlerServicer_to_server(ModelHandler(), server)
+  print("Starting the model handler server. Listening on port : " + str(port))
+  server.add_insecure_port("0.0.0.0:{}".format(port))
+  await server.start()
+  await server.wait_for_termination()
+
+asyncio.run(serve())
