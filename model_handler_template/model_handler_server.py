@@ -14,12 +14,11 @@ class ModelHandler(model_handler_pb2_grpc.CollaborateServicer):
     self.model_list = []
 
   def startTask(self, request, context):
-    modelRequirements = request.modelRequirements
     suitable_models_list = []
 
     #Scan in the model list for the suitable model
     for model in self.model_list:
-      if (modelRequirements.need_text == model.can_text and modelRequirements.need_image == model.can_image):
+      if (request.need_text == model.can_text and request.need_image == model.can_image):
         suitable_models_list.append(model)
 
     #choose a random model if there are multiple that sastisfy the requirements
@@ -27,22 +26,24 @@ class ModelHandler(model_handler_pb2_grpc.CollaborateServicer):
 
     #assign the modelID to the session
     request.session["modelID"] = chosen_model.modelID
-    
+
     return model_handler_pb2.Empty()
 
-  # def finishTask(self, request, context):
-      
-  #   return model_handler_pb2.metricsJson()
+  def finishTask(self, request, context):
+    taskMetrics = request.taskMetrics
+
+    return model_handler_pb2.metricsJson()
   
-  # def sendToModel(self, request, context):
+  def sendToModel(self, request, context):
       
-  #   return
+    return
   
-  # def returnToTask(self, request, context):
+  def returnToTask(self, request, context):
       
-  #   return
+    return
   
   def registerModel(self, request, context):
+    #add the models to the model list on startup
     self.model_list.append(request)
     return model_handler_pb2.Empty();
 
