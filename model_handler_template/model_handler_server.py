@@ -1,4 +1,3 @@
-from starlette.requests import Request
 import grpc.aio as grpc
 from concurrent import futures
 import asyncio
