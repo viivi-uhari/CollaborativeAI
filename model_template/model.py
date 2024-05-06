@@ -1,8 +1,10 @@
+import os
+
+print(os.environ["OPENAI_API_KEY"])
 from langchain_openai import ChatOpenAI
 from langchain_core.messages import HumanMessage, AIMessage, SystemMessage
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain.chains.combine_documents import create_stuff_documents_chain
-import os
 import logging
 import model_pb2
 from data_models import *

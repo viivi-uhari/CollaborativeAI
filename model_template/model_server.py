@@ -1,7 +1,6 @@
 from grpc import StatusCode
 import grpc.aio as grpc
 from concurrent import futures
-import time
 
 # import the generated classes :
 import model_pb2
@@ -9,7 +8,6 @@ import model_pb2_grpc
 
 # import the function we made :
 import model as ai_model
-import json
 import asyncio
 import queue
 from data_models import TaskInput
@@ -26,6 +24,8 @@ class ModelServicer(model_pb2_grpc.ModelServicer):
         self.result_queue = queue.Queue()
 
     def publishMetrics(self, request, context):
+        print("Publishing metrics")
+        print(request)
         if model_definition.modelID != request.modelID:
             # Not sure, whether we need to abort, as this might caus esome unexpected error.
             # This is just not connected to anything...
@@ -36,7 +36,8 @@ class ModelServicer(model_pb2_grpc.ModelServicer):
         return model_pb2.Empty()
 
     def predict(self, request, context):
-
+        print("Predicting")
+        print(request)
         if model_definition.modelID != request.modelID:
             # Not sure, whether we need to abort, as this might caus esome unexpected error.
             # This is just not connected to anything...
@@ -49,7 +50,10 @@ class ModelServicer(model_pb2_grpc.ModelServicer):
 
     async def do_prediction(self, data: model_pb2.modelRequest):
         input = TaskInput.model_validate_json(data.request)
+        print("Sending request to model")
         result = await ai_model.get_response(input)
+        print("Got response from model")
+        print(result)
         modelAnswer = model_pb2.modelAnswer()
         modelAnswer.response = result.model_dump_json()
         modelAnswer.sessionID = data.sessionID
@@ -61,6 +65,8 @@ class ModelServicer(model_pb2_grpc.ModelServicer):
                 await asyncio.sleep(1)
             else:
                 data = self.start_queue.get(timeout=1.0)
+                print("Processing Request")
+                print(data)
                 task = asyncio.create_task(self.do_prediction(data))
 
     async def sendPrediction(self, request, context):
@@ -68,13 +74,16 @@ class ModelServicer(model_pb2_grpc.ModelServicer):
         print("Starting prediction queue")
         task = asyncio.create_task(self.process_queue(context))
         while True:
-            if self.done_queue.empty():
+            if self.result_queue.empty():
                 await asyncio.sleep(1)
             else:
-                data = self.done_queue.get(timeout=1.0)
+                print("Sending response")
+                data = self.result_queue.get(timeout=1.0)
                 yield data
 
     def registerModel(self, request, context):
+        print("Reistering model")
+        print(request)
         # get the value of the response by calling the desired function :
         return model_definition
 
