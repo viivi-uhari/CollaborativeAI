@@ -1,10 +1,8 @@
 import os
 
-print(os.environ["OPENAI_API_KEY"])
 from langchain_openai import ChatOpenAI
 from langchain_core.messages import HumanMessage, AIMessage, SystemMessage
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
-from langchain.chains.combine_documents import create_stuff_documents_chain
 import logging
 import model_pb2
 from data_models import *
@@ -20,7 +18,6 @@ ChatOpenAI(
     default_headers=default_headers,
 )
 
-
 model_definition = model_pb2.modelDefinition()
 model_definition.needs_text = True
 model_definition.needs_image = False
@@ -29,37 +26,41 @@ model_definition.can_image = False
 model_definition.modelID = "GPT4_turbo"
 
 
-def publish_metrics(metrics_json: str):
-    logger.info(metrics_json)
-    return True
+class AIModel:
+    def get_model_definition(self) -> model_pb2.modelDefinition:
+        return model_definition
+
+    def publish_metrics(self, metrics_json: str) -> None:
+        logger.info(metrics_json)
+
+    async def get_response(self, message: TaskInput) -> TaskOutput:
+        model = ChatOpenAI(
+            base_url="https://aalto-openai-apigw.azure-api.net/v1/openai/gpt4-1106-preview/",
+            default_headers=default_headers,
+        )
+
+        history_template = ChatPromptTemplate.from_messages(
+            [
+                ("system", message.system),
+                MessagesPlaceholder(variable_name="chat_history"),
+                ("human", "{input}"),
+            ]
+        )
+
+        history = []
+        if len(message.text) > 1:
+            for i in range(len(message.text) - 1):
+                inputMessage = message.text[i]
+                if inputMessage.role == "user":
+                    history.append(HumanMessage(inputMessage.content))
+                else:
+                    history.append(AIMessage(inputMessage.content))
+        AIresponse = model.invoke(
+            history_template.format_prompt(chat_history=history, input=message.text[-1])
+        )
+        taskResponse = TaskOutput()
+        taskResponse.text = AIresponse.content
+        return taskResponse
 
 
-async def get_response(message: TaskInput) -> TaskOutput:
-    model = ChatOpenAI(
-        base_url="https://aalto-openai-apigw.azure-api.net/v1/openai/gpt4-1106-preview/",
-        default_headers=default_headers,
-    )
-
-    history_template = ChatPromptTemplate.from_messages(
-        [
-            ("system", message.system),
-            MessagesPlaceholder("chat_history"),
-            ("human", {"input"}),
-        ]
-    )
-
-    history = []
-    if len(message.text) > 1:
-        for i in range(len(message.text) - 1):
-            inputMessage = message.text[i]
-            if inputMessage.role == "user":
-                history.append(HumanMessage(inputMessage.content))
-            else:
-                history.append(AIMessage(inputMessage.content))
-    history_chain = create_stuff_documents_chain(model, history_template)
-    AIresponse = await history_chain.invoke(
-        input=message.text[-1], chat_history=history
-    )
-    taskResponse = TaskOutput()
-    taskResponse.text = AIresponse.content
-    return taskResponse
+ai_model = AIModel()
