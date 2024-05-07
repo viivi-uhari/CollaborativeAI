@@ -107,10 +107,12 @@ export const useTaskStore = defineStore({
           })
           .then((response) => {
             // Handle response
+            console.log(response)
             const responseData = response.data
+            const submissiondata = { tangram: responseData.text }
             const AISubmission = {
               role: 'AI',
-              data: responseData.data
+              data: submissiondata
             }
             this.currentInteraction.submissionHistory.push(AISubmission)
             this.lastInteraction = AISubmission

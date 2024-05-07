@@ -10,3 +10,21 @@ This repository contains most of the code necessary to add a Model or a Task.
 The `task_template` and `model_template` folders contain template applications for deployment on the AI Builder infrastructure.
 They indicate how to implement a model and a task and supply most infrastructure necessary to minimise the requirements of a user to adopt their code.
 Details are provided in the respective README files.
+
+## Local testing
+
+To test things locally and see if they work, we provide a docker compose file along with a simple orchestrator.
+
+To run, you need docker installed.
+You also need the following environment variables set:
+`OPENAI_API_KEY` - a openAI access key.
+`SSL_KEY` - a valid openssl certficate key
+`SSL_CERTIFICATE` - a valid openssl certificate
+
+The template model uses a Aalto specific endpoint for computation. change this if you have an openai access key.
+
+Run `docker compose up --build` (the `--build` flag makes sure that it uses the latest modifications you have done to the code.)
+
+Once the docker network is up, run `python3 test_orchestrator.py` to run the orchestrator.
+
+After that, the frontend should be accessible via https://localhost:8062. Note, that we provide some certificate files, but those should not be used in actual deployment environment!

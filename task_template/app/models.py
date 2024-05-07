@@ -1,5 +1,5 @@
 from typing import Any, List, Optional
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class TaskDataRequest(BaseModel):
@@ -11,9 +11,9 @@ class TaskDataRequest(BaseModel):
 
 class TaskRequest(BaseModel):
     # The text of the request
-    text: str
+    text: Optional[str] = Field(default="", nullable=True)
     # the image of the request
-    image: Optional[str] = None
+    image: Optional[str] = Field(default=None, nullable=True)
     # The system message of the request
     system: str
 
@@ -22,7 +22,7 @@ class ModelResponse(BaseModel):
     # The text of the request
     text: str
     # the image of the request
-    image: Optional[str] = None
+    image: Optional[str] = Field(default=None, nullable=True)
 
 
 class TaskDataResponse(BaseModel):

@@ -85,7 +85,7 @@ class TaskServicer(tasks_pb2_grpc.taskServiceServicer):
         logger.info("Received response from model")
         if request.sessionID in self.queue_handler.response_queues:
             current_queue = self.queue_handler.response_queues[request.sessionID]
-            current_queue.put(request.answer)
+            current_queue.put(request)
         else:
             logging.error(
                 "Session ID not found in response_queues, couldn't hanlde request"

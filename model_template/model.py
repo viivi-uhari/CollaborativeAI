@@ -7,7 +7,7 @@ import logging
 import model_pb2
 from data_models import *
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("app")
 
 # NOTE: This needs to be defined in the environment this model is running in.
 default_headers = {"Ocp-Apim-Subscription-Key": os.environ["OPENAI_API_KEY"]}
@@ -41,7 +41,8 @@ class AIModel:
 
         history_template = ChatPromptTemplate.from_messages(
             [
-                ("system", message.system),
+                # replace single curly brackets by double, since otherwise they they are interpreted as variables, which they are not
+                ("system", message.system.replace("{", "{{").replace("}", "}}")),
                 MessagesPlaceholder(variable_name="chat_history"),
                 ("human", "{input}"),
             ]
@@ -58,6 +59,7 @@ class AIModel:
         AIresponse = model.invoke(
             history_template.format_prompt(chat_history=history, input=message.text[-1])
         )
+        print(f"AIresponse: {AIresponse.content}")
         taskResponse = TaskOutput()
         taskResponse.text = AIresponse.content
         return taskResponse

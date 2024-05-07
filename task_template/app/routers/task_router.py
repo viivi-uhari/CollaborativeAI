@@ -48,7 +48,9 @@ class TaskRouter:
         self, response: grpc_models.modelAnswer, history: List[ConversationItem]
     ) -> TaskDataResponse:
         # Load the json
-        data = ModelResponse().load_json(response.answer)
+        logger.info(response)
+        logger.info(response.answer)
+        data = ModelResponse.model_validate_json(response.answer)
         history.append({"role": "assistant", "content": data.text})
         return self.task.process_model_answer(data)
 

@@ -67,10 +67,12 @@ For simplicty, we have defined three pydantic models, that we use for interactio
 
 ### Interface
 
-This server handles most interactions and relies on the `model.py` file to provide the following methods and fields:
+This server handles most interactions and relies on the AIModel class defined in the `model.py` file to provide the following methods and fields:
 
 - Methods:
   - publish_metrics(metrics_json: str):
     - A Method that publishes (i.e. prints) the given metrics to the container log
   - async get_response(message: TaskInput) -> TaskOutput:
     - A asynchronous method that performs the handling of the input, processing it by the actual model and returning a TaskOutput that can then be sent on.
+  - get_model_definition() -> model_pb2.modelDefinition:
+    - Indicate the `modelDefinition`, i.e. its capabilities and requirements as defined above in the outgoing message list.
