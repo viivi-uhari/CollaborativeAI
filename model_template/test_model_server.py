@@ -17,8 +17,6 @@ class TestModelServicer:
         # Replace 'YourService' with the actual service name
         self.channel = grpc.insecure_channel("localhost:8061")
         self.stub = model_pb2_grpc.ModelStub(self.channel)
-        self.achannel = grpc.aio.insecure_channel("localhost:8061")
-        self.astub = model_pb2_grpc.ModelStub(self.achannel)
         # We need to initialize this once, and not several times.
         self.predictions = self.stub.sendPrediction(model_pb2.Empty())
         self.modelID = "GPT4_turbo"
