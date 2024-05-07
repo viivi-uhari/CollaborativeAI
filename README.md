@@ -27,4 +27,4 @@ Run `docker compose up --build` (the `--build` flag makes sure that it uses the 
 
 Once the docker network is up, run `python3 test_orchestrator.py` to run the orchestrator.
 
-After that, the frontend should be accessible via https://localhost:8062. Note, that we provide some certificate files, but those should not be used in actual deployment environment!
+After that, the frontend should be accessible via https://localhost:8062.
