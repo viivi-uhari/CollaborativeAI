@@ -56,12 +56,12 @@ There are five services detailed in the model_handler.proto file. Those contain:
   - If the modelRequirements message has "needs_text", choose models that have "can_text" and don't have "needs_image".
   - If the modelRequirements message has "needs_image", choose models that have "can_image" and don't have "needs_text".
   - If the modelRequirements message has both "needs_image" and "needs_text", choose models that have both "can_image" and "can_text"
-If there are multiple models that sastisfy the condition, choose a random model and then store the sessionID-modelID connection in a dictinary. The idea here is to assign a single session to a single model only. Finally, the service returns an Empty message.
+If there are multiple models that sastisfy the condition, choose a random model and then store the sessionID-modelID connection in a dictionary. The idea here is to assign a single session to a single model only. Finally, the service returns an Empty message.
 
-- `finishTask`: a service which is called when a taskMetrics message is sent from a task component whenever the task is demdemned completed by the user. After that, the model handler retrieves the modelID from the request and then severe the connection between the sessionID and the modelID. Finally, a request with metricsJson message is sent to the correct model component to store the metrics in the model logs.
+- `finishTask`: a service which is called when a taskMetrics message is sent from a task component (whenever the task is demdemned completed by the user). After that, the model handler retrieves the modelID from the modelID-sessionID dictionary, and severes the connection between the sessionID and the modelID. Finally, the response of the service is a metricsJson message, which is then sent to the correct model component to store the metrics in the model logs.
 
-- `sendToModel`: 
+- `sendToModel`: a service which is called when a taskRequest message is sent from a task component to the model handler. After that, the model handler retrieves the modelID from from the modelID-sessionID dictionary. Finally, the service returns a modelRequest message, which is then sent to the corresponding model component.
 
-- `returnToTask`:
+- `returnToTask`: a service which basically serves as a gateway to forward the model answer from a model component to a task component. It receives a modelAnswer message and returns the exact same modelAnswer message.
 
 - `registerModel`: a service which is called when a modelDefinition message is sent from a model component. The request gives the necessary details (the capabilities of the model and the ID)of that model so that the handler can store them in a list for future use. The service returns an Empty message.
