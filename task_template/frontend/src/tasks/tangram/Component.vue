@@ -64,7 +64,7 @@ export default {
      */
     async fetchData() {
       console.log('Submitting data')
-      const temp = this.iframe?.contentWindow as any 
+      const temp = this.iframe?.contentWindow as any
       console.log(temp.setData)
       if (this.getData == null) {
         console.error('Get data has not been set properly')
@@ -96,6 +96,7 @@ export default {
         submission.role = 'user'
         submission.data = {
           message: this.submissionText,
+          image: displayData.imageURL,
           tangramData: JSON.parse(this.tangramMessage)
         }
         submissionData.submission = submission
@@ -163,18 +164,18 @@ export default {
       this.aiMessage = null
     },
     async frameLoaded() {
-      console.log("Frame loaded")
-      if (this.iframe){
-      const iframeContentNew = this.iframe.contentWindow as any      
-      iframeContentNew.registerSetDataCallback = this.registerSetDataCallback.bind(this)
-      iframeContentNew.registerUpdateDataCallback = this.updateDataCallback.bind(this)
-      iframeContentNew.setData = this.setTangramData.bind(this)
-      iframeContentNew.taskLoaded = this.taskLoaded.bind(this)
-      iframeContentNew.dataUpdated = this.buildHistory.bind(this)
-      console.log("Functions registered")
+      console.log('Frame loaded')
+      if (this.iframe) {
+        const iframeContentNew = this.iframe.contentWindow as any
+        iframeContentNew.registerSetDataCallback = this.registerSetDataCallback.bind(this)
+        iframeContentNew.registerUpdateDataCallback = this.updateDataCallback.bind(this)
+        iframeContentNew.setData = this.setTangramData.bind(this)
+        iframeContentNew.taskLoaded = this.taskLoaded.bind(this)
+        iframeContentNew.dataUpdated = this.buildHistory.bind(this)
+        console.log('Functions registered')
+      }
+      console.log('frame loading done')
     }
-    console.log("frame loading done")
-  }
   },
   watch: {
     async inputData(newValue) {
@@ -200,20 +201,20 @@ export default {
   },
   mounted() {
     if (this.iframe) {
-      console.log("There is an iframe")
+      console.log('There is an iframe')
       const iframeContent = this.iframe.contentWindow as any
       if (iframeContent) {
-        console.log("There is some content in the iframe")
+        console.log('There is some content in the iframe')
         iframeContent.registerSetDataCallback = this.registerSetDataCallback.bind(this)
         iframeContent.registerUpdateDataCallback = this.updateDataCallback.bind(this)
         iframeContent.setData = this.setTangramData.bind(this)
         iframeContent.taskLoaded = this.taskLoaded.bind(this)
         iframeContent.dataUpdated = this.buildHistory.bind(this)
-        console.log("Data on iframe set")
+        console.log('Data on iframe set')
       }
       console.log(iframeContent.taskLoaded)
       this.iframe.src = '/godot_games/tangram/tangram.html'
-      const iframeContentNew = this.iframe.contentWindow as any      
+      const iframeContentNew = this.iframe.contentWindow as any
       iframeContentNew.registerSetDataCallback = this.registerSetDataCallback.bind(this)
       iframeContentNew.registerUpdateDataCallback = this.updateDataCallback.bind(this)
       iframeContentNew.setData = this.setTangramData.bind(this)
@@ -223,7 +224,6 @@ export default {
       console.log(iframeContent)
       nextTick()
       console.log(iframeContent.taskLoaded)
-
     }
   }
 }

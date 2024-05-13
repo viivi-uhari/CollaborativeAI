@@ -5,7 +5,7 @@ from models import (
     ModelResponse,
     TaskRequirements,
 )
-
+from typing import Union, List
 
 class Task:
     def __init__(self):

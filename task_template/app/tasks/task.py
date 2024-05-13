@@ -17,11 +17,10 @@ logger = logging.getLogger(__name__)
 class ActiveTask(Task):
 
     def convert_task_data_to_tangram_data(
-        self, task_data: Any
+        self, tangram_data: Any
     ) -> List[tangram_models.Piece]:
-        logger.info(task_data)
+        logger.info(tangram_data)
         pieces = []
-        tangram_data = task_data["tangramData"]
         for name in tangram_data:
             position_values = tangram_data[name]
             xy_values = position_values[0]
@@ -69,12 +68,10 @@ class ActiveTask(Task):
             6. Square: (-45,-45), (-45,45), (45,45), (45,-45)
             7. Parallelogram: (-40,-24), (88,-24), (24, 40), (-104,40)
             The information you will get, are the central points along with a rotation (in degrees) as follows:
-            [4,5,45]
+            [4,5,45], where 4 is the x-coordinate, 5 is the y-coordinate and 45 is the rotation.
             You should only modify one piece in each of your turns. A move can consist of both roatting and movig the piece.
-            You should respond with the new location and rotation of the element you modified in the following format, 
-            similar to the positions provided by the user. 
-            {{"Piece Name" : [x,y, rotation]}}
-            Your answer must only contain one line.
+            Your answer should be brief and state the position and rotation of the piece you want to move.
+            In addition to the positions, you will also get an image of the current state of the tangram puzzle.
             """
         return system_prompt
 
@@ -86,13 +83,11 @@ class ActiveTask(Task):
         """Generate prompt endpoint:
         process pieces' data and plug them into the prompt
         """
-        taskData = request.inputData
-        pieces = self.convert_task_data_to_tangram_data(taskData)
+        pieces = self.convert_task_data_to_tangram_data(request.inputData)
         prompt = self.process_tangram_data(pieces)
         system_prompt = self.get_system_prompt(request.objective)
-
         # This could include an image, but for this task, we currently don't supply one
-        return TaskRequest(text=prompt, system=system_prompt)
+        return TaskRequest(text=prompt, system=system_prompt, image=request.image)
 
     def get_requirements(self) -> TaskRequirements:
-        return TaskRequirements(needs_text=True, needs_image=False)
+        return TaskRequirements(needs_text=True, needs_image=True)

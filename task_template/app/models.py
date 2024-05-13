@@ -34,6 +34,7 @@ class TaskDataResponse(BaseModel):
 class TaskRequirements(BaseModel):
     needs_text: bool
     needs_image: bool
+    multirequest: Optional[bool] = Field(default=False)
 
 
 class TaskMetrics(BaseModel):

@@ -102,7 +102,8 @@ export const useTaskStore = defineStore({
 */
         axios
           .post(`/api/v1/task/process`, {
-            inputData: data.submission.data,
+            inputData: data.submission.data.tangramData,
+            image: data.submission.data.image,
             objective: this.currentInteraction.objective
           })
           .then((response) => {
