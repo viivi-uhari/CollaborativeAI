@@ -30,7 +30,7 @@ export default {
     setRating(rating) {
       this.currentRating = rating
       this.taskStore.finishTask(rating)
-      this.$router.push({ name: 'home' })
+      this.$router.push({ name: 'task' })
     }
   },
   setup() {

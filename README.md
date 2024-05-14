@@ -21,10 +21,9 @@ You also need the following environment variables set:
 `SSL_KEY` - a valid openssl certficate key
 `SSL_CERTIFICATE` - a valid openssl certificate
 
-The template model uses a Aalto specific endpoint for computation. change this if you have an openai access key.
+The template model currently uses an Aalto specific endpoint for computation.
 
 Run `docker compose up --build` (the `--build` flag makes sure that it uses the latest modifications you have done to the code.)
-
-Once the docker network is up, run `python3 test_orchestrator.py` to run the orchestrator.
+The docker network contains all parts, including th orchestrator.
 
 After that, the frontend should be accessible via https://localhost:8062.

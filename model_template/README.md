@@ -67,12 +67,22 @@ For simplicty, we have defined three pydantic models, that we use for interactio
 
 ### Interface
 
-This server handles most interactions and relies on the AIModel class defined in the `model.py` file to provide the following methods and fields:
+The server provided handles most iteractions necessary for integration into the AIBuilder framework. To deploy a model you will need to implement the `AIModel` interface as defined in `models/basemodel.py`. To create a container using this model you will then need to define the `ai_model` field in the `model.py` module to be your model.
+For security reasons, you will have to provide your secrets to the AI Builder team, and import them using environment variables.  
+An object of type `AIModel` (i.e. the model you need to implement) needs to provide the following three methods:
 
 - Methods:
-  - publish_metrics(metrics_json: str):
+  - `publish_metrics(metrics_json: str)`:
     - A Method that publishes (i.e. prints) the given metrics to the container log
-  - async get_response(message: TaskInput) -> TaskOutput:
+  - `async get_response(message: TaskInput) -> TaskOutput`:
     - A asynchronous method that performs the handling of the input, processing it by the actual model and returning a TaskOutput that can then be sent on.
-  - get_model_definition() -> model_pb2.modelDefinition:
+  - `get_model_definition() -> model_pb2.modelDefinition`:
     - Indicate the `modelDefinition`, i.e. its capabilities and requirements as defined above in the outgoing message list.
+
+Essentially this is everything that's necessary for a model to be plugged in to the framework.
+
+### Example models
+
+We provide 4 example models. All models are based on using `langchain` to call API endpoints, which should make switching to a model of your choice relatvely easy (including local models).
+Two of the models use Aalto Azure endpoints and thus might not be suitable for testing for most people (since you will need an Aalto Azure key to use them).
+The other two are calling the OpenAI API using gpt-4-turbo for image processing.

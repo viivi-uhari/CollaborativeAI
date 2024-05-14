@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
 import TaskView from '../views/TaskView.vue'
 import RatingView from '../views/RatingView.vue'
 
@@ -8,11 +7,6 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      name: 'home',
-      component: HomeView
-    },
-    {
-      path: '/task',
       name: 'task',
       component: TaskView
     },

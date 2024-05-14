@@ -29,6 +29,7 @@ import type { TangramGame } from './types'
 import type { TaskSubmission, DisplayMessage, SubmissionObject } from '@/stores/types'
 import InputField from '@/components/InputField.vue'
 import html2canvas from 'html2canvas'
+import { json } from 'stream/consumers'
 
 export default {
   name: 'TangramComponent',
@@ -105,23 +106,6 @@ export default {
         this.tangramMessage = null
       }
     },
-    /**
-     * This method is used by the game to obtain the initial positions of the
-     * tangram pieces
-     */
-    getTestData(): TangramGame {
-      return {
-        // replace by actual data.
-        st_1: {
-          id: 'st_1',
-          points: [
-            { x: 1, y: 0 },
-            { x: 1, y: 0 },
-            { x: 1, y: 0 }
-          ]
-        }
-      }
-    },
     updateDataCallback(dataCallBack: Function) {
       // Implement your logic here
       console.log('Registering update data callback')
@@ -187,6 +171,19 @@ export default {
       await nextTick()
       console.log('Got new data! Trying to submit')
       console.log(newValue)
+      try {
+        JSON.parse(newValue)
+      } catch {
+        // This will error in the Godot game and not be processed correctly.
+        const displayData = {} as DisplayMessage
+        displayData.containsImage = false
+        displayData.message = `The data returned by the AI was unexpected. The message was: ${newValue.data}`
+        displayData.role = 'AI'
+        displayData.handled = true
+        this.aiMessage = displayData
+        this.$emit('updateHistory', this.aiMessage)
+        return
+      }
       const displayData = {} as DisplayMessage
       displayData.containsImage = true
       displayData.message = newValue.data.message

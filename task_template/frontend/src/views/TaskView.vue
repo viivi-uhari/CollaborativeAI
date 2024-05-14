@@ -1,8 +1,8 @@
 <template>
   <div ref="displayArea" class="flex flex-grow-1 flex-column align-content-between h-full">
     <div ref="titleArea" class="taskview-header">
-      <h1>{{ selectedTask.title }}</h1>
-      <p>{{ selectedTask.description }}</p>
+      <h1>{{ task.title }}</h1>
+      <p>{{ task.description }}</p>
       <div v-if="currentInteraction.objective">
         The current Objective is: {{ currentInteraction.objective }}
       </div>
@@ -21,7 +21,7 @@
         <TaskInterface
           v-show="!currentInteraction.isLoading"
           @newSubmission="scrollToBottom"
-          :task-component="selectedTask.id"
+          :task-component="task.id"
           :input-data="lastInteraction"
         ></TaskInterface>
         <div v-if="currentInteraction.isLoading" class="flex justify-center">
@@ -67,8 +67,8 @@ export default defineComponent({
   },
   setup() {
     const taskStore = useTaskStore()
-    const { selectedTask, currentInteraction, lastInteraction } = storeToRefs(taskStore)
-    return { selectedTask, currentInteraction, lastInteraction, taskStore }
+    const { task, currentInteraction, lastInteraction } = storeToRefs(taskStore)
+    return { task, currentInteraction, lastInteraction, taskStore }
   },
   methods: {
     async scrollToBottom(): Promise<void> {
@@ -79,6 +79,7 @@ export default defineComponent({
       content.scrollTop = content.scrollHeight
     },
     finishedObjective() {
+      this.taskStore.startTask()
       this.taskStore.setObjective(this.taskObjective)
       console.log(this.currentInteraction)
     },

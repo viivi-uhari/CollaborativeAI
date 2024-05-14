@@ -1,13 +1,4 @@
-<script setup lang="ts">
-import { onMounted } from 'vue'
-import { RouterLink, RouterView } from 'vue-router'
-import { useTaskStore } from './stores'
-
-onMounted(() => {
-  const taskStore = useTaskStore()
-  taskStore.updateTasks()
-})
-</script>
+<script setup lang="ts"></script>
 
 <template>
   <RouterView class="h-screen" />
