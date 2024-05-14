@@ -105,3 +105,18 @@ The server handles most functionality on the back-end side. It requires the impl
 The current docker file assumes a frontend folder which contains builds the `frontend` into it's `dist` folder. The server will serve these files automatically.
 This might need to be changed for your front-end but generally any compiled front-end can be used.
 If you use a different front-end tech to the one in this project, the compiled frontend needs to be placed into the "dist" folder from which it will be served by the FastAPI server.
+
+#### Frontend-backend interaction
+
+The back-end provides two endpoints at the moment:
+
+- `/api/v1/task/process/`, which expects a `TaskDataRequest` object to be processed.
+  This endpoint will respond with a `TaskDataResponse`, with the contents depending on the response of the model and the post-processing done in the `process_model_answer` function of the task.
+- `/api/v1/task/finish/` this endpoint indicates that one session has finished, and expects a `TaskMetrics` object that is passed on to the model handler, supplemented with the session ID. This will also clear the session association held by the back end, and the triggered model handler call will clear out the model associated with the current session.
+
+##### Front-end template
+
+The template currently available on the front-end is a combination of a godot game (source obtainable on request) which incorporates interaction with the a vue framework.
+This can be replaced by anything which calls the above mentioned backend endpoints and provides an index.html.
+
+We provide an alternative docker file (Dockerfile_godot_only) that shows how to deploy the godot game directly instead of within the vue framework. Note, however, that this game does not currently talk with the back-end as it was intended to be used within the vue framework. But of course, it could be adapted such that it works with the backend.

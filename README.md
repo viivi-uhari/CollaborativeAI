@@ -15,11 +15,12 @@ Details are provided in the respective README files.
 
 To test things locally and see if they work, we provide a docker compose file along with a simple orchestrator.
 
-To run, you need docker installed.
+To run, you need docker installed.  
 You also need the following environment variables set:
-`OPENAI_API_KEY` - a openAI access key.
-`SSL_KEY` - a valid openssl certficate key
-`SSL_CERTIFICATE` - a valid openssl certificate
+
+- `OPENAI_API_KEY` - a openAI access key.
+- `SSL_KEY` - a valid openssl certficate key
+- `SSL_CERTIFICATE` - a valid openssl certificate
 
 The template model currently uses an Aalto specific endpoint for computation.
 
