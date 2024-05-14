@@ -14,19 +14,22 @@ const props = defineProps({
 })
 const emit = defineEmits(['messagesUpdated', 'askQuestion'])
 const taskStore = useTaskStore()
-const { selectedTask, currentInteraction, lastInteraction } = storeToRefs(taskStore)
+const { currentInteraction, lastInteraction } = storeToRefs(taskStore)
 const ai_worked = computed(() => {
-  if (currentInteraction.value && currentInteraction.value.history.length > 0 && currentInteraction.value.submissionHistory.length > 0) {
+  if (
+    currentInteraction.value &&
+    currentInteraction.value.history.length > 0 &&
+    currentInteraction.value.submissionHistory.length > 0
+  ) {
     const submissionitems = currentInteraction.value.submissionHistory.length
     const historyItems = currentInteraction.value.history.length
-    console.log("Testing, whether AI Worked")
+    console.log('Testing, whether AI Worked')
     if (currentInteraction.value.submissionHistory[submissionitems - 1].role === 'AI') {
-      console.log("LAtest submission element is from AI")
+      console.log('LAtest submission element is from AI')
       if (currentInteraction.value.history[historyItems - 1].role == 'AI') {
-        console.log("Latest history element is from AI")
+        console.log('Latest history element is from AI')
         return true
-      }
-      else{
+      } else {
         console.log(currentInteraction.value.history[historyItems - 1])
         return false
       }
@@ -50,7 +53,9 @@ const ai_worked = computed(() => {
       :key="index"
     >
     </ConversationItem>
-    <Message v-if="!ai_worked" severity="error">Latest response from AI could not be interpreted</Message>
+    <Message v-if="!ai_worked" severity="error"
+      >Latest response from AI could not be interpreted</Message
+    >
   </div>
 </template>
 <style scoped>

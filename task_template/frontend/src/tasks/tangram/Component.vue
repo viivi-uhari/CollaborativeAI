@@ -29,7 +29,6 @@ import type { TangramGame } from './types'
 import type { TaskSubmission, DisplayMessage, SubmissionObject } from '@/stores/types'
 import InputField from '@/components/InputField.vue'
 import html2canvas from 'html2canvas'
-import { json } from 'stream/consumers'
 
 export default {
   name: 'TangramComponent',
