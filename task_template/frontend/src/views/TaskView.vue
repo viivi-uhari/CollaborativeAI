@@ -28,7 +28,8 @@
           <ProgressSpinner v-if="currentInteraction.isLoading" />
           AI Calculating...
         </div>
-        <router-link to="rating"><Button label="Finish" /></router-link>
+        <Button v-if="!showRatings" @click="() => (showRatings = true)" label="Finish" />
+        <Ratings v-else />
       </ScrollPanel>
     </div>
   </div>
@@ -40,6 +41,7 @@ import Button from 'primevue/button'
 import ConversationDisplay from '@/components/ConversationDisplay.vue'
 import InputField from '@/components/InputField.vue'
 import TaskInterface from '@/components/TaskInterface.vue'
+import Ratings from '@/components/Ratings.vue'
 
 import { defineComponent } from 'vue'
 
@@ -57,12 +59,14 @@ export default defineComponent({
     ScrollPanel,
     InputField,
     TaskInterface,
-    ProgressSpinner
+    ProgressSpinner,
+    Ratings
   },
   data() {
     return {
       taskObjective: '',
-      scrollpaneMax: 300
+      scrollpaneMax: 300,
+      showRatings: false
     }
   },
   setup() {
