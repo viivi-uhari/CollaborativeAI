@@ -35,7 +35,7 @@ class TaskRouter:
         currentElement = self.task.generate_model_request(request)
         grpc_taskRequest = grpc_models.taskRequest()
         # Extend the history by the current request.
-        logger.info(currentElement)
+        logger.info(currentElement.text)
         history.append(ConversationItem(role="user", content=currentElement.text))
         # Now, we convert this into the taskRequest
         currentRequestObject = TaskRequest(
@@ -82,7 +82,6 @@ async def process_task_data(
     # Submit the task to the model
     logger.info("Task started, submitting to model")
     model_request = task_handler.build_model_request(task_data, history)
-    logger.info(model_request)
     # Add the session ID to the model request
     model_request.sessionID = sessionID
     queue_handler.task_queue.put(model_request)

@@ -1,7 +1,9 @@
 version: "3"
 services:
   task_template:
-    build: ./task_template
+    build:
+      context: ./task_template
+      dockerfile: Dockerfile_tangram
     ports:
       - 0.0.0.0:8070:8061
       - 8062:8062
@@ -11,7 +13,7 @@ services:
       - SSL_CERTIFICATE=${SSL_CERTIFICATE}
       - SSL_KEY=${SSL_KEY}
   model_template:
-    build: ./model_with_image_template
+    build: ./model_template
     ports:
       - 0.0.0.0:8072:8061
     networks:

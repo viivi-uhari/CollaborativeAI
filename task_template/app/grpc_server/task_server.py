@@ -30,7 +30,9 @@ class TaskServicer(tasks_pb2_grpc.taskServiceServicer):
                 if self.queue_handler.start_queue.empty():
                     await asyncio.sleep(1)
                 else:
-                    job = self.queue_handler.start_queue.get(timeout=0.1)
+                    job = self.queue_handler.start_queue.get()
+                    logger.info("Starting task with data:")
+                    logger.info(job)
                     self.queue_handler.response_queues[job.sessionID] = queue.Queue()
                     yield job
 

@@ -74,7 +74,15 @@ class Tangram(Task):
         """
         system_prompt = self.get_system_prompt(request.objective)
         # This could include an image, but for this task, we currently don't supply one
-        return TaskRequest(text=request.text, system=system_prompt, image=request.image)
+        if request.text == None:
+            # Just indicate that it's the AI's turn, TaskRequest has to have non empty Text.
+            return TaskRequest(
+                text="Your turn", system=system_prompt, image=request.image
+            )
+        else:
+            return TaskRequest(
+                text=request.text, system=system_prompt, image=request.image
+            )
 
     def get_requirements(self) -> TaskRequirements:
         return TaskRequirements(needs_text=True, needs_image=True)

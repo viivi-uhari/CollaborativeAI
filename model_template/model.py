@@ -1,4 +1,4 @@
 from models import *
 import os
 
-ai_model = AaltoModel()
+ai_model = AaltoImageModel()

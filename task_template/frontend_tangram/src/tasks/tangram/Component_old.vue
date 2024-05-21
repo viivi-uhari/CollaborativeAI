@@ -18,7 +18,7 @@
   <InputField
     v-model:inputText="submissionText"
     :isLoading="false"
-    :allowText="true"
+    :allowText="false"
     @submit="fetchData"
   />
 </template>
@@ -103,7 +103,6 @@ export default {
         console.log('Emitting data')
         this.$emit('submit', submissionData)
         this.tangramMessage = null
-        this.submissionText = ''
       }
     },
     updateDataCallback(dataCallBack: Function) {
@@ -168,15 +167,11 @@ export default {
         return
       }
       // Wait till the element got actually updated.
-      await nextTick()      
+      await nextTick()
+      console.log('Got new data! Trying to submit')
+      console.log(newValue)
       try {
-        const displayData = {} as DisplayMessage
-        displayData.containsImage = false
-        displayData.message = newValue.data.tangram
-        displayData.role = 'AI'
-        displayData.handled = true
-        this.aiMessage = displayData
-        this.$emit('updateHistory', this.aiMessage)
+        JSON.parse(newValue)
       } catch {
         // This will error in the Godot game and not be processed correctly.
         const displayData = {} as DisplayMessage
@@ -187,7 +182,17 @@ export default {
         this.aiMessage = displayData
         this.$emit('updateHistory', this.aiMessage)
         return
-      }      
+      }
+      const displayData = {} as DisplayMessage
+      displayData.containsImage = true
+      displayData.message = newValue.data.message
+      displayData.role = 'AI'
+      displayData.handled = false
+      this.aiMessage = displayData
+      if (this.setData != null) {
+        this.setData(newValue.data.tangram)
+        // this will trigger an update call, which will submit the data to histroy
+      }
     }
   },
   mounted() {
