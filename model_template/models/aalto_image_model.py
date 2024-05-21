@@ -6,7 +6,7 @@ from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 import logging
 import model_pb2
 from data_models import *
-from basemodel import AIModel
+from models.basemodel import AIModel
 
 logger = logging.getLogger("app")
 
@@ -21,7 +21,7 @@ model_definition.can_image = True
 model_definition.modelID = "GPT4_vision"
 
 
-class AaltoImageModel(BaseModel):
+class AaltoImageModel(AIModel):
     def get_model_definition(self) -> model_pb2.modelDefinition:
         return model_definition
 

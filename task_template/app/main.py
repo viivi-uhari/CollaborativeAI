@@ -10,13 +10,11 @@ import secrets
 import concurrent.futures
 
 # This will need to be adapted by the individual task!
-from tasks.task import ActiveTask
+from tasks.task import task as current_task
 
 # Set the logger config
 logging.config.fileConfig("logging.conf", disable_existing_loggers=False)
 
-
-current_task = ActiveTask()
 task_handler.set_Task(current_task)
 logger = logging.getLogger("app")
 # Router handling.

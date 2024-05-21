@@ -6,7 +6,7 @@ import model_pb2
 import model_pb2_grpc
 
 # import the function we made :
-from model import AIModel
+from model import ai_model
 import asyncio
 import queue
 from data_models import TaskInput
@@ -22,7 +22,7 @@ port = 8061
 
 # create a class to define the server functions, derived from
 class ModelServicer(model_pb2_grpc.ModelServicer):
-    def __init__(self, ai_model=AIModel(), testing=False):
+    def __init__(self, ai_model=ai_model, testing=False):
         self.start_queue = queue.Queue()
         self.result_queue = queue.Queue()
         self.ai_model = ai_model

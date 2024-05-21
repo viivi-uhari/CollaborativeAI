@@ -1,93 +1,10 @@
-import logging
-import tasks.tangram_models as tangram_models
-from typing import Any, List
-import json
-from tasks.task_interface import Task
-from models import (
-    TaskDataRequest,
-    TaskRequest,
-    TaskDataResponse,
-    ModelResponse,
-    TaskRequirements,
-)
+import os
 
-logger = logging.getLogger(__name__)
+# define the Task
+from task_examples import poetry, tangram
 
 
-class ActiveTask(Task):
-
-    def convert_task_data_to_tangram_data(
-        self, tangram_data: Any
-    ) -> List[tangram_models.Piece]:
-        logger.info(tangram_data)
-        pieces = []
-        for name in tangram_data:
-            position_values = tangram_data[name]
-            xy_values = position_values[0]
-            x = int(xy_values.split(",")[0].replace("(", ""))
-            y = int(xy_values.split(",")[1].replace(")", ""))
-            position = tangram_models.Position(x=x, y=y, rotation=position_values[1])
-            piece = tangram_models.Piece(name=name, position=position)
-            pieces.append(piece)
-        return pieces
-
-    def process_tangram_data(self, pieces: List[tangram_models.Piece]):
-        prompt = "Here are the current positions and rotations of the pieces:\n"
-        for piece in pieces:
-            prompt += f"{piece.name}: {piece.position.x}, {piece.position.y}, {piece.position.rotation}\n"
-        return prompt
-
-    def convert_model_response(self, response: Any) -> tangram_models.Piece:
-        try:
-            element = json.loads(response)
-            name, position_values = list(element.items())[0]
-            position = tangram_models.Position(
-                x=position_values[0], y=position_values[1], rotation=position_values[2]
-            )
-            piece = tangram_models.Piece(name=name, position=position)
-            return piece
-        except:
-            logger.error("Error converting model response to Piece")
-            return None
-
-    def get_system_prompt(self, objective: str, hasImage: bool = False) -> str:
-        """Generate response endpoint:
-        generate the response based on given prompt and store the conversation
-        in the history of the session (based on the session_id cookie)
-        """
-
-        system_prompt = f"""Your are working with a user to solve some task with a tangram puzzle. 
-            The stated task is : {objective}
-            You will be given central points for the objects of the tangram puzzle.         
-            The corners of the objects are as follows (relative to their central points):
-            1. Big Triangle 1: (-85,-85), (-85,85), (95,95)
-            2. Big Triangle 2: (-96,-96),(-96,85),(85,85)
-            3. Medium Triangle: (0,0), (0,128), (128,128)
-            4. Small Triangle 1: (-45,-45),(-45,45),(45,45)
-            5. Small Triangle 2: (-45,-45),(-45,45),(45,45)
-            6. Square: (-45,-45), (-45,45), (45,45), (45,-45)
-            7. Parallelogram: (-40,-24), (88,-24), (24, 40), (-104,40)
-            The information you will get, are the central points along with a rotation (in degrees) as follows:
-            [4,5,45], where 4 is the x-coordinate, 5 is the y-coordinate and 45 is the rotation.
-            You should only modify one piece in each of your turns. A move can consist of both roatting and movig the piece.
-            Your answer should be brief and state the position and rotation of the piece you want to move.
-            In addition to the positions, you will also get an image of the current state of the tangram puzzle.
-            """
-        return system_prompt
-
-    def process_model_answer(self, answer: ModelResponse) -> TaskDataResponse:
-        # Again, we ignore the potential image here...
-        return TaskDataResponse(text=answer.text)
-
-    def generate_model_request(self, request: TaskDataRequest) -> TaskRequest:
-        """Generate prompt endpoint:
-        process pieces' data and plug them into the prompt
-        """
-        pieces = self.convert_task_data_to_tangram_data(request.inputData)
-        prompt = self.process_tangram_data(pieces)
-        system_prompt = self.get_system_prompt(request.objective)
-        # This could include an image, but for this task, we currently don't supply one
-        return TaskRequest(text=prompt, system=system_prompt, image=request.image)
-
-    def get_requirements(self) -> TaskRequirements:
-        return TaskRequirements(needs_text=True, needs_image=True)
+if os.environ.get("TASK_NAME") == "tangram":
+    task = tangram.Tangram()
+else:
+    task = poetry.Poetry()

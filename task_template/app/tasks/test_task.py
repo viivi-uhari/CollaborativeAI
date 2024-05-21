@@ -46,15 +46,13 @@ tangramData = """
   ]
 }
 """
-data = json.loads(tangramData)
+import os
 
-from tasks.task import ActiveTask
+data = json.loads(tangramData)
+os.environ["TASK_NAME"] = "tangram"
+from tasks.task import task as testTask
 from models import (
     TaskDataRequest,
-    TaskRequest,
-    TaskDataResponse,
-    ModelResponse,
-    TaskRequirements,
 )
 
 print(type(data))
@@ -62,6 +60,5 @@ print(data)
 request = TaskDataRequest(inputData=data, objective="A House")
 print(request.inputData)
 print(type(request.inputData))
-testTask = ActiveTask()
 modelRequest = testTask.generate_model_request(request)
 print(modelRequest)
