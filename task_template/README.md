@@ -114,9 +114,15 @@ The back-end provides two endpoints at the moment:
   This endpoint will respond with a `TaskDataResponse`, with the contents depending on the response of the model and the post-processing done in the `process_model_answer` function of the task.
 - `/api/v1/task/finish/` this endpoint indicates that one session has finished, and expects a `TaskMetrics` object that is passed on to the model handler, supplemented with the session ID. This will also clear the session association held by the back end, and the triggered model handler call will clear out the model associated with the current session.
 
-##### Front-end template
+### Front-end templates
 
-The template currently available on the front-end is a combination of a godot game (source obtainable on request) which incorporates interaction with the a vue framework.
+Two templates currently exist for the frontend which are roughly similar.
+One is for a poetry interaction, where the user and the LLM create a poem together.
+The other is for a tangram game, where the user can place pieces and the AI can inform them of where to put pieces.
+
+Th two different tasks have individual docker files (`Dockerfile_poetry` and `Dockerfile_tangram` respectively)
+For the tangram task, the template currently available on the front-end is a combination of a godot game (source obtainable on request) which incorporates interaction with the a vue framework.
+The poetry task is a simple chat like interface in vue.
 This can be replaced by anything which calls the above mentioned backend endpoints and provides an index.html.
 
 We provide an alternative docker file (Dockerfile_godot_only) that shows how to deploy the godot game directly instead of within the vue framework. Note, however, that this game does not currently talk with the back-end as it was intended to be used within the vue framework. But of course, it could be adapted such that it works with the backend.

@@ -15,6 +15,8 @@ Details are provided in the respective README files.
 
 To test things locally and see if they work, we provide a docker compose file along with a simple orchestrator.
 
+To run locally you will need docker installed!
+
 To run, you need docker installed.  
 You also need the following environment variables set:
 
@@ -23,8 +25,11 @@ You also need the following environment variables set:
 - `SSL_CERTIFICATE` - a valid openssl certificate
 
 The template model currently uses an Aalto specific endpoint for computation.
+You will likely need to change the model used in `model_template/model.py` to an OpenAI model and use that for testing.
 
-Run `docker compose up --build` (the `--build` flag makes sure that it uses the latest modifications you have done to the code.)
-The docker network contains all parts, including th orchestrator.
+We provide two tasks that can be used, either a poetry task or a tangram task. To run them call:
+`docker compose up -f docker-compose_tangram.yaml --build` for the tangram task and  
+`docker compose up -f docker-compose_poetry.yaml --build` for the poetry task respectively
+only one of the tasks can be run at the same time.
 
 After that, the frontend should be accessible via https://localhost:8062.
