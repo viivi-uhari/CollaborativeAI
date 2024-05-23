@@ -28,8 +28,8 @@ The template model currently uses an Aalto specific endpoint for computation.
 You will likely need to change the model used in `model_template/model.py` to an OpenAI model and use that for testing.
 
 We provide two tasks that can be used, either a poetry task or a tangram task. To run them call:
-`docker compose up -f docker-compose_tangram.yaml --build` for the tangram task and  
-`docker compose up -f docker-compose_poetry.yaml --build` for the poetry task respectively
+`docker compose -f docker-compose_tangram.yaml up --build` for the tangram task and  
+`docker compose -f docker-compose_poetry.yaml up --build` for the poetry task respectively
 only one of the tasks can be run at the same time.
 
 After that, the frontend should be accessible via https://localhost:8062.
