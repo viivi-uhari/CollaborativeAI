@@ -57,6 +57,22 @@ export default {
       this.$emit('submit', submissionData)
       this.poemText = ''
       this.submissionText = ''
+    },
+    async initilize() {
+      console.log('Initializing')
+      const submission = {} as SubmissionObject
+      submission.role = 'user'
+      submission.poemText = this.poemText
+      submission.commentText = this.submissionText
+      const displayData = {} as DisplayMessage
+
+      const submissionData: TaskSubmission = {
+        submission: submission,
+        displayData: displayData
+      }
+      this.$emit('submit', submissionData)
+      this.poemText = ''
+      this.submissionText = ''
     }
   },
   watch: {
@@ -75,6 +91,8 @@ export default {
       this.$emit('updateHistory', displayData)
     }
   },
-  mounted() {}
+  mounted() {
+    this.initilize()
+  }
 }
 </script>
