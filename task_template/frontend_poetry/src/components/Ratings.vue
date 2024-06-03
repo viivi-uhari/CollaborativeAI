@@ -1,9 +1,10 @@
 <template>
   <div class="flex flex-column align-items-center w-full">
-    <h2>Please rate your experience</h2>
+    <h2>Please rate your experience based on the below metric</h2>
+    <h3>"Our team collaborated well during this task"</h3>
     <div class="flex flex-row">
       <div
-        v-for="rating in [0, 1, 2, 3, 4]"
+        v-for="rating in [0, 1, 2, 3, 4, 5, 6]"
         :key="rating"
         class="m-2 cursor-pointer border-circle border-solid border-2 border-900 w-2rem h-2rem flex justify-content-center align-items-center"
         :class="`${colors[rating]}`"
@@ -22,7 +23,7 @@ export default {
   data() {
     return {
       currentRating: 0,
-      colors: ['bg-red-500', 'bg-orange-500', 'bg-yellow-500', 'bg-teal-500', 'bg-green-500']
+      colors: ['bg-red-700', 'bg-red-500', 'bg-orange-500', 'bg-yellow-500', 'bg-teal-500', 'bg-green-300', 'bg-green-500']
     }
   },
   emits: ['submitRating'],
