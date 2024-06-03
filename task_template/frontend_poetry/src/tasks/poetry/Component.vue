@@ -1,6 +1,6 @@
 <template>
   <!-- the iframe is allowed to be maximised-->
-  <div class="grid m-4">
+  <div v-if="!limitReached" class="grid m-4">
     <label for="poemText" class="col-2">Your Poem Line: </label>
     <InputText class="col-10" id="poemText" v-model="poemText" />
     <label for="comments" class="col-2">Additional comments: </label>
@@ -17,6 +17,10 @@ import InputText from 'primevue/inputtext'
 import Button from 'primevue/button'
 
 import type { TaskSubmission, DisplayMessage, SubmissionObject } from '@/stores/types'
+import { useTaskStore } from '@/stores'
+import { storeToRefs } from 'pinia'
+const taskStore = useTaskStore()
+const { currentInteraction, lastInteraction } = storeToRefs(taskStore)
 
 export default {
   name: 'PoetryComponent',
@@ -31,6 +35,13 @@ export default {
     return {
       submissionText: '',
       poemText: ''
+    }
+  },
+  computed: {
+    limitReached(): boolean {
+      console.log(currentInteraction.value.history.length)
+      console.log(currentInteraction.value.history)
+      return currentInteraction.value.history.length > 9;  //This is the number of lines for the poem
     }
   },
   emits: ['submit', 'updateHistory'],
