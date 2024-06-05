@@ -56,11 +56,12 @@ class Tangram(Task):
         in the history of the session (based on the session_id cookie)
         """
 
-        system_prompt = f"""Your are working with a user to solve some task with a tangram puzzle. 
+        system_prompt = f"""Your are working with a user to solve some task with a tangram puzzle that consists only of two pieces, a small triangle and a square. 
             The stated task is : {objective}
             In each round, you should select one piece and indicate where you want to place it. 
-            You will be provided an image with the current placement of all pieces, and potentiallly 
-            some comment by the user on their move.             
+            You will be provided an image with the current placement of all available pieces, no other pieces are available.py
+            You might also get some comment by the user on their move.
+            If you decide, that the task is fullfilled, tell the user.
             """
         return system_prompt
 

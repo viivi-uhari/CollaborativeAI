@@ -13,13 +13,12 @@
     msallowfullscreen="true"
     scrolling="no"
     webkitallowfullscreen="true"
-    @load="frameLoaded"
   />
   <InputField
     v-model:inputText="submissionText"
     :isLoading="false"
     :allowText="true"
-    @submit="fetchData"
+    @submit="submitData"
   />
 </template>
 
@@ -46,90 +45,47 @@ export default {
     const setData = ref<Function | null>(null)
     const getData = ref<Function | null>(null)
     const tangramData = ref<TangramGame | null>(null)
-    const tangramMessage = ref<string | null>(null)
     const submissionText = ref<string>('')
     return {
       iframe,
-      setData,
-      getData,
       tangramData,
       submissionText,
-      aiMessage,
-      tangramMessage
+      aiMessage
     }
   },
   methods: {
     /**
      * This method is used by the game to submit the data to the task
      */
-    async fetchData() {
-      console.log('Submitting data')
-      const temp = this.iframe?.contentWindow as any
-      console.log(temp.setData)
-      if (this.getData == null) {
-        console.error('Get data has not been set properly')
-        return
-      } else {
-        this.getData()
-      }
-    },
+
     async submitData() {
-      if (this.tangramMessage == null) {
-        console.error('No data to submit')
-        return
-      } else {
-        console.log('Calling submit Data!')
-        const submissionData = {} as TaskSubmission
-        const displayData = {} as DisplayMessage
-        displayData.containsImage = true
-        displayData.message = this.submissionText
-        displayData.role = 'user'
-        displayData.handled = false
-        // take a screenshot of the game
-        if (this.iframe && this.iframe.contentDocument) {
-          const canvas = await html2canvas(this.iframe.contentDocument.body)
-          const imgData = canvas.toDataURL()
-          displayData.imageURL = imgData
-        }
-        submissionData.displayData = displayData
-        const submission = {} as SubmissionObject
-        submission.role = 'user'
-        submission.data = {
-          message: this.submissionText,
-          image: displayData.imageURL,
-          tangramData: JSON.parse(this.tangramMessage)
-        }
-        submissionData.submission = submission
-        console.log('Emitting data')
-        this.$emit('submit', submissionData)
-        this.tangramMessage = null
-        this.submissionText = ''
+      console.log('Calling submit Data!')
+      const submissionData = {} as TaskSubmission
+      const displayData = {} as DisplayMessage
+      displayData.containsImage = true
+      displayData.message = this.submissionText
+      displayData.role = 'user'
+      displayData.handled = false
+      // take a screenshot of the game
+      if (this.iframe && this.iframe.contentDocument) {
+        const canvas = await html2canvas(this.iframe.contentDocument.body)
+        const imgData = canvas.toDataURL()
+        displayData.imageURL = imgData
       }
-    },
-    updateDataCallback(dataCallBack: Function) {
-      // Implement your logic here
-      console.log('Registering update data callback')
-      this.getData = dataCallBack
+      submissionData.displayData = displayData
+      const submission = {} as SubmissionObject
+      submission.role = 'user'
+      submission.data = {
+        message: this.submissionText,
+        image: displayData.imageURL,
+        tangramData: 'Irrelevant'
+      }
+      submissionData.submission = submission
+      console.log('Emitting data')
+      this.$emit('submit', submissionData)
+      this.submissionText = ''
     },
 
-    registerSetDataCallback(cf: Function) {
-      // Implement your logic here
-      console.log('Registering set data callback')
-      this.setData = cf
-    },
-    taskLoaded() {
-      // Implement your logic here
-      if (this.setData != null) {
-        if (this.inputData?.data) {
-          this.setData(this.inputData?.data.tangram as TangramGame)
-        }
-      }
-    },
-    setTangramData(data: any) {
-      console.log(data)
-      this.tangramMessage = data
-      this.submitData()
-    },
     // build the ai Message
     async buildHistory() {
       if (this.aiMessage == null) {
@@ -149,16 +105,6 @@ export default {
     },
     async frameLoaded() {
       console.log('Frame loaded')
-      if (this.iframe) {
-        const iframeContentNew = this.iframe.contentWindow as any
-        iframeContentNew.registerSetDataCallback = this.registerSetDataCallback.bind(this)
-        iframeContentNew.registerUpdateDataCallback = this.updateDataCallback.bind(this)
-        iframeContentNew.setData = this.setTangramData.bind(this)
-        iframeContentNew.taskLoaded = this.taskLoaded.bind(this)
-        iframeContentNew.dataUpdated = this.buildHistory.bind(this)
-        console.log('Functions registered')
-      }
-      console.log('frame loading done')
     }
   },
   watch: {
@@ -168,7 +114,7 @@ export default {
         return
       }
       // Wait till the element got actually updated.
-      await nextTick()      
+      await nextTick()
       try {
         const displayData = {} as DisplayMessage
         displayData.containsImage = false
@@ -187,32 +133,14 @@ export default {
         this.aiMessage = displayData
         this.$emit('updateHistory', this.aiMessage)
         return
-      }      
+      }
     }
   },
   mounted() {
     if (this.iframe) {
       console.log('There is an iframe')
       const iframeContent = this.iframe.contentWindow as any
-      if (iframeContent) {
-        console.log('There is some content in the iframe')
-        iframeContent.registerSetDataCallback = this.registerSetDataCallback.bind(this)
-        iframeContent.registerUpdateDataCallback = this.updateDataCallback.bind(this)
-        iframeContent.setData = this.setTangramData.bind(this)
-        iframeContent.taskLoaded = this.taskLoaded.bind(this)
-        iframeContent.dataUpdated = this.buildHistory.bind(this)
-        console.log('Data on iframe set')
-      }
-      console.log(iframeContent.taskLoaded)
       this.iframe.src = '/godot_games/tangram/tangram.html'
-      const iframeContentNew = this.iframe.contentWindow as any
-      iframeContentNew.registerSetDataCallback = this.registerSetDataCallback.bind(this)
-      iframeContentNew.registerUpdateDataCallback = this.updateDataCallback.bind(this)
-      iframeContentNew.setData = this.setTangramData.bind(this)
-      iframeContentNew.taskLoaded = this.taskLoaded.bind(this)
-      iframeContentNew.dataUpdated = this.buildHistory.bind(this)
-      console.log(iframeContentNew)
-      console.log(iframeContent)
       nextTick()
       console.log(iframeContent.taskLoaded)
     }
