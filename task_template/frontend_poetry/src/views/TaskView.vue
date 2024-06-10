@@ -4,7 +4,7 @@
       <h1>{{ task.title }}</h1>
       <p>{{ task.description }}</p>
       <div v-if="currentInteraction.objective">
-        The current Objective is: {{ currentInteraction.objective }}
+        Our current THEME is: {{ currentInteraction.objective }}
       </div>
       <InputField
         v-else

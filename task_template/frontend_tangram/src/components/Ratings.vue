@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-column align-items-center w-full">
     <h2>Please rate your experience based on the below metric</h2>
-    <h3>"Our team collaborated well during this task"</h3>
+    <h3>"Me and the AI collaborated well in this task"</h3>
     <div class="flex flex-row">
       <div
         v-for="rating in [0, 1, 2, 3, 4, 5, 6]"

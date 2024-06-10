@@ -8,6 +8,10 @@
     <InputText id="comments" class="col-9" v-model="submissionText" />
     <Button class="col-1" label="Submit" @click="submitData" />
   </div>
+
+  <div v-else class="m-4">
+    <p>Thank you. Here is our final poem. Can you please rate it.</p>
+  </div>
 </template>
 
 <script lang="ts">
