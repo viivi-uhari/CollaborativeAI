@@ -1,30 +1,32 @@
 <template>
-  <div class="flex w-full pt-2 pb-2 pr-2 align-items-center" v-if="message.role === 'user'">
-    <Avatar :isGPT="false" :ID="userName"></Avatar>
-    <div class="flex textcontainer align-items-start input">
-      <img v-if="message.containsImage" width="1000" :src="message.imageURL" />
-      {{ currentContent }}
+  <div v-if="currentContent">
+    <div class="flex w-full pt-2 pb-2 pr-2 align-items-center" v-if="message.role === 'user'">
+      <Avatar :isGPT="false" :ID="userName"></Avatar>
+      <div class="flex textcontainer align-items-start input">
+        <img v-if="message.containsImage" width="1000" :src="message.imageURL" />
+        {{ currentContent }}
+      </div>
     </div>
-  </div>
-  <div
-    v-else-if="message.role != 'system'"
-    ref="messageContent"
-    class="flex gptmessage w-full pt-2 pb-2 pr-2 flex-column"
-  >
-    <div class="flex gptmessage w-full">
-      <div class="flex textcontainer align-items-center">
-        <div class="flex flex-column w-full align-items-start">
-          <div class="flex w-full flex-column">
-            <div class="flex w-full justify-content-end align-items-start">
-              <img v-if="message.containsImage" width="1000" :src="message.imageURL" />
-              <span>
-                {{ currentContent }}
-              </span>
+    <div
+      v-else-if="message.role != 'system'"
+      ref="messageContent"
+      class="flex gptmessage w-full pt-2 pb-2 pr-2 flex-column"
+    >
+      <div class="flex gptmessage w-full">
+        <Avatar :isGPT="true" :ID="modelName" />
+        <div class="flex textcontainer align-items-center">
+          <div class="flex flex-column w-full align-items-start">
+            <div class="flex w-full flex-column">
+              <div class="flex w-full align-items-start">
+                <img v-if="message.containsImage" width="1000" :src="message.imageURL" />
+                <span>
+                  {{ currentContent }}
+                </span>
+              </div>
             </div>
           </div>
         </div>
       </div>
-      <Avatar :isGPT="true" :ID="modelName" />
     </div>
   </div>
   <span class="flex flex-column overflow-x-hidden" v-if="isLoading">
