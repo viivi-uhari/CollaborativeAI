@@ -14,6 +14,7 @@
     scrolling="no"
     webkitallowfullscreen="true"
   />
+  <p>What is your instruction to your AI partner?</p>
   <InputField
     v-model:inputText="submissionText"
     :isLoading="false"

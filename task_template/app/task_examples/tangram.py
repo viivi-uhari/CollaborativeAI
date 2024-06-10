@@ -62,6 +62,7 @@ class Tangram(Task):
             You will be provided an image with the current placement of all available pieces, no other pieces are available.py
             You might also get some comment by the user on their move.
             If you decide, that the task is fullfilled, tell the user.
+            Be brief in your instruction. Instruct the user one step at a time - move one piece in one turn.
             """
         return system_prompt
 
