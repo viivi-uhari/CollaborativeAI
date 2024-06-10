@@ -29,7 +29,7 @@
           AI Calculating...
         </div>
         <Button v-if="!showRatings" @click="() => (showRatings = true)" label="Finish" />
-        <Ratings v-else />
+        <Ratings v-else @ratingsSubmitted="() => (showRatings = false)"/>
       </ScrollPanel>
     </div>
   </div>
