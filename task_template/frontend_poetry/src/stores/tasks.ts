@@ -12,10 +12,9 @@ export const useTaskStore = defineStore({
       id: 'poetry',
       title: 'Poetry Task',
       needsText: true,
-      description: `The objective of this task is to create a poem together with the AI. 
-                    The player and the AI take turns in writing lines of a poem.
-                    Please define what the poem you and the AI write will be about, and potentially give more 
-                    details on the type of poem you want to write.`
+      description: `Welcome to write poetry with AI! We will write a 9-line 
+                    poem together one turn at a time. To get started, write 
+                    the THEME of the poem.`
     } as Task,
     currentInteraction: (sessionStorage.getItem(interactionField)
       ? JSON.parse(sessionStorage.getItem(interactionField) as string)
