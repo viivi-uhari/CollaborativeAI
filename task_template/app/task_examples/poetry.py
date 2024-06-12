@@ -31,6 +31,7 @@ class Poetry(Task):
             The comment line can be empty
             Your answer should take the comment line and the poem line into consideration and consist and consist of the next line in the poem you want to create.
             Your anser should only be the poem line you created. Do not include the text '[POEM_LINE]' or '[COMMENT_LINE]' into your answer.
+            Your answer should not repeat what the user give, or what you have generated before
             """
         return system_prompt
 
