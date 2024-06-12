@@ -27,22 +27,20 @@ class OpenAIImageModel(AIModel):
 
     async def get_response(self, message: TaskInput) -> TaskOutput:
         model = ChatOpenAI(
-            model="gpt-4-turbo",
+            model="gpt-4o",
             max_tokens=4096,
         )
         if not message.image == None:
             final_request = HumanMessage(
                 content=[
                     {"type": "text", "text": message.text[-1].content},
-                    {"type": "image_url", "image_url": message.image},
+                    {"type": "image_url", "image_url": {"url": message.image}},
                 ]
             )
         else:
             final_request = HumanMessage(
                 content=[{"type": "text", "text": message.text[-1].content}]
             )
-        logger.info(final_request)
-        logger.info(message.text[-1].content)
         history_template = ChatPromptTemplate.from_messages(
             [
                 # replace single curly brackets by double, since otherwise they they are interpreted as variables, which they are not
