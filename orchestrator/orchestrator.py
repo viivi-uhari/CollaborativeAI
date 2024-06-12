@@ -20,7 +20,9 @@ model_port = 8061
 
 task_channel = grpc.insecure_channel(f"task_template:{task_channel_port}")
 model_channel = grpc.insecure_channel(f"model_template:{model_port}")
-model_handler_channel = grpc.insecure_channel(f"model_handler_template:{model_handler_port}")
+model_handler_channel = grpc.insecure_channel(
+    f"model_handler_template:{model_handler_port}"
+)
 
 
 task_stub = grpc_pb2.taskServiceStub(task_channel)
@@ -44,7 +46,6 @@ async def start_task(stub):
     tasks = stub.startTask(task_request)
     async for task in tasks:
         logger.info("Starting task with")
-        logger.info(task)
         model_handler_stub.startTask(task)
 
 
@@ -53,10 +54,8 @@ async def run_Task(stub):
     taskRequests = stub.runTask(task_request)
     async for taskRequest in taskRequests:
         logger.info("Running task with")
-        logger.info(taskRequest)
         model_request = model_handler_stub.sendToModel(taskRequest)
         logger.info("Sending to model")
-        logger.info(model_request)
         model_stub.predict(model_request)
 
 
@@ -65,7 +64,6 @@ async def finish_task(stub):
     finishTasks = stub.finishTask(task_request)
     async for finishRequest in finishTasks:
         logger.info("Finishing task with:")
-        logger.info(finishRequest)
         metrics = model_handler_stub.finishTask(finishRequest)
         model_stub.publishMetrics(metrics)
 
@@ -77,24 +75,25 @@ async def returnPrediction(stub):
     model_predictions = stub.sendPrediction(model_request)
     async for prediction in model_predictions:
         logger.info("Returning prediction:")
-        logger.info(prediction)
         prediction = model_handler_stub.returnToTask(prediction)
         task_stub.getModelResponse(prediction)
     logger.info("Finished looping")
 
 
-
 logger.info(task_receivers)
+
 
 async def main():
     async_task_channel = agrpc.insecure_channel(f"task_template:{task_channel_port}")
     async_model_channel = agrpc.insecure_channel(f"model_template:{model_port}")
-    async_model_handler_channel = agrpc.insecure_channel(f"model_handler_template:{model_handler_port}")
+    async_model_handler_channel = agrpc.insecure_channel(
+        f"model_handler_template:{model_handler_port}"
+    )
     async_task_stub = grpc_pb2.taskServiceStub(async_task_channel)
     async_model_stub = grpc_pb2.ModelStub(async_model_channel)
     ## When these all return, the servers are ready.
-    await async_task_channel.channel_ready() 
-    await async_model_channel.channel_ready() 
+    await async_task_channel.channel_ready()
+    await async_model_channel.channel_ready()
     await async_model_handler_channel.channel_ready()
     # At this point everything should be up.
     # We can now start the model handling
@@ -106,9 +105,6 @@ async def main():
         finish_task(async_task_stub),
         returnPrediction(async_model_stub),
     )
-
-
-
 
 
 asyncio.run(main())
