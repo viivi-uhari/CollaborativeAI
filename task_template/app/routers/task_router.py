@@ -105,7 +105,7 @@ async def clear_session(
     delete the session based on the session_id cookie when the user decides
     their task is done
     """
-    finishObj = {"sessionID": session.id, "metrics": request.metrics.json()}
+    finishObj = {"sessionID": session.id, "metrics": str(request.metrics)}
     queue_handler.finish_queue.put(finishObj)
     clear_session(request)
     return {"response": "session cleared"}

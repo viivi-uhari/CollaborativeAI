@@ -25,8 +25,8 @@
           :input-data="lastInteraction"
         ></TaskInterface>
         <div v-if="currentInteraction.isLoading" class="flex justify-center">
-          <ProgressSpinner v-if="currentInteraction.isLoading" />
           AI Calculating...
+          <ProgressSpinner v-if="currentInteraction.isLoading" />
         </div>
         <Button v-if="!showRatings" @click="() => (showRatings = true)" label="Finish" />
         <Ratings v-else @submitRating="submitRating" />
@@ -47,9 +47,10 @@ import { defineComponent } from 'vue'
 
 import { useTaskStore } from '@/stores'
 import { storeToRefs } from 'pinia'
-import { ref } from 'vue'
 import { useResizeObserver } from '@vueuse/core'
 import ProgressSpinner from 'primevue/progressspinner'
+
+import type { TaskSubmission, DisplayMessage, SubmissionObject } from '@/stores/types'
 
 export default defineComponent({
   name: 'TaskView',
@@ -85,7 +86,21 @@ export default defineComponent({
     finishedObjective() {
       this.taskStore.startTask()
       this.taskStore.setObjective(this.taskObjective)
-      console.log(this.currentInteraction)
+      const submission = {} as SubmissionObject
+      submission.role = 'user'
+      submission.poemText = ''
+      submission.commentText = 'You start'
+      const displayData = {} as DisplayMessage
+      displayData.role = 'user'
+      displayData.containsImage = false
+      displayData.message = ''
+      displayData.role = 'user'
+      displayData.handled = false
+      const start: TaskSubmission = {
+        submission: submission,
+        displayData: displayData
+      }
+      this.taskStore.submitUserInput(start)
     },
     updateHeights() {
       const area = this.$refs.displayArea as HTMLElement

@@ -27,10 +27,12 @@ export default {
       colors: ['bg-red-700', 'bg-red-500', 'bg-orange-500', 'bg-yellow-500', 'bg-teal-500', 'bg-green-300', 'bg-green-500']
     }
   },
+  emits: [ 'ratingsSubmitted'],
   methods: {
     setRating(rating) {
       this.currentRating = rating
       this.taskStore.finishTask(rating)
+      this.$emit("ratingsSubmitted")      
       this.$router.push({ name: 'task' })
     }
   },
