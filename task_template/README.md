@@ -52,7 +52,7 @@ service, if a new session was started etc..
 
 ## Implementation
 
-We provide a sample implementation of a Task Server in the `model_server.py` class.
+We provide a sample implementation of a Task Server in the `task_server.py` class.
 The `main.py` file further implements a FastAPI server which can serve a ready to serve front-end along with three end-points that can be used as
 a basis and implementation example for tasks and the communication logic.
 
