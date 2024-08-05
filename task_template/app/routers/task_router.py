@@ -59,6 +59,7 @@ task_handler = TaskRouter()
 
 from uuid import uuid4
 
+
 @task_router.post("/process")
 async def process_task_data(
     task_data: TaskDataRequest, session: SessionData = Depends(get_session)
@@ -68,7 +69,7 @@ async def process_task_data(
     """
     history = session.history
     sessionID = session.id
-    messageID = uuid4()
+    messageID = str(uuid4())
     task_props = task_handler.get_requirements()
     startRequest = grpc_models.modelRequirements()
     startRequest.sessionID = sessionID
@@ -91,8 +92,8 @@ async def process_task_data(
     logger.info("Submitted, awaiting response")
     # And wait for the response to arrive:
     while True:
-        answer = queue_handler.get_answer(sessionID, messageID) 
-        if  answer == None:
+        answer = queue_handler.get_answer(sessionID, messageID)
+        if answer == None:
             queue_handler.process_queue(sessionID)
             await asyncio.sleep(1)
         else:
