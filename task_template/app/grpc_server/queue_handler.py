@@ -1,5 +1,7 @@
 import queue
 
+import logging
+logger = logging.getLogger("app")
 
 class QueueHandler:
     def __init__(self):
@@ -13,7 +15,7 @@ class QueueHandler:
         self.responses[sessionID][messageID] = answer
 
     def get_answer(self, sessionID, messageID):
-        if not messageID in self.responses[sessionID]:
+        if not sessionID in self.responses or not messageID in self.responses[sessionID]:
             return None
         else:
             answer = self.responses[sessionID][messageID]
@@ -23,19 +25,22 @@ class QueueHandler:
         queue = self.get_response_queue(session_id)
         try:
             if not queue.empty():
-                response = queue.get()
+                response = queue.get(block = True, timeout= 3)
                 self.add_answer(session_id, response.messageID, response)
-        except:
+        except Exception as e:
             #TODO: Handle this properly with a lock on the queue....
-            print("Error processing queue, possibly got consumed by a different thread")
+            logger.error(e)
+            logger.error("Error processing queue, possibly got consumed by a different thread")
         
     def add_response_queue(self, sessionID):
         if sessionID not in self.response_queues:
             self.response_queues[sessionID] = queue.Queue()
             self.responses[sessionID] = {}
+
     def get_response_queue(self, sessionID) -> queue.Queue:
         if sessionID not in self.response_queues:
             self.response_queues[sessionID] = queue.Queue()
+            self.responses[sessionID] = {}
         return self.response_queues[sessionID]
 
     def remove_response_queue(self, sessionID):

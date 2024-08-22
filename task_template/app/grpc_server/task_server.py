@@ -33,7 +33,7 @@ class TaskServicer(tasks_pb2_grpc.taskServiceServicer):
                     job = self.queue_handler.start_queue.get()
                     logger.info("Starting task with data:")
                     logger.info(job)
-                    self.queue_handler.response_queues[job.sessionID] = queue.Queue()
+                    self.queue_handler.add_response_queue(job.sessionID)                    
                     yield job
 
             except Exception as e:
@@ -86,7 +86,7 @@ class TaskServicer(tasks_pb2_grpc.taskServiceServicer):
     def getModelResponse(self, request, context):
         logger.info("Received response from model")
         if request.sessionID in self.queue_handler.response_queues:
-            current_queue = self.queue_handler.response_queues[request.sessionID]
+            current_queue = self.queue_handler.get_response_queue(request.sessionID)
             current_queue.put(request)
         else:
             logging.error(
