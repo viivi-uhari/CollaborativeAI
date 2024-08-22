@@ -6,7 +6,6 @@ import random
 # import the generated classes :
 import model_handler_pb2
 import model_handler_pb2_grpc
-
 port = 8061
 
 
@@ -27,7 +26,6 @@ class ModelHandler(model_handler_pb2_grpc.ModelHandlerServicer):
             "needs_image": request.needs_image,
             "sessionID": request.sessionID,
         }
-
         # Scan in the model list for the suitable model
         for model in self.model_list:
             if modelRequirements["needs_text"] and modelRequirements["needs_image"]:
@@ -39,7 +37,6 @@ class ModelHandler(model_handler_pb2_grpc.ModelHandlerServicer):
             elif modelRequirements["needs_image"]:
                 if model["can_image"] and not model["needs_text"]:
                     suitable_models_list.append(model)
-
         # choose a random model if there are multiple that sastisfy the requirements
         chosen_model = random.choice(suitable_models_list)
         print("The chosen model is")
@@ -73,10 +70,10 @@ class ModelHandler(model_handler_pb2_grpc.ModelHandlerServicer):
         )
 
     def returnToTask(self, request, context):
-        modelAnwer = request
+        modelAnswer = request
 
         return model_handler_pb2.modelAnswer(
-            answer=modelAnwer.answer, sessionID=modelAnwer.sessionID, messageID=modelAnswer.messageID,
+            answer=modelAnswer.answer, sessionID=modelAnswer.sessionID, messageID=modelAnswer.messageID,
         )
 
     def registerModel(self, request, context):
