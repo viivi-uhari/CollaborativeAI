@@ -71,7 +71,72 @@ a:active {
 }
 
 .card-list {
-  
+  margin: 10px;
+  padding: 5px;
+  margin-bottom: 50px;
+}
+
+.card-list-inner-border {
+  display: flex;
+  flex-direction: row;
+  border: 1px solid lightgrey;
+  border-radius: 20px;
+  padding: 10px;
+}
+
+.card-container {
+  width: 300px;
+  border-radius: 20px;
+  box-shadow: 0px 10px 8px #999;
+  display: flex;
+  flex-direction: column;
+  margin: 20px;
+  padding: 10px;
+  background-color: rgba(147, 147, 147, 0.784);
+  height: fit-content(100);
+}
+
+.card-img {
+  width: 100%;
+  border-radius: 20px 20px 0 0;
+}
+
+.card-name,
+.card-description {
+  margin: 10px 5%;
+  align-self: center; 
+}
+
+.card-link {
+  width: 90%;
+  border-radius: 5px;
+  padding: 10px 20px;
+  margin: 10px;
+}
+
+.card-btn-group {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 20px;
+}
+
+.code-btn,
+.link-btn {
+  display: inline-block;
+  padding: 10px 20px;
+  text-align: center;
+  border-radius: 5px;
+  font-size: 16px;
+  margin-top: 10px;
+}
+
+.link-btn:hover {
+  background-color: #5a6268;
+}
+
+.code-btn:hover {
+  background-color: #5a6268;
 }
 
 .footer-container {

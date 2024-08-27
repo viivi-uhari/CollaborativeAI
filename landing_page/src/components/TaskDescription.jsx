@@ -8,8 +8,9 @@ const Rules = () => {
         <li>There are two input field: the first one is for adding a new poemline, the second one is for sending the model a comment</li>
         <li>The poem is finished when it reaches the 9-line limit</li>
       </ol> <br/>
-      <h2>🏆 Leaderboard </h2>
-      <p>We collect human votes to compute a leaderboard for LLMs</p>
+      <h2>🏆 Leaderboard </h2>
+      <p>We collect human votes to compute a leaderboard for LLMs</p> <br/>
+      <h2>📝 Task list</h2>
     </div>
   );
 };
