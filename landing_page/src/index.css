@@ -15,6 +15,7 @@ textarea {
 
 body {
   font-family: "Inter", sans-serif;
+  background-color: rgb(230, 230, 230);
 }
 
 a:link {
@@ -79,7 +80,7 @@ a:active {
 .card-list-inner-border {
   display: flex;
   flex-direction: row;
-  border: 1px solid lightgrey;
+  border: 1px solid rgb(166, 166, 166);
   border-radius: 20px;
   padding: 10px;
 }
@@ -92,8 +93,14 @@ a:active {
   flex-direction: column;
   margin: 20px;
   padding: 10px;
-  background-color: rgba(147, 147, 147, 0.784);
+  background-color: rgba(255, 255, 255, 0.784);
   height: fit-content(100);
+  border: 2px solid transparent;
+}
+
+.card-container:hover {
+  border: 2px solid blue;
+  transition: all ease-in-out 0.2s;
 }
 
 .card-img {
@@ -107,13 +114,6 @@ a:active {
   align-self: center; 
 }
 
-.card-link {
-  width: 90%;
-  border-radius: 5px;
-  padding: 10px 20px;
-  margin: 10px;
-}
-
 .card-btn-group {
   display: flex;
   flex-direction: row;
@@ -122,20 +122,40 @@ a:active {
 }
 
 .code-btn,
-.link-btn {
+.task-btn {
   display: inline-block;
   padding: 10px 20px;
   text-align: center;
   border-radius: 5px;
   font-size: 16px;
   margin-top: 10px;
+  transition: all ease-in-out 0.25s;
+  color: rgb(176, 124, 124);
+}
+.code-link-text,
+.task-link-text {
+  opacity: 0;
+  transition: all ease-in-out 0.25s;
+  visibility: hidden;
+  width: 100px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  transform: translateX(-25%);  
+  padding: 5px;
+  border-radius: 6px;
+  position: absolute;
+  margin: 2px
 }
 
-.link-btn:hover {
-  background-color: #5a6268;
+.code-btn:hover + .code-link-text,
+.task-btn:hover + .task-link-text{
+  visibility: visible;
+  opacity: 1;
 }
 
-.code-btn:hover {
+.code-btn:hover,
+.task-btn:hover {
   background-color: #5a6268;
 }
 
