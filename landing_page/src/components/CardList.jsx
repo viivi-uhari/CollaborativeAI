@@ -7,14 +7,14 @@ const CardList = () => {
       name: "Tangram task",
       description: "Make a tangram shape with the help of AI models",
       link: "./tg.png",
-      task_link: "#",
+      task_link: "https://202.61.249.214:31817/",
       code_link: "https://github.com/AaltoRSE/CollaborativeAI/tree/main/task_template/frontend_tangram"
     },
     {
       name: "Poetry task",
       description: "Choose a topic and collaborate with AI models to create a poem",
       link: "./pt.png",
-      task_link: "#",
+      task_link: "https://202.61.249.214:30396/",
       code_link: "https://github.com/AaltoRSE/CollaborativeAI/tree/main/task_template/frontend_poetry"
     },
     {
