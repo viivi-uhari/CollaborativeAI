@@ -8,7 +8,21 @@ const submitUserInput = (newUserMessage) => {
 }
 
 const finishTask = (rating) => {
-  console.log(`finish ${rating}`)
+  const ratingjson = {
+    metrics: {
+      rating: rating, 
+      task_name: "poetry_task"
+    }
+  }
+  console.log(ratingjson)
+  axios
+    .post(`/api/v1/task/finish`, ratingjson)
+    .then((response) => {
+      console.log(response)
+    })
+    .catch((error) => {
+      console.log(error)
+    })
 }
 
 export default { 
