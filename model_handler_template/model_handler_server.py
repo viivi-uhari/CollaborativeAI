@@ -37,7 +37,7 @@ class ModelHandler(model_handler_pb2_grpc.ModelHandlerServicer):
 
     def startTask(self, request, context):
         suitable_models_list = []
-
+        
         modelRequirements = {
             "needs_text": request.needs_text,
             "needs_image": request.needs_image,
@@ -67,11 +67,11 @@ class ModelHandler(model_handler_pb2_grpc.ModelHandlerServicer):
     def finishTask(self, request, context):
         taskMetrics = request
         modelID = self.assignment_list[taskMetrics.sessionID]
-
+        
         #Metrics
         metrics = taskMetrics.metrics
         parsedMetrics = json.loads(metrics.replace("\'", "\""))
-
+        
         rating = parsedMetrics["rating"]
         task_name = parsedMetrics["task_name"]
 
@@ -90,7 +90,7 @@ class ModelHandler(model_handler_pb2_grpc.ModelHandlerServicer):
         
         # Break the model assignment after sending the metrics
         del self.assignment_list[taskMetrics.sessionID]
-
+        
         return model_handler_pb2.metricsJson(
             metrics=taskMetrics.metrics, modelID=modelID
         )
