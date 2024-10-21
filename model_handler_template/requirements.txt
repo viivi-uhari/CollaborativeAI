@@ -5,3 +5,6 @@ protobuf
 pydantic
 langchain
 langchain-openai
+pymongo
+datetime
+pytz

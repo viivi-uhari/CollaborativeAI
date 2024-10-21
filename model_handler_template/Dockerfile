@@ -4,8 +4,7 @@ FROM python:3.9
 WORKDIR /usr/project
 
 
-RUN apt-get update -y 
-RUN apt-get install -y python3-pip python3-dev
+RUN apt-get update -y && apt-get install -y python3-pip python3-dev ca-certificates
 RUN pip3 install --upgrade pip
 # Copy the requirements over to build the virtual environment
 COPY ./requirements.txt .

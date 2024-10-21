@@ -103,8 +103,8 @@ async def process_task_data(
 
 
 @task_router.post("/finish")
-async def clear_session(
-    request: TaskMetrics, session: SessionData = Depends(get_session)
+async def finish(
+    source_request: Request, request: TaskMetrics, session: SessionData = Depends(get_session)
 ):
     """Finish task endpoint:
     delete the session based on the session_id cookie when the user decides
@@ -112,5 +112,5 @@ async def clear_session(
     """
     finishObj = {"sessionID": session.id, "metrics": str(request.metrics)}
     queue_handler.finish_queue.put(finishObj)
-    clear_session(request)
+    clear_session(source_request)
     return {"response": "session cleared"}
