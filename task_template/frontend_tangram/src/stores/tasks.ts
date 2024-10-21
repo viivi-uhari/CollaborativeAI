@@ -103,7 +103,12 @@ export const useTaskStore = defineStore({
      * Finish the task, resetting history and everything.
      */
     finishTask(rating: any) {
-      const ratingjson = { metrics: rating }
+      const ratingjson = {
+        metrics: {
+          rating: rating, 
+          task_name: "tangram_task"
+        }
+      }
       axios
         .post(`/api/v1/task/finish`, ratingjson)
         .then((response) => {
