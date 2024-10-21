@@ -66,7 +66,7 @@ task_handler = TaskRouter()
 from uuid import uuid4
 
 
-@task_router.post("/v1/chat/completions")
+@task_router.post("/completions")
 async def chat_completion_endpoint(
     task_data: OpenAIChatBaseModel, session: SessionData = Depends(get_session)
 ):
