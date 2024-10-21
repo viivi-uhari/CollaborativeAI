@@ -13,7 +13,7 @@ from models import (
 logger = logging.getLogger(__name__)
 
 
-class Poetry(Task):
+class OpenAITask(Task):
 
     def process_model_answer(self, answer: ModelResponse) -> TaskDataResponse:
         # Again, we ignore the potential image here...
