@@ -1,5 +1,4 @@
 import grpc.aio as grpc
-import 
 from concurrent import futures
 
 # import the generated classes :
@@ -118,9 +117,11 @@ class ModelServicer(model_pb2_grpc.ModelServicer):
     def registerModel(self, request, context):
         logger.info("Registering model")
         logger.info(request)
-        # Lets allow this for now. 
+        # Lets allow this for now.
         if self.called > 0:
-            logger.info("Called Register a second time. This might be intentional, but please check, whether this is ok.")
+            logger.info(
+                "Called Register a second time. This might be intentional, but please check, whether this is ok."
+            )
         #    context.set_code(grpc.StatusCode.OUT_OF_RANGE)
         self.called += 1
         return self.ai_model.get_model_definition()
