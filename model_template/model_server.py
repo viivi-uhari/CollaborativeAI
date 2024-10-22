@@ -1,4 +1,5 @@
 import grpc.aio as grpc
+import grpc as grpc_base
 from concurrent import futures
 
 # import the generated classes :
@@ -118,7 +119,7 @@ class ModelServicer(model_pb2_grpc.ModelServicer):
         logger.info("Registering model")
         logger.info(request)
         if self.called > 0:
-            context.set_code(grpc.StatusCode.OUT_OF_RANGE)
+            context.set_code(grpc_base.StatusCode.OUT_OF_RANGE)
         self.called += 1
         return self.ai_model.get_model_definition()
 
