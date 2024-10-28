@@ -1,5 +1,6 @@
 import grpc as grpc_base
 import grpc.aio as grpc
+import grpc as grpc_base
 from concurrent import futures
 
 # import the generated classes :
