@@ -1,12 +1,33 @@
 import grpc.aio as grpc
 from concurrent import futures
+import json
 import asyncio
 import random
+from database import AtlasClient
+import os
+from datetime import datetime
+from pytz import timezone
+import logging
+import logging.config
+
+logging.config.fileConfig("logging.conf", disable_existing_loggers=False)
+
+logger = logging.getLogger("app")
 
 # import the generated classes :
 import model_handler_pb2
 import model_handler_pb2_grpc
+
 port = 8061
+
+DB_NAME = "task_rating"
+COLLECTION_NAME = "informal"
+if os.environ.get("USE_ATLAS", "True") == "True":
+    atlas_client = AtlasClient(os.environ["ATLAS_URI"], DB_NAME)
+    rating_collection = atlas_client.get_collection(COLLECTION_NAME)
+    atlas_client.ping()
+
+print("Connected to Atlas instance! We are good to go!")
 
 
 class ModelHandler(model_handler_pb2_grpc.ModelHandlerServicer):
@@ -51,6 +72,28 @@ class ModelHandler(model_handler_pb2_grpc.ModelHandlerServicer):
         taskMetrics = request
         modelID = self.assignment_list[taskMetrics.sessionID]
 
+        # Metrics
+        metrics = taskMetrics.metrics
+        parsedMetrics = json.loads(metrics.replace("'", '"'))
+
+        rating = parsedMetrics["rating"]
+        task_name = parsedMetrics["task_name"]
+
+        # Time stamp
+        tz = timezone("Europe/Helsinki")
+        submitted_time = datetime.now(tz)
+
+        # Store the metrics to the db
+        new_metric = {
+            "task_name": task_name,
+            "model": modelID,
+            "timeStamp": submitted_time,
+            "rating": rating,
+        }
+
+        if os.environ.get("USE_ATLAS", "True") == "True":
+            rating_collection.insert_one(new_metric)
+
         # Break the model assignment after sending the metrics
         del self.assignment_list[taskMetrics.sessionID]
 
@@ -73,7 +116,9 @@ class ModelHandler(model_handler_pb2_grpc.ModelHandlerServicer):
         modelAnswer = request
 
         return model_handler_pb2.modelAnswer(
-            answer=modelAnswer.answer, sessionID=modelAnswer.sessionID, messageID=modelAnswer.messageID,
+            answer=modelAnswer.answer,
+            sessionID=modelAnswer.sessionID,
+            messageID=modelAnswer.messageID,
         )
 
     def registerModel(self, request, context):
