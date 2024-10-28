@@ -7,13 +7,15 @@
       <div v-if="currentInteraction.objective">
         The current Objective is: {{ currentInteraction.objective }}
       </div>
-      <InputField
-        v-else
-        v-model:inputText="taskObjective"
-        :isLoading="false"
-        :allowText="true"
-        @submit="finishedObjective()"
-      />
+      <div v-else>
+        Describe what should be built with the tangram pieces
+        <InputField
+          v-model:inputText="taskObjective"
+          :isLoading="false"
+          :allowText="true"
+          @submit="finishedObjective()"
+        />
+      </div>
     </div>
 
     <div v-if="currentInteraction.objective">
