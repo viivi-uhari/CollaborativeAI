@@ -1,20 +1,22 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import ConversationItem from "./ConversationItem";
 import taskService from '../services/task'
 import { lengthLimit } from '../utils/config';
 
-const ConversationDisplay = ({ toggleFinish, messages, addMessage }) => {
+const ConversationDisplay = ({ isDisabled, setIsDisabled, messages, addMessage }) => {
   // const [newMessage, setNewMessage] = useState("");
   const [newLine, setNewLine] = useState("");
   const [newComment, setNewComment] = useState("");
-  const [isFinishClicked, setIsFinishClicked] = useState(false);
-  const [isDisabled, setIsDisabled] = useState(false);
   const [theme, setTheme] = useState("");
   const [isLengthReached, setIsLengthReached] = useState(false);
+  const messagesRef = useRef(null);
 
   //Check if the length of the text has reached the line limit yet
   useEffect(() => {
     setIsLengthReached(messages.filter(msg => msg.text !== "" && msg.text !== null).length === lengthLimit)
+    if (messagesRef.current) {
+      messagesRef.current.scrollTop = messagesRef.current.scrollHeight;
+    }    
   }, [messages])
   
   function parsePoetryAndComment(input) {
@@ -61,7 +63,7 @@ function checkAndAddMessage(sender, text, comment, type) {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-
+    
     checkAndAddMessage("user", newLine, newComment,"dialogue");   
 
     if (isLengthReached) {
@@ -105,16 +107,12 @@ function checkAndAddMessage(sender, text, comment, type) {
       });
   };
 
-  const toggleFinishButton = () => {
-    toggleFinish();
-    setIsFinishClicked(!isFinishClicked);
-  }
 
   return (
     <div className="chat-space-wrapper">
       <h2>Discussion with AI</h2>
       <div className="chat-space">
-        <div>
+        <div className='theme-wrapper'>
           <form onSubmit={chooseTheme} className="theme-input">
             <input 
                   type="text" 
@@ -136,7 +134,7 @@ function checkAndAddMessage(sender, text, comment, type) {
             </button>
           </form>
         </div>
-        <div className="messages">
+        <div className="messages" ref={messagesRef}>
           {messages
             .filter(msg => msg.comment !== "" && msg.comment !== null)
             .map((msg, index) => (
@@ -156,38 +154,23 @@ function checkAndAddMessage(sender, text, comment, type) {
           <form onSubmit={handleSubmit}>
             <div className="input-form">  
               <textarea 
-                value={newLine}
-                disabled={isLengthReached}
-                className={isLengthReached ? "disabled" : ""}
-                onChange={(event) => setNewLine(event.target.value)}
-                placeholder="Add a line to the poem" 
-              />
-              <textarea 
                 value={newComment}
-                disabled={isLengthReached}
+                disabled={isLengthReached || !isDisabled}
                 className={isLengthReached ? "disabled" : ""}
                 onChange={(event) => setNewComment(event.target.value)} 
                 placeholder="Send a message to the AI" 
               />
             </div>
           </form>
-          <div className="button-group">
+          <div className="submit-button">
               <button type="submit" 
                 style={{
                   backgroundColor: "#4caf50"
                 }}
-                disabled={isLengthReached}
+                disabled={isLengthReached || !isDisabled}
                 className={isLengthReached ? "disabled" : ""}
                 onClick={handleSubmit}> 
-                Submit
-              </button>
-              <button type="submit" className="finish-button" 
-                style={{
-                  backgroundColor: isFinishClicked ? "#f44336" : "#6eb4ff",
-                  "cursor": isFinishClicked ? "not-allowed" : "pointer"
-                }}
-                onClick={toggleFinishButton}> 
-                {isFinishClicked ? "Cancel" : "Finish"}
+                Send message
               </button>
             </div>
         </div>

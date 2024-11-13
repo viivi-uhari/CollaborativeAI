@@ -105,6 +105,9 @@ a:active {
   margin: 5px;
   border-radius: 20px;
   text-align: justify;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
 }
 
 .dialogue-poem {
@@ -152,12 +155,6 @@ a:active {
   border-radius: 5px;
 }
 
-.chat-space {
-  background-color: #fff;
-  display: flex;
-  flex-direction: column;
-}
-
 .theme-input {
   display: flex;
   flex-direction: row;
@@ -165,7 +162,7 @@ a:active {
 }
 
 .theme-input input {
-  width: 714px;
+  width: 100%;
   border-radius: 10px;
   margin: 5px;
   padding: 10px;
@@ -209,7 +206,19 @@ a:active {
   flex-direction: column;
 }
 
+.dialogue-content {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
 .form-wrapper {
+  display: flex;
+  align-items: flex-start;
+}
+
+.form-wrapper-add-line {
   display: flex;
   align-items: flex-start;
 }
@@ -217,21 +226,59 @@ a:active {
 .input-form textarea {
   flex-grow: 1;
   margin: 5px;
+  width: 100%;
+  min-width: 500px;
 }
 
-.button-group {
-  display: flex;
-  flex-direction: row;
+.submit-button {
   margin: 5px;
-  height: 120px;
+  height: 100%;
+  width: 100%;
 }
 
-.button-group button {
+.submit-button button {
   margin-left: 5px;
   padding: 5px;
   height: 100%;
   border-radius: 10px;
-  width: 70px;
+  width: 100%;
+}
+
+.line-input {
+  display: flex;
+  flex-direction: row;
+  align-self: center;
+}
+
+.line-input input {
+  width: 100%;
+  border-radius: 10px;
+  margin: 5px;
+  padding: 10px;
+  overflow-y: auto;
+}
+
+.theme-input button {
+  border-radius: 10px;
+  margin: 5px;
+  padding: 5px;
+}
+
+
+.finish-btn-wrapper {
+  margin: 10px;
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+}
+
+.finish-btn {
+  margin-left: 5px;
+  font-size: larger;
+  padding: 5px;
+  height: 75px;
+  border-radius: 10px;
+  width: 150px;
 }
 
 .input-form input {

@@ -32,8 +32,8 @@ const FeedbackForm = ({ }) => {
       </div>
       {ratingSubmitted && 
         <div className="after-rating-submitted">
-          <h4>Thank you! The model that you worked with was XXX.</h4>
-          <button type="submit" className="reset-button" onClick={() => window.location.reload()}> Reset </button>
+          <h4>Thank you! The model that you worked with was GPT-4o.</h4>
+          <button type="submit" className="reset-button" onClick={() => window.location.reload()}> Redo the task </button>
         </div>
       }
     </div>

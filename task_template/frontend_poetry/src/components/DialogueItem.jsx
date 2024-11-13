@@ -35,7 +35,9 @@ const DialogueItem = ({ idx, message, handleEditMessage, style }) => {
           <button type="submit" disabled={!editedMessage.trim()}> Save </button>
         </form>
       ) : (
-        <div className={`${style} ${messageClass}`} onClick={handleEditClick}>{message.text} <br/> </div>
+        <div className={`${style} ${messageClass}`} style={{cursor: "alias"}} onClick={handleEditClick}>
+          {message.text} <br/> 
+        </div>
       )}
     </>
   );

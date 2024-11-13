@@ -2,7 +2,6 @@
   <div class="flex flex-column align-content-between h-screen">
     <div class="taskview-header">
       <Header />
-      <h1>{{ task.title }}</h1>
       <TaskDescription />
       <div v-if="currentInteraction.objective">
         The current Objective is: {{ currentInteraction.objective }}
