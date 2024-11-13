@@ -25,14 +25,14 @@ class Poetry(Task):
             The details of the poem are as follows : {objective}
             Each User message will consist of the current status of the POEM and either a new line to the poem
             or a comment or question about the poem. 
-            Discussion messages will look like this:
+            Discussion messages (comments or questions) will look like this:
             POEM : [ "This is Line one of the poem", "Line two follows in a run", "Line three is a bun" ]
             COMMENT : "I like the poem so far, it depicts a beautiful picture"
             New line messages will look like this:
             POEM : [ "This is Line one of the poem", "Line two follows in a run", "Line three is a bun" ]
             NEWLINE : "This line is for fun"
             When the user submits a new line message, you should also return a new line.
-            When the user submits a comment message, you should act as a helpful assistant in answering to the comment or question.
+            When the user submits a discussion message, you should act as a helpful assistant in answering to the comment or question.
             """
         return system_prompt
 
