@@ -22,7 +22,7 @@ port = 8061
 
 DB_NAME = "task_rating"
 COLLECTION_NAME = "informal"
-if os.environ.get("USE_ATLAS", "True") == "True":
+if not os.environ.get("ATLAS_URI", None) == None:
     atlas_client = AtlasClient(os.environ["ATLAS_URI"], DB_NAME)
     rating_collection = atlas_client.get_collection(COLLECTION_NAME)
     atlas_client.ping()
@@ -91,7 +91,7 @@ class ModelHandler(model_handler_pb2_grpc.ModelHandlerServicer):
             "rating": rating,
         }
 
-        if os.environ.get("USE_ATLAS", "True") == "True":
+        if not os.environ.get("ATLAS_URI", None) == None:
             rating_collection.insert_one(new_metric)
 
         # Break the model assignment after sending the metrics
