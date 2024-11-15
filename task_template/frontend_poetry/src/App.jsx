@@ -5,7 +5,6 @@ import TaskDescription from "./components/TaskDescription";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import FeedbackForm from "./components/FeedbackForm";
-import TutorialPopUp from "./components/TutorialPopUp"
 import "./index.css";
 
 const App = () => {

@@ -7,6 +7,8 @@ const ConversationDisplay = ({ theme, setTheme, isDisabled, setIsDisabled, messa
   // const [newMessage, setNewMessage] = useState("");
   const [newComment, setNewComment] = useState("");
   const [isLengthReached, setIsLengthReached] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
   const messagesRef = useRef(null);
 
   //Check if the length of the text has reached the line limit yet
@@ -61,7 +63,10 @@ function checkAndAddMessage(sender, text, comment, type) {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    
+    if (!newComment.trim()) {
+      return;
+    }
+    setIsLoading(true);
     checkAndAddMessage("user", null, newComment,"dialogue");   
 
     if (isLengthReached) {
@@ -80,11 +85,12 @@ function checkAndAddMessage(sender, text, comment, type) {
         .then((returnedResponse) => {
           let parsed = parsePoetryAndComment(returnedResponse.text)
           checkAndAddMessage("ai", parsed.poetryLine, parsed.comment,"dialogue")
+          setIsLoading(false)
         })
         .catch((error) => {
           console.log(error)
         });
-        setNewComment("");
+    setNewComment("");
   };
 
   const chooseTheme = (event) => {
@@ -149,6 +155,7 @@ function checkAndAddMessage(sender, text, comment, type) {
             ))
           }
         </div>
+        {isLoading && <div>Waiting for response...</div>} 
         {isLengthReached && 
         <span 
           style={{
@@ -161,7 +168,7 @@ function checkAndAddMessage(sender, text, comment, type) {
           <form onSubmit={handleSubmit} className="input-form">
             <input 
               value={newComment}
-              disabled={isLengthReached || !isDisabled}
+              disabled={isLengthReached || !isDisabled || isLoading}
               className={isLengthReached ? "disabled" : ""}
               onChange={(event) => setNewComment(event.target.value)} 
               placeholder="Send a message to the AI" 
@@ -170,7 +177,7 @@ function checkAndAddMessage(sender, text, comment, type) {
               style={{
                 backgroundColor: "#4caf50"
               }}
-              disabled={isLengthReached || !isDisabled}
+              disabled={isLengthReached || !isDisabled || isLoading}
               className={isLengthReached ? "disabled" : ""}
               onClick={handleSubmit}> 
               Send message

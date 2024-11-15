@@ -8,6 +8,7 @@ const Dialogue = ({ theme, isDisabled, messages, setMessages, addMessage }) => {
   const [newLine, setNewLine] = useState("");
   const [isLengthReached, setIsLengthReached] = useState(false);
   const messagesRef = useRef(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     setIsLengthReached(messages.filter(msg => msg.text !== "" && msg.text !== null).length === lengthLimit)
@@ -75,10 +76,12 @@ const Dialogue = ({ theme, isDisabled, messages, setMessages, addMessage }) => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    
+    if (!newLine.trim()) {
+      return;
+    }
+    setIsLoading(true);
     checkAndAddMessage("user", newLine, null,"dialogue");
-    console.log(messages.filter(msg => msg.text !== "" && msg.text !== null).length)
-    console.log(messages.filter(msg => msg.text !== "" && msg.text !== null).length < lengthLimit)
+    
     if (messages.filter(msg => msg.text !== "" && msg.text !== null).length < lengthLimit - 1) {
       taskService
           .submitUserInput({
@@ -92,12 +95,13 @@ const Dialogue = ({ theme, isDisabled, messages, setMessages, addMessage }) => {
           .then((returnedResponse) => {
             let parsed = parsePoetryAndComment(returnedResponse.text)
             checkAndAddMessage("ai", parsed.poetryLine, parsed.comment,"dialogue")
+            setIsLoading(false)
           })
           .catch((error) => {
             console.log(error)
           });
-          setNewLine("");
-      }
+      setNewLine("");
+    }
   };
 
   return (
@@ -118,6 +122,7 @@ const Dialogue = ({ theme, isDisabled, messages, setMessages, addMessage }) => {
               />
             ))}
         </div>
+        {isLoading && <div>Waiting for response...</div>} 
         {isLengthReached && 
         <span 
           style={{
@@ -130,7 +135,7 @@ const Dialogue = ({ theme, isDisabled, messages, setMessages, addMessage }) => {
           <form onSubmit={handleSubmit} className="input-form">
             <input 
               value={newLine}
-              disabled={isLengthReached || !isDisabled}
+              disabled={isLengthReached || !isDisabled || isLoading}
               className={isLengthReached ? "disabled" : ""}
               onChange={(event) => setNewLine(event.target.value)}
               placeholder="Add a line to the poem" 
@@ -139,7 +144,7 @@ const Dialogue = ({ theme, isDisabled, messages, setMessages, addMessage }) => {
               style={{
                 backgroundColor: "#4caf50"
               }}
-              disabled={isLengthReached || !isDisabled}
+              disabled={isLengthReached || !isDisabled || isLoading}
               className={isLengthReached ? "disabled" : ""}
               onClick={handleSubmit}> 
               Add new line
