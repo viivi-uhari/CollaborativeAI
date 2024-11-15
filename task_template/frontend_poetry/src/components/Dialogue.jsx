@@ -1,11 +1,11 @@
 import { useState, useEffect, useRef } from 'react';
 import DialogueItem from "./DialogueItem";
 import { dialogueType } from "../utils/config";
+import taskService from '../services/task'
 import { lengthLimit } from '../utils/config';
 
-const Dialogue = ({ isDisabled, messages, setMessages, addMessage }) => {
+const Dialogue = ({ theme, isDisabled, messages, setMessages, addMessage }) => {
   const [newLine, setNewLine] = useState("");
-  const [newComment, setNewComment] = useState("");
   const [isLengthReached, setIsLengthReached] = useState(false);
   const messagesRef = useRef(null);
 
@@ -57,7 +57,7 @@ const Dialogue = ({ isDisabled, messages, setMessages, addMessage }) => {
         comment = input;
     }
 
-    console.log("Parsed: ", poetryLine, ", ", comment)
+    // console.log("Parsed: ", poetryLine, ", ", comment)
 
     return { poetryLine, comment };
   }
@@ -76,23 +76,28 @@ const Dialogue = ({ isDisabled, messages, setMessages, addMessage }) => {
   const handleSubmit = (event) => {
     event.preventDefault();
     
-    checkAndAddMessage("user", newLine, newComment,"dialogue");   
-
-    if (isLengthReached) {
-      newComment += " The poem is finished. Do NOT add a new poetry line.";
-    }
-
-    taskService
-        .submitUserInput({inputData: { commentData: newComment}, text: newLine, ojective: theme})
-        .then((returnedResponse) => {
-          let parsed = parsePoetryAndComment(returnedResponse.text)
-          checkAndAddMessage("ai", parsed.poetryLine, parsed.comment,"dialogue")
-        })
-        .catch((error) => {
-          console.log(error)
-        });
-        setNewLine("");
-        setNewComment("");
+    checkAndAddMessage("user", newLine, null,"dialogue");
+    console.log(messages.filter(msg => msg.text !== "" && msg.text !== null).length)
+    console.log(messages.filter(msg => msg.text !== "" && msg.text !== null).length < lengthLimit)
+    if (messages.filter(msg => msg.text !== "" && msg.text !== null).length < lengthLimit - 1) {
+      taskService
+          .submitUserInput({
+            inputData: { 
+              comment: false,
+              poem: messages
+            }, 
+            text: newLine, 
+            ojective: theme
+          })
+          .then((returnedResponse) => {
+            let parsed = parsePoetryAndComment(returnedResponse.text)
+            checkAndAddMessage("ai", parsed.poetryLine, parsed.comment,"dialogue")
+          })
+          .catch((error) => {
+            console.log(error)
+          });
+          setNewLine("");
+      }
   };
 
   return (
@@ -113,10 +118,18 @@ const Dialogue = ({ isDisabled, messages, setMessages, addMessage }) => {
               />
             ))}
         </div>
+        {isLengthReached && 
+        <span 
+          style={{
+            "color" : "#FF0000"
+          }}>
+          Thank you. Here is our final poem. Please click Finish to rate it!
+        </span>
+        }
         <div className="form-wrapper">
           <form onSubmit={handleSubmit}>
             <div className="input-form">  
-              <textarea 
+              <input 
                 value={newLine}
                 disabled={isLengthReached || !isDisabled}
                 className={isLengthReached ? "disabled" : ""}

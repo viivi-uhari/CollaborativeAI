@@ -215,25 +215,33 @@ a:active {
 
 .form-wrapper {
   display: flex;
-  align-items: flex-start;
+  max-height: 70px;
+  align-content: center;
 }
 
 .form-wrapper-add-line {
   display: flex;
+  flex-grow: 1;
   align-items: flex-start;
+}
+
+.input-form {
+  flex-grow: 1;
 }
 
 .input-form textarea {
   flex-grow: 1;
   margin: 5px;
   width: 100%;
-  min-width: 500px;
+  min-width: 600px;
 }
 
 .submit-button {
   margin: 5px;
   height: 100%;
   width: 100%;
+  max-width: 200px;
+  align-self: center;
 }
 
 .submit-button button {
@@ -284,6 +292,8 @@ a:active {
 .input-form input {
   flex: 1;
   padding: 10px;
+  flex-grow: 1;
+  min-width: 700px;
   border: 1px solid #ccc;
   border-radius: 4px;
 }

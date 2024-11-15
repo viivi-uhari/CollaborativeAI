@@ -13,6 +13,7 @@ const App = () => {
   const [isFinished, setIsFinished] = useState(false);
   const [isFinishClicked, setIsFinishClicked] = useState(false);
   const [isDisabled, setIsDisabled] = useState(false);
+  const [theme, setTheme] = useState("");
 
   const addMessage = (message) => {
     setMessages(prevMessages => prevMessages.concat(message));
@@ -32,8 +33,8 @@ const App = () => {
       <Header />
       <TaskDescription />
       <div className="main-interaction">
-        <Dialogue isDisabled={isDisabled} messages={messages} setMessages={setMessages} addMessage={addMessage} />
-        <ConversationDisplay isDisabled={isDisabled} setIsDisabled={setIsDisabled} messages={messages} addMessage={addMessage} />
+        <Dialogue theme={theme} isDisabled={isDisabled} messages={messages} setMessages={setMessages} addMessage={addMessage} />
+        <ConversationDisplay theme={theme} setTheme={setTheme} isDisabled={isDisabled} setIsDisabled={setIsDisabled} messages={messages} addMessage={addMessage} />
       </div>
       <div className="finish-btn-wrapper">
         <button type="submit" className="finish-btn" 
