@@ -122,22 +122,22 @@ function checkAndAddMessage(sender, text, comment, type) {
         <div className='theme-wrapper'>
           <form onSubmit={chooseTheme} className="theme-input">
             <input 
-                  type="text" 
-                  disabled={isDisabled}
-                  placeholder="Set a theme for the poem"
-                  value={theme}
-                  className={isDisabled ? "disabled" : ""}
-                  onChange={(event) => setTheme(event.target.value)}
+              type="text" 
+              disabled={isDisabled}
+              placeholder="Set a theme for the poem"
+              value={theme}
+              className={isDisabled ? "disabled" : ""}
+              onChange={(event) => setTheme(event.target.value)}
             />
             <button 
-                type="button"
-                disabled={isDisabled}
-                className={isDisabled ? "disabled" : ""}
-                onClick={chooseTheme}
-                style={{
-                  backgroundColor: "#4caf50"
-                }}>
-                Submit 
+              type="button"
+              disabled={isDisabled}
+              className={isDisabled ? "disabled" : ""}
+              onClick={chooseTheme}
+              style={{
+                backgroundColor: "#4caf50"
+              }}>
+              Submit 
             </button>
           </form>
         </div>
@@ -158,28 +158,24 @@ function checkAndAddMessage(sender, text, comment, type) {
         </span>
         }
         <div className="form-wrapper">
-          <form onSubmit={handleSubmit}>
-            <div className="input-form">  
-              <input 
-                value={newComment}
-                disabled={isLengthReached || !isDisabled}
-                className={isLengthReached ? "disabled" : ""}
-                onChange={(event) => setNewComment(event.target.value)} 
-                placeholder="Send a message to the AI" 
-              />
-            </div>
+          <form onSubmit={handleSubmit} className="input-form">
+            <input 
+              value={newComment}
+              disabled={isLengthReached || !isDisabled}
+              className={isLengthReached ? "disabled" : ""}
+              onChange={(event) => setNewComment(event.target.value)} 
+              placeholder="Send a message to the AI" 
+            />
+            <button type="submit" 
+              style={{
+                backgroundColor: "#4caf50"
+              }}
+              disabled={isLengthReached || !isDisabled}
+              className={isLengthReached ? "disabled" : ""}
+              onClick={handleSubmit}> 
+              Send message
+            </button>
           </form>
-          <div className="submit-button">
-              <button type="submit" 
-                style={{
-                  backgroundColor: "#4caf50"
-                }}
-                disabled={isLengthReached || !isDisabled}
-                className={isLengthReached ? "disabled" : ""}
-                onClick={handleSubmit}> 
-                Send message
-              </button>
-          </div>
         </div>
       </div>
     </div>

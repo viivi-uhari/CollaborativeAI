@@ -3,6 +3,10 @@
   padding: 0px;
 }
 
+body,html {
+  overflow-x: hidden;
+}
+
 *:disabled {
   opacity: 1;
   cursor: not-allowed;
@@ -47,7 +51,7 @@ a:active {
   display: flex;
   justify-content: space-between; 
   align-items: center; 
-  height: 100px; 
+  height: 100%; 
   padding: 20px;
 }
 
@@ -73,6 +77,17 @@ a:active {
 .main-interaction {
   display: flex;
   padding: 20px;
+}
+
+@media (max-width: 600px) {
+  .main-interaction {
+    flex-direction: column;
+  }
+
+  .dialogue-wrapper, .chat-space-wrapper {
+    min-height: 500px;
+    max-height: 500px;
+  }
 }
 
 .dialogue-wrapper, .chat-space-wrapper {
@@ -170,9 +185,17 @@ a:active {
 }
 
 .theme-input button {
-  border-radius: 10px;
+  border-radius: 5px;
+  border: none;
   margin: 5px;
-  padding: 5px;
+  cursor: pointer;
+  color: white;
+  padding: 10px;
+}
+
+.theme-input button:disabled {
+  opacity: 1;
+  cursor: not-allowed;
 }
 
 .avatar {
@@ -213,20 +236,16 @@ a:active {
   flex-direction: column;
 }
 
-.form-wrapper {
+/* .form-wrapper {
   display: flex;
   max-height: 70px;
   align-content: center;
-}
-
-.form-wrapper-add-line {
-  display: flex;
-  flex-grow: 1;
-  align-items: flex-start;
-}
+} */
 
 .input-form {
-  flex-grow: 1;
+  display: flex;
+  flex-direction: row;
+  align-self: center;
 }
 
 .input-form textarea {
@@ -266,13 +285,6 @@ a:active {
   overflow-y: auto;
 }
 
-.theme-input button {
-  border-radius: 10px;
-  margin: 5px;
-  padding: 5px;
-}
-
-
 .finish-btn-wrapper {
   margin: 10px;
   padding: 10px;
@@ -293,7 +305,6 @@ a:active {
   flex: 1;
   padding: 10px;
   flex-grow: 1;
-  min-width: 700px;
   border: 1px solid #ccc;
   border-radius: 4px;
 }
@@ -302,10 +313,16 @@ a:active {
   padding: 10px;
   margin-left: 10px;
   border: none;
-  background-color: #007bff;
   color: white;
   border-radius: 4px;
   cursor: pointer;
+  border-radius: 5px;
+  height: 50px;
+}
+
+.input-form button:disabled {
+  opacity: 1;
+  cursor: not-allowed;
 }
 
 .message {
@@ -337,8 +354,7 @@ a:active {
   color: white;
   padding: 50px;
   display: flex;
-  justify-content: space-around;
-  align-items: flex-start;
+  justify-content: space-between;
 }
 
 .footer-container h2,
@@ -348,6 +364,11 @@ a:active {
 
 .footer-container h2 {
   font-size: 20px;
+}
+
+.footer-container img {
+  max-width: 100%;
+  height: auto;
 }
 
 .acknowledge-section,

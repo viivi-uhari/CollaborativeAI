@@ -19,12 +19,6 @@ const CardList = () => {
       code_link:
         "https://github.com/AaltoRSE/CollaborativeAI/tree/main/task_template/frontend_poetry",
     },
-    {
-      name: "Gesture task",
-      description: ["TBA"],
-      task_link: "#",
-      code_link: "#",
-    },
   ]);
 
   return (

@@ -127,29 +127,25 @@ const Dialogue = ({ theme, isDisabled, messages, setMessages, addMessage }) => {
         </span>
         }
         <div className="form-wrapper">
-          <form onSubmit={handleSubmit}>
-            <div className="input-form">  
-              <input 
-                value={newLine}
-                disabled={isLengthReached || !isDisabled}
-                className={isLengthReached ? "disabled" : ""}
-                onChange={(event) => setNewLine(event.target.value)}
-                placeholder="Add a line to the poem" 
-              />
-            </div>
+          <form onSubmit={handleSubmit} className="input-form">
+            <input 
+              value={newLine}
+              disabled={isLengthReached || !isDisabled}
+              className={isLengthReached ? "disabled" : ""}
+              onChange={(event) => setNewLine(event.target.value)}
+              placeholder="Add a line to the poem" 
+            />
+            <button type="submit" 
+              style={{
+                backgroundColor: "#4caf50"
+              }}
+              disabled={isLengthReached || !isDisabled}
+              className={isLengthReached ? "disabled" : ""}
+              onClick={handleSubmit}> 
+              Add new line
+            </button>
           </form>
-          <div className="submit-button">
-              <button type="submit" 
-                style={{
-                  backgroundColor: "#4caf50"
-                }}
-                disabled={isLengthReached || !isDisabled}
-                className={isLengthReached ? "disabled" : ""}
-                onClick={handleSubmit}> 
-                Add new line
-              </button>
-          </div>
-      </div>
+        </div>
       </div>
     </div>
   );
