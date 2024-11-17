@@ -5,6 +5,7 @@ import TaskDescription from "./components/TaskDescription";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import FeedbackForm from "./components/FeedbackForm";
+import TutorialPopUp from './components/TutorialPopUp';
 import "./index.css";
 
 const App = () => {
@@ -31,6 +32,7 @@ const App = () => {
     <>
       <Header />
       <TaskDescription />
+      <TutorialPopUp />
       <div className="main-interaction">
         <Dialogue theme={theme} isDisabled={isDisabled} messages={messages} setMessages={setMessages} addMessage={addMessage} />
         <ConversationDisplay theme={theme} setTheme={setTheme} isDisabled={isDisabled} setIsDisabled={setIsDisabled} messages={messages} addMessage={addMessage} />
