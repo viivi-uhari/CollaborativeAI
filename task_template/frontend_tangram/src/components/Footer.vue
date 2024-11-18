@@ -35,13 +35,17 @@ export default {
   color: white;
   padding: 50px;
   display: flex;
-  justify-content: space-around;
-  align-items: flex-start;
+  justify-content: space-between
 }
 
 .footer-container h2,
 .footer-container p {
   margin-bottom: 10px;
+}
+
+.footer-container img {
+  max-width: 100%;
+  height: auto;
 }
 
 .footer-container h2 {

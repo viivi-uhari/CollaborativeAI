@@ -56,6 +56,10 @@ export default {
       return { text: this.inputText } as SubmissionData
     },
     sendRequest(event: KeyboardEvent | MouseEvent) {
+      if (!this.inputText.trim()) {
+        alert("Please write a message before sending");
+        return;
+      }
       event.preventDefault()
       this.$emit('submit')
     },

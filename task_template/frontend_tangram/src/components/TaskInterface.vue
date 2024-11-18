@@ -9,7 +9,7 @@
         :isLoading="currentInteraction.isLoading"
       />
 
-      <div class="flex flex-column col-6">
+      <div class="flex flex-column col-6 border-1">
         <ScrollPanel ref="chatpanel" :style="{ height: scrollpaneMax + 'px' }">
           <ConversationDisplay :conversation="currentInteraction.history"> </ConversationDisplay>
           <div class="grid">

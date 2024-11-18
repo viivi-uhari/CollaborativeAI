@@ -27,8 +27,9 @@ export default {
   display: flex;
   justify-content: space-between; 
   align-items: center; 
-  height: 150px; 
+  height: 100%; 
   padding: 20px;
+  max-height: 200px;
 }
 
 .navbar {

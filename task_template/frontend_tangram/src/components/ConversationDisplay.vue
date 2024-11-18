@@ -58,5 +58,8 @@ const errored = computed(() => {
 .chat-container {
   width: 100%;
   padding: 3rem;
+  height: 500px;
+  overflow-y: scroll;
+  overflow-x: hidden;
 }
 </style>
