@@ -6,6 +6,7 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import FeedbackForm from "./components/FeedbackForm";
 import TutorialPopUp from './components/TutorialPopUp';
+import ThemeForm from './components/ThemeForm';
 import "./index.css";
 
 const App = () => {
@@ -14,6 +15,7 @@ const App = () => {
   const [isFinishClicked, setIsFinishClicked] = useState(false);
   const [isDisabled, setIsDisabled] = useState(false);
   const [theme, setTheme] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const addMessage = (message) => {
     setMessages(prevMessages => prevMessages.concat(message));
@@ -33,9 +35,10 @@ const App = () => {
       <Header />
       <TaskDescription />
       <TutorialPopUp />
+      <ThemeForm theme={theme} setTheme={setTheme} isDisabled={isDisabled} setIsDisabled={setIsDisabled} setIsLoading={setIsLoading} addMessage={addMessage}/>
       <div className="main-interaction">
-        <Dialogue theme={theme} isDisabled={isDisabled} messages={messages} setMessages={setMessages} addMessage={addMessage} />
-        <ConversationDisplay theme={theme} setTheme={setTheme} isDisabled={isDisabled} setIsDisabled={setIsDisabled} messages={messages} addMessage={addMessage} />
+        <Dialogue isLoading={isLoading} setIsLoading={setIsLoading} theme={theme} isDisabled={isDisabled} messages={messages} setMessages={setMessages} addMessage={addMessage} />
+        <ConversationDisplay isLoading={isLoading} setIsLoading={setIsLoading} theme={theme} isDisabled={isDisabled} messages={messages} addMessage={addMessage} />
       </div>
       <div className="finish-btn-wrapper">
         <button type="submit" className="finish-btn" 

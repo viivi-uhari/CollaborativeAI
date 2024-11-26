@@ -1,7 +1,18 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const TutorialPopUp = () => {
   const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    const handleClosePopUpKey = (event) => {
+      if (event.key === "Escape") {
+        setIsOpen(false)
+      }
+    }
+  
+    document.addEventListener("keydown", handleClosePopUpKey)
+    return () => document.removeEventListener("keydown", handleClosePopUpKey)
+  }, [])
 
   const togglePopUp = () => {
     setIsOpen(!isOpen)

@@ -4,11 +4,10 @@ import { dialogueType } from "../utils/config";
 import taskService from '../services/task'
 import { lengthLimit } from '../utils/config';
 
-const Dialogue = ({ theme, isDisabled, messages, setMessages, addMessage }) => {
+const Dialogue = ({ isLoading, setIsLoading, theme, isDisabled, messages, setMessages, addMessage }) => {
   const [newLine, setNewLine] = useState("");
   const [isLengthReached, setIsLengthReached] = useState(false);
   const messagesRef = useRef(null);
-  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     setIsLengthReached(messages.filter(msg => msg.text !== "" && msg.text !== null).length === lengthLimit)
@@ -128,7 +127,7 @@ const Dialogue = ({ theme, isDisabled, messages, setMessages, addMessage }) => {
           style={{
             "color" : "#FF0000"
           }}>
-          Thank you. Here is our final poem. Please click Finish to rate it!
+          Thank you. Here is our final poem. Please click "Rate task" to rate it!
         </span>
         }
         <div className="form-wrapper">

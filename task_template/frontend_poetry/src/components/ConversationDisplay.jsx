@@ -3,11 +3,10 @@ import ConversationItem from "./ConversationItem";
 import taskService from '../services/task'
 import { lengthLimit } from '../utils/config';
 
-const ConversationDisplay = ({ theme, setTheme, isDisabled, setIsDisabled, messages, addMessage }) => {
+const ConversationDisplay = ({ isLoading, setIsLoading, theme, isDisabled, messages, addMessage }) => {
   // const [newMessage, setNewMessage] = useState("");
   const [newComment, setNewComment] = useState("");
   const [isLengthReached, setIsLengthReached] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
 
   const messagesRef = useRef(null);
 
@@ -93,60 +92,10 @@ function checkAndAddMessage(sender, text, comment, type) {
     setNewComment("");
   };
 
-  const chooseTheme = (event) => {
-    if (!theme.trim()) {
-      alert("Please enter a theme");
-      return;
-    }
-    event.preventDefault();
-    setIsDisabled(true);
-    
-    //Generate the first AI poem line after setting the theme, it works based on how the prompt is set up
-    taskService
-      .submitUserInput({
-        inputData: { 
-          comment: true,
-          poem: []
-        },
-        text: "Write the first line of the poem",
-        objective: theme
-      })
-      .then((returnedResponse) => {
-        let parsed = parsePoetryAndComment(returnedResponse.text)
-        checkAndAddMessage("ai", parsed.poetryLine, parsed.comment, "dialogue")
-      })
-      .catch((error) => {
-        console.log(error)
-      });
-  };
-
-
   return (
     <div className="chat-space-wrapper">
       <h2>Discussion with AI</h2>
       <div className="chat-space">
-        <div className='theme-wrapper'>
-          <form onSubmit={chooseTheme} className="theme-input">
-            <input 
-              type="text" 
-              disabled={isDisabled}
-              placeholder="Set a theme for the poem"
-              value={theme}
-              className={isDisabled ? "disabled" : ""}
-              onChange={(event) => setTheme(event.target.value)}
-            />
-            <button 
-              type="button"
-              disabled={isDisabled}
-              className={isDisabled ? "disabled" : ""}
-              onClick={chooseTheme}
-              style={{
-                backgroundColor: "#4caf50"
-              }}>
-              Submit 
-            </button>
-          </form>
-        </div>
         <div className="messages" ref={messagesRef}>
           {messages
             .filter(msg => msg.comment !== "" && msg.comment !== null)
@@ -161,7 +110,7 @@ function checkAndAddMessage(sender, text, comment, type) {
           style={{
             "color" : "#FF0000"
           }}>
-          The poem reached the length limit. Please click Finish to rate it
+          The poem reached the length limit. Please click "Rate task" to rate it
         </span>
         }
         <div className="form-wrapper">
