@@ -1,21 +1,35 @@
-from pydantic import BaseModel, Field
-from typing import List, Optional
+from pydantic import BaseModel, Field, ConfigDict
+from typing import List, Optional, Union
 
 
-class TaskMessage(BaseModel):
-    role: str  # The role of the Message (either "assistant" or "user")
-    content: str  # The content of the message
+class OpenAIMessage(BaseModel):
+    type: str
+    
+class ImageURL(BaseModel):
+    url: str
+
+class ImageMessage(OpenAIMessage):
+    image_url: ImageURL
+    model_config = ConfigDict(extra="ignore")
+
+
+    model_config = ConfigDict(extra="ignore")
+
+
+class TextMessage(OpenAIMessage):
+    text: str
+    model_config = ConfigDict(extra="ignore")
+
+class Message(BaseModel):
+    role: str
+    content: Union[str, List[Union[ImageMessage, TextMessage]]]
+    model_config = ConfigDict(extra="ignore")
 
 
 class TaskInput(BaseModel):
-    text: List[TaskMessage]  # The history of the conversation
-    image: Optional[str] = Field(
-        default=None, nullable=True
-    )  # The image to be processed
-    system: Optional[str] = Field(
-        default=""
-    )  # A System message that indicates the Task
-
+    messages: Optional[List[Message]] = None # The messages that the model should process
+    model_config = ConfigDict(extra="ignore")    
+        
 
 class TaskOutput(BaseModel):
     text: str = Field(default="", nullable=True)  # The response Message

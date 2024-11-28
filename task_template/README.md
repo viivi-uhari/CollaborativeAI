@@ -22,7 +22,7 @@ The messages along with their fields are:
     - `sessionID`: An ID of the session that this info is for
 - Outgoing Messages:
   - `taskRequest`
-    - `request` : A string represnting a json object with the following fields:
+    - `request` : A string representing a json object with the following fields:
       - `text` : An array of messages with a syntax resembling OpenAI messages. Each message has a field `role` and a field `content` where role can be either `"assistant"` or `"user"`
       - `image`: a base64 encoded image.
       - `system`: A String representing a system message to the model (i.e. the task description)

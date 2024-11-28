@@ -2,7 +2,7 @@ from fastapi import FastAPI, Request
 import logging
 import logging.config
 import configparser
-from routers.task_router import task_router, task_handler
+from routers.task_router import task_router
 from routers.session import router as session_router
 from grpc_server import task_server
 from starlette.middleware.sessions import SessionMiddleware
@@ -10,13 +10,14 @@ import secrets
 import concurrent.futures
 
 # This will need to be adapted by the individual task!
-from tasks.task import task as current_task
+from tasks.task import task 
+
 
 # Set the logger config
 logging.config.fileConfig("logging.conf", disable_existing_loggers=False)
 
-task_handler.set_Task(current_task)
 logger = logging.getLogger("app")
+logger.info(f"Starting {task} task")
 # Router handling.
 app = FastAPI()
 

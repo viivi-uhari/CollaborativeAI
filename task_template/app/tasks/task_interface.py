@@ -22,3 +22,6 @@ class Task:
 
     def get_requirements(self) -> TaskRequirements:
         raise NotImplementedError()
+    
+    def is_openAI_task(self) -> bool:
+        return False
