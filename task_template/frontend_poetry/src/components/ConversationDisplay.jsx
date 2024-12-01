@@ -129,7 +129,7 @@ function checkAndAddMessage(sender, text, comment, type) {
               disabled={isLengthReached || !isDisabled || isLoading}
               className={isLengthReached ? "disabled" : ""}
               onClick={handleSubmit}> 
-              Send message
+              Send
             </button>
           </form>
         </div>

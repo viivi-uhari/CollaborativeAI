@@ -48,7 +48,7 @@ const App = () => {
             "cursor": isFinishClicked || messages.length <= 0 ? "not-allowed" : "pointer"
           }}
           onClick={toggleFinishButton}> 
-          {isFinishClicked ? "Cancel" : "Rate task"}
+          {isFinishClicked ? "Cancel" : "Finish"}
         </button>
       </div>
       {isFinished && <FeedbackForm />}

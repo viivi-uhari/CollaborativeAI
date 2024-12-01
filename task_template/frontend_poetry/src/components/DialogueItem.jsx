@@ -3,18 +3,18 @@ import { useState } from 'react';
 const DialogueItem = ({ idx, message, handleEditMessage, style }) => {
   const messageClass = message.sender === "user" ? "user-dialogue" : "ai-dialogue";
 
-  const [isEditing, setIsEditing] = useState(false);
-  const [editedMessage, setEditedMessage] = useState(message.text);
+  // const [isEditing, setIsEditing] = useState(false);
+  // const [editedMessage, setEditedMessage] = useState(message.text);
 
-  const handleEditClick = () => {
-    setIsEditing(!isEditing);
-  };
+  // const handleEditClick = () => {
+  //   setIsEditing(!isEditing);
+  // };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    handleEditMessage(idx, editedMessage);
-    setIsEditing(!isEditing);
-  };
+  // const handleSubmit = (event) => {
+  //   event.preventDefault();
+  //   handleEditMessage(idx, editedMessage);
+  //   setIsEditing(!isEditing);
+  // };
 
   /*let newLine = ""
   const poemLine = message.text.match(/\[(.*?)\]/);
@@ -26,7 +26,7 @@ const DialogueItem = ({ idx, message, handleEditMessage, style }) => {
 
   return (
     <>
-      {isEditing ? (
+      {/* {isEditing ? (
         <form onSubmit={handleSubmit} className="edit-form">
           <textarea
             value={editedMessage}
@@ -38,7 +38,10 @@ const DialogueItem = ({ idx, message, handleEditMessage, style }) => {
         <div className={`${style} ${messageClass}`} style={{cursor: "alias"}} onClick={handleEditClick}>
           {message.text} <br/> 
         </div>
-      )}
+      )} */}
+      <div className={`${style} ${messageClass}`}>
+          {message.text} <br/> 
+      </div>
     </>
   );
 };

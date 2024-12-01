@@ -146,7 +146,7 @@ const Dialogue = ({ isLoading, setIsLoading, theme, isDisabled, messages, setMes
               disabled={isLengthReached || !isDisabled || isLoading}
               className={isLengthReached ? "disabled" : ""}
               onClick={handleSubmit}> 
-              Add new line
+              Add
             </button>
           </form>
         </div>

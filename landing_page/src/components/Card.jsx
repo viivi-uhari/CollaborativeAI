@@ -12,7 +12,7 @@ const Card = ({card}) => {
       </div>
       <div className="card-btn-group">
         <div className="task-btn-wrapper">
-          <a className="task-btn" type="button" href={card.task_link} style={{color: "rgb(176, 124, 124)"}}>
+          <a className="task-btn" type="button" href={card.task_link} target="_blank" style={{color: "rgb(176, 124, 124)"}}>
             <i className="fa fa-play"></i>       
           </a>
           <p className="task-link-text">Launch task</p>

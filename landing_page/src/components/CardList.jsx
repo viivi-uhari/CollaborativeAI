@@ -5,7 +5,7 @@ const CardList = () => {
   const [cards, setCards] = useState([
     {
       name: "Tangram task",
-      description: ["Compose an object with AI", "Coordination"],
+      description: ["Compose an object with AI"],
       link: "./tg.png",
       task_link: "https://tangramtask1-tangram.node01.ki-lab.nrw/",
       code_link:
@@ -13,7 +13,7 @@ const CardList = () => {
     },
     {
       name: "Poetry task",
-      description: ["Write a short poem with AI", "Co-creativity"],
+      description: ["Write a short poem with AI"],
       link: "./pt.png",
       task_link: "https://poetrytask1-poetry.node01.ki-lab.nrw/",
       code_link:
