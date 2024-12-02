@@ -118,16 +118,11 @@ function checkAndAddMessage(sender, text, comment, type) {
             <input 
               value={newComment}
               disabled={isLengthReached || !isDisabled || isLoading}
-              className={isLengthReached ? "disabled" : ""}
               onChange={(event) => setNewComment(event.target.value)} 
               placeholder="Send a message to the AI" 
             />
             <button type="submit" 
-              style={{
-                backgroundColor: "#4caf50"
-              }}
               disabled={isLengthReached || !isDisabled || isLoading}
-              className={isLengthReached ? "disabled" : ""}
               onClick={handleSubmit}> 
               Send
             </button>

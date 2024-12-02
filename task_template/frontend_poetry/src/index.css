@@ -7,11 +7,6 @@ body,html {
   overflow-x: hidden;
 }
 
-*:disabled {
-  opacity: 1;
-  cursor: not-allowed;
-}
-
 textarea {
   width: 630px;
   height: 50px;
@@ -96,15 +91,6 @@ a:active {
   padding: 10px;
   height: 70vh;
   margin: 5px;
-}
-
-.chat-space-wrapper {
-  display: flex;
-  flex-direction: column;
-  text-align: center;
-}
-
-.dialogue-wrapper {
   display: flex;
   flex-direction: column;
   text-align: center;
@@ -135,14 +121,6 @@ a:active {
 .dialogue-paragraph {
   display: inline;
   border-radius: 10px;
-}
-
-.dialogue-button {
-  background-color: #4caf50;
-  justify-content: flex-end;
-  align-items: center;
-  margin: 5px;
-  padding: 5px;
 }
 
 .user-dialogue {
@@ -190,17 +168,26 @@ a:active {
   overflow-y: auto;
 }
 
-.theme-input button {
+.theme-input input:disabled {
+  cursor: not-allowed;
+}
+
+.theme-submit-btn {
   border-radius: 5px;
   border: none;
   margin: 5px;
   cursor: pointer;
   color: white;
   padding: 10px;
+  background-color: #4caf50;
 }
 
-.theme-input button:disabled {
-  opacity: 1;
+.theme-submit-btn:hover {
+  opacity: 0.9;
+}
+
+.theme-submit-btn:disabled {
+  opacity: 0.5;
   cursor: not-allowed;
 }
 
@@ -315,6 +302,10 @@ a:active {
   border-radius: 10px;
 }
 
+.input-form input:disabled {
+  cursor: not-allowed;
+}
+
 .input-form button {
   padding: 10px;
   margin-left: 10px;
@@ -324,10 +315,16 @@ a:active {
   cursor: pointer;
   border-radius: 5px;
   height: 50px;
+  min-width: 50px;
+  background-color: #4caf50;
+}
+
+.input-form button:hover {
+  opacity: 0.9;
 }
 
 .input-form button:disabled {
-  opacity: 1;
+  opacity: 0.5;
   cursor: not-allowed;
 }
 

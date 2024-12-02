@@ -135,16 +135,11 @@ const Dialogue = ({ isLoading, setIsLoading, theme, isDisabled, messages, setMes
             <input 
               value={newLine}
               disabled={isLengthReached || !isDisabled || isLoading}
-              className={isLengthReached ? "disabled" : ""}
               onChange={(event) => setNewLine(event.target.value)}
               placeholder="Add a line to the poem" 
             />
             <button type="submit" 
-              style={{
-                backgroundColor: "#4caf50"
-              }}
               disabled={isLengthReached || !isDisabled || isLoading}
-              className={isLengthReached ? "disabled" : ""}
               onClick={handleSubmit}> 
               Add
             </button>

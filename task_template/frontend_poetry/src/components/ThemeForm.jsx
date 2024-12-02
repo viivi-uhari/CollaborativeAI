@@ -82,17 +82,13 @@ const ThemeForm = ({ theme, setTheme, isDisabled, setIsDisabled, setIsLoading, a
             disabled={isDisabled}
             placeholder="Set a theme for the poem"
             value={theme}
-            className={isDisabled ? "disabled" : ""}
             onChange={(event) => setTheme(event.target.value)}
           />
           <button 
             type="button"
             disabled={isDisabled}
-            className={isDisabled ? "disabled" : ""}
-            onClick={chooseTheme}
-            style={{
-              backgroundColor: "#4caf50"
-            }}>
+            className="theme-submit-btn"
+            onClick={chooseTheme}>
             Submit 
           </button>
         </form>
