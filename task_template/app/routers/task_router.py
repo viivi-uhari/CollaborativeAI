@@ -216,6 +216,6 @@ async def finish(
         await asyncio.sleep(1)
     modelinfo = queue_handler.get_model_info(session.id)    
     # Clear the model info
-    queue_handler.clear_model_info(session.id)
+    queue_handler.clear_session(session.id)
     clear_session(source_request)
     return {"modelInfo": modelinfo}
