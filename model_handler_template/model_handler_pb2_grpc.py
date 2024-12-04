@@ -5,10 +5,8 @@ import warnings
 
 import model_handler_pb2 as model__handler__pb2
 
-GRPC_GENERATED_VERSION = '1.64.1'
+GRPC_GENERATED_VERSION = '1.68.1'
 GRPC_VERSION = grpc.__version__
-EXPECTED_ERROR_RELEASE = '1.65.0'
-SCHEDULED_RELEASE_DATE = 'June 25, 2024'
 _version_not_supported = False
 
 try:
@@ -18,15 +16,12 @@ except ImportError:
     _version_not_supported = True
 
 if _version_not_supported:
-    warnings.warn(
+    raise RuntimeError(
         f'The grpc package installed is at version {GRPC_VERSION},'
         + f' but the generated code in model_handler_pb2_grpc.py depends on'
         + f' grpcio>={GRPC_GENERATED_VERSION}.'
         + f' Please upgrade your grpc module to grpcio>={GRPC_GENERATED_VERSION}'
         + f' or downgrade your generated code using grpcio-tools<={GRPC_VERSION}.'
-        + f' This warning will become an error in {EXPECTED_ERROR_RELEASE},'
-        + f' scheduled for release on {SCHEDULED_RELEASE_DATE}.',
-        RuntimeWarning
     )
 
 
@@ -47,7 +42,7 @@ class ModelHandlerStub(object):
         self.finishTask = channel.unary_unary(
                 '/ModelHandler/finishTask',
                 request_serializer=model__handler__pb2.taskMetrics.SerializeToString,
-                response_deserializer=model__handler__pb2.metricsJson.FromString,
+                response_deserializer=model__handler__pb2.modelInfo.FromString,
                 _registered_method=True)
         self.sendToModel = channel.unary_unary(
                 '/ModelHandler/sendToModel',
@@ -110,7 +105,7 @@ def add_ModelHandlerServicer_to_server(servicer, server):
             'finishTask': grpc.unary_unary_rpc_method_handler(
                     servicer.finishTask,
                     request_deserializer=model__handler__pb2.taskMetrics.FromString,
-                    response_serializer=model__handler__pb2.metricsJson.SerializeToString,
+                    response_serializer=model__handler__pb2.modelInfo.SerializeToString,
             ),
             'sendToModel': grpc.unary_unary_rpc_method_handler(
                     servicer.sendToModel,
@@ -181,7 +176,7 @@ class ModelHandler(object):
             target,
             '/ModelHandler/finishTask',
             model__handler__pb2.taskMetrics.SerializeToString,
-            model__handler__pb2.metricsJson.FromString,
+            model__handler__pb2.modelInfo.FromString,
             options,
             channel_credentials,
             insecure,

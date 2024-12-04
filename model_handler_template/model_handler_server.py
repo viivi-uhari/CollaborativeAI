@@ -97,8 +97,8 @@ class ModelHandler(model_handler_pb2_grpc.ModelHandlerServicer):
         # Break the model assignment after sending the metrics
         del self.assignment_list[taskMetrics.sessionID]
 
-        return model_handler_pb2.metricsJson(
-            metrics=taskMetrics.metrics, modelID=modelID
+        return model_handler_pb2.modelInfo(
+            modelName=modelID, sessionID=taskMetrics.sessionID
         )
 
     def sendToModel(self, request, context):

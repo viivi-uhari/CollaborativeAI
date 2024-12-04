@@ -3,6 +3,8 @@ FROM python:3.9
 
 WORKDIR /usr/project
 
+ARG MODEL=default_model
+ENV MODEL_TO_USE=${MODEL}
 
 RUN apt-get update -y 
 RUN apt-get install -y python3-pip python3-dev

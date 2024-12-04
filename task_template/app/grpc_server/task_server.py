@@ -83,6 +83,12 @@ class TaskServicer(tasks_pb2_grpc.taskServiceServicer):
                 # allow new call to start
                 break
 
+    def receiveModelInfo(self, request, context):        
+        modelID = request.modelName
+        sessionID = request.sessionID
+        self.queue_handler.set_model_info(sessionID, modelID)
+        return tasks_pb2.Empty()
+        
     def getModelResponse(self, request, context):
         logger.info("Received response from model")
         if request.sessionID in self.queue_handler.response_queues:

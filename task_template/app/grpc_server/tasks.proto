@@ -7,16 +7,17 @@ syntax = "proto3";
 // A model Request. The request must follow the following (textual) json conversion
 // { "text" : [ { "role" : "user|assistant", "content" : "Content" } ... ], 
 //   "image" : "base64 encoded image", 
-//   "system" : "The system prompt for the model" } 
+//   "system" : "The system prompt for the model" 
+//   }
+
 message taskRequest { 
     string request = 1;   
-    string sessionID = 2;
-    string messageID = 3;    
+    string sessionID = 2;    
+    string messageID = 3;
 }
 // The answer (again a json)
 // the answer is a json object with the following structure
-// { "text" : "Some text returned by the model", 
-//   "image" : "base64 encoded image returned by the model, if any" } 
+// { "data" : { "text" : "Some text returned by the model", "image" : "base64 encoded image returned by the model, if any" } }
 message modelAnswer { 
     string answer = 1;
     string sessionID = 2;
@@ -30,6 +31,10 @@ message modelRequirements {
     string sessionID = 3;
 }
 
+message modelInfo {
+    string modelName = 1;    
+    string sessionID = 2;
+}
 
 // the metrics Json (a json object properly formatted for the metrics)
 message taskMetrics {    
@@ -47,4 +52,5 @@ service taskService {
     rpc runTask(Empty) returns (stream taskRequest); 
     rpc finishTask(Empty) returns (stream taskMetrics);
     rpc getModelResponse(modelAnswer) returns (Empty);
+    rpc receiveModelInfo(modelInfo) returns (Empty);
 }

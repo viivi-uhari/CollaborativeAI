@@ -57,10 +57,10 @@ message modelRequirements {
 }
 
 
-// the metrics Json (a json object properly formatted for the metrics)
-message metricsJson { 
-    string metrics = 1;   
-    string modelID = 2;
+// the information about the model
+message modelInfo { 
+    string modelName = 1;   
+    string sessionID = 2;
 }
 
 message Empty {
@@ -68,9 +68,9 @@ message Empty {
 }
 
 service ModelHandler {
-    rpc startTask(modelRequirements) returns (Empty); # Register a started task, and assign a model to it.
-    rpc finishTask(taskMetrics) returns (metricsJson); # Finish a Task, no reply necessary
-    rpc sendToModel(taskRequest) returns (modelRequest); # Predict a task
-    rpc returnToTask(modelAnswer) returns (modelAnswer); # Return the answer to the task, this is essentially just a forward
-    rpc registerModel(modelDefinition) returns (Empty); # Register a model
+    rpc startTask(modelRequirements) returns (Empty);
+    rpc finishTask(taskMetrics) returns (modelInfo); 
+    rpc sendToModel(taskRequest) returns (modelRequest);
+    rpc returnToTask(modelAnswer) returns (modelAnswer);
+    rpc registerModel(modelDefinition) returns (Empty); 
 }

@@ -65,7 +65,7 @@ async def finish_task(stub):
     async for finishRequest in finishTasks:
         logger.info("Finishing task with:")
         metrics = model_handler_stub.finishTask(finishRequest)
-        model_stub.publishMetrics(metrics)
+        task_stub.receiveModelInfo(metrics)
 
 
 async def returnPrediction(stub):

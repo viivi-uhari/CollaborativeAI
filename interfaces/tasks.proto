@@ -10,9 +10,10 @@ syntax = "proto3";
 //   "system" : "The system prompt for the model" 
 //   }
 
-messaRge taskRequest { 
+message taskRequest { 
     string request = 1;   
-    string sessionID = 2;    
+    string sessionID = 2;  
+    string messageID = 3;  
 }
 // The answer (again a json)
 // the answer is a json object with the following structure
@@ -20,6 +21,7 @@ messaRge taskRequest {
 message modelAnswer { 
     string answer = 1;
     string sessionID = 2;
+    string messageID = 3;
 }
 
 // define model Properties
@@ -29,6 +31,10 @@ message modelRequirements {
     string sessionID = 3;
 }
 
+message modelInfo {
+    string modelName = 1;    
+    string sessionID = 2;
+}
 
 // the metrics Json (a json object properly formatted for the metrics)
 message taskMetrics {    
@@ -46,4 +52,5 @@ service taskService {
     rpc runTask(Empty) returns (stream taskRequest); 
     rpc finishTask(Empty) returns (stream taskMetrics);
     rpc getModelResponse(modelAnswer) returns (Empty);
+    rpc receiveModelInfo(modelInfo) returns (Empty);
 }

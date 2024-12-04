@@ -7,9 +7,10 @@ class QueueHandler:
     def __init__(self):
         self.start_queue = queue.Queue()
         self.task_queue = queue.Queue()
-        self.finish_queue = queue.Queue()
+        self.finish_queue = queue.Queue()        
         self.response_queues = {}
         self.responses = {}
+        self.model_info = {}
 
     def add_answer(self, sessionID, messageID, answer):
         self.responses[sessionID][messageID] = answer
@@ -42,10 +43,25 @@ class QueueHandler:
             self.response_queues[sessionID] = queue.Queue()
             self.responses[sessionID] = {}
         return self.response_queues[sessionID]
-
+    
     def remove_response_queue(self, sessionID):
         if sessionID in self.response_queues:
             self.response_queues.pop(sessionID)
             self.responses.pop(sessionID)
+
+    def get_model_info(self, sessionID) -> str:
+        if sessionID not in self.response_queues:
+            return None
+        else:            
+            return self.model_info[sessionID]    
+    def set_model_info(self, sessionID, modelID) -> None:        
+        self.model_info[sessionID] = modelID
+
+    def clear_model_info(self, sessionID) -> None:        
+        self.model_info.pop(sessionID)
+        
+    def clear_session(self, sessionID) -> None:
+        self.remove_response_queue(sessionID)
+        self.clear_model_info(sessionID)
 
 queue_handler = QueueHandler()
