@@ -17,6 +17,9 @@ The messages along with their fields are:
       - `image`: a base64 encoded image.
     - `sessionID`: An ID of the session that this response is for
     - `messageID`: An ID of the individual message sent, to be able to answer to this message
+  - `modelInfo`:
+    - `modelName` : The name of the model
+    - `sessionID`: An ID of the session that this info is for
 - Outgoing Messages:
   - `taskRequest`
     - `request` : A string represnting a json object with the following fields:
@@ -42,14 +45,15 @@ Those contain:
 - `runTask`: This is again a service with an empty request, which needs to provide a sstream of `taskRequest` messages, which will be allocated to the correct model by the model handler.
 - `finishTask`: Again a service that needs to provide a stream of `taskMetrics` messages upon completion of the task by the user.
 - `getModelResponse`: This service receives the responses by the model, and needs to be able to handle them and assign them to the web-requests that caused their generation.
+- `receiveModelInfo`: This service receives information about the model used once a job is finished and can thus inform the frontend which model has been used.
 
 The logic of the processing is as follows:
 When a user sends a request that they want to start the task, the `startTask` service should emit a `modelRequirements` message. This message
 is used by the model handler to select a model for the indicated session.
 After this message, the `runTask` service can emit several `taskRequest` messages, which will be processed and forwarded by the model handler
 to the appropriate model.
-Finally, when a session (i.e. running one task) ends, the task needs to emit one `taskMetrics` message from the `finishTask` service to indicate,
-that this session is over, and that the association can be removed. After that it can emit a new `modelReqirements` message from the `startTask`
+Finally, when a session (i.e. running one task) ends, the task needs to emit one `taskMetrics` message from the `finishTask` service to indicate
+that this session is over, and receives a new message at the receiveModelInfo service about which modl has been used. Then the association with the session can be removed. After that it can emit a new `modelRequirements` message from the `startTask`
 service, if a new session was started etc..
 
 ## Implementation
@@ -115,6 +119,7 @@ The back-end provides two endpoints at the moment:
 - `/api/v1/task/process/`, which expects a `TaskDataRequest` object to be processed.
   This endpoint will respond with a `TaskDataResponse`, with the contents depending on the response of the model and the post-processing done in the `process_model_answer` function of the task.
 - `/api/v1/task/finish/` this endpoint indicates that one session has finished, and expects a `TaskMetrics` object that is passed on to the model handler, supplemented with the session ID. This will also clear the session association held by the back end, and the triggered model handler call will clear out the model associated with the current session.
+  The response will contain the name of the used model.
 
 ### Front-end templates
 

@@ -30,7 +30,7 @@ For a more detailed explanation, please go [here](task_template/frontend_tangram
 
 ## Model selection:
 
-At the moment, the system supports two models [gpt4-turbo](model_template/models/openAI_model.py) and [gpt4-o](model_template/models/openAI_image_model.py), which are located inside the folder [model_template/models](model_template/models).
+At the moment, the system supports two models [o1-mini](model_template/models/openAI_model.py) and [gpt4-o](model_template/models/openAI_image_model.py), which are located inside the folder [model_template/models](model_template/models).
 
 You can change between the two models by changing the value of the variable `ai_model` between `OpenAIImageModel()` and `OpenAIModel()` in the file [model_template/model.py](model_template/model.py).
 If you have time and want to add your own models to the system, feel free to do so by following the template located in the file [basemodel.py](model_template/models/basemodel.py) and using the already existing model files as guidance.
