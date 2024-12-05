@@ -32,10 +32,7 @@ const TutorialPopUp = () => {
                 <img src="./intro.png" alt="Main UI" className="image" />
                 <div className="description">
                   <p>
-                    The main UI of the task. There are two interaction zones: 
-                    "Your joint poem" shows the current poem and a form for you to submit your 
-                    poemline while "Discussion with AI" shows the chat between you and the AI 
-                    model and a form for you to send any comments or questions to it like a normal chat.
+                    Provide a theme for the poem. 
                   </p>
                 </div>
               </div>
@@ -44,11 +41,10 @@ const TutorialPopUp = () => {
                 <img src="./topic.png" alt="Choose your topic" className="image" />
                 <div className="description">
                   <p>
-                    First, you enter and submit the topic of the poem. After that, the AI model
-                    will process and generate the first line of the poem. Then you and the AI take
-                    turns to complete the poem. Meanwhile, you can chat with it in the
-                    right-side box to raise any questions or suggestions. You can also request it
-                    to generate the next poem line if you are stuck.
+                    The AI then writes the first line.
+                  </p>
+                  <p>
+                    Then it is your turn to write.
                   </p>
                 </div>
               </div>
@@ -57,9 +53,7 @@ const TutorialPopUp = () => {
                 <img src="./done.png" alt="Communicate with the AI model" className="image" />
                 <div className="description">
                   <p>
-                    When there are 9 lines of poem, the task is deemed completed. At the moment, the 
-                    poem lines can be edited but it's purely just for the user to change/edit the content of 
-                    the poem (nothing else happens when you save the change).
+                    If you want to discuss with the AI, you can do that in the Dialogue box. 
                   </p>
                 </div>
               </div>
@@ -68,9 +62,7 @@ const TutorialPopUp = () => {
                 <img src="./finish.png" alt="Send rating" className="image" />
                 <div className="description">
                   <p>
-                    Give the task a rating based on how well you and the AI model collaborated 
-                    on the task. If you want to do the task again, you can press the redo button 
-                    at the bottom.
+                    Please then rate your experience with the AI. 
                   </p>
                 </div>
               </div>

@@ -205,10 +205,9 @@ a:active {
   height: auto;
 }
 
-.acknowledge-section,
-.bug-report-section,
-.terms-section {
+.acknowledge-section {
   flex: 1;
+  max-width: 600px;
   margin-right: 20px;
   padding-right: 20px;
 }

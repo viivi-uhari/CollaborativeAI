@@ -374,10 +374,9 @@ a:active {
   height: auto;
 }
 
-.acknowledge-section,
-.bug-report-section,
-.terms-section {
+.acknowledge-section {
   flex: 1;
+  max-width: 600px;
   margin-right: 20px;
   padding-right: 20px;
 }
@@ -401,6 +400,20 @@ a:active {
 
 .rating-container {
   display: flex;
+  flex-direction: column;
+}
+
+.collaboration-metric,
+.ai-performance-metric,
+.coordination-metric,
+.with-or-without-metric {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+}
+
+.rating-selector {
+  display: flex;
   flex-direction: row;
 }
 
@@ -408,12 +421,21 @@ a:active {
   margin: 0.5rem;
   cursor: pointer;
   border-radius: 50%;
-  border: 2px solid rgb(23,23,23);
+  border: 1px solid rgb(23,23,23);
   width: 2rem;
   height: 2rem;
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.rating-circle:hover {
+  transform: scale(1.25);
+}
+
+.rating-circle.selected {
+  transform: scale(1.25);
+  border: 3px solid rgb(23,23,23);
 }
 
 .after-rating-submitted {
@@ -424,7 +446,8 @@ a:active {
   align-items: center;
 }
 
-.reset-button {
+.reset-button,
+.submit-button {
   padding: 20px;
   margin-top: 10px;
   border: none;
@@ -496,6 +519,7 @@ a:active {
   flex-direction: column;
   align-items: center;
   resize: auto;
+  margin: 10px;
 }
 
 .image {
@@ -506,11 +530,11 @@ a:active {
 }
 
 .description {
-  margin-top: 5px;
-  margin-left: 5px;
-  margin-right: 5px;
-  margin-bottom: 5px;
-  font-size: 12px;
+  margin-top: 10px;
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  font-size: 15px;
   color: #000000;
   text-align: left;
 }
