@@ -29,7 +29,7 @@ const TutorialPopUp = () => {
             <h2>Poetry task quick guide</h2>
             <div className="image-grid-container">
               <div className="image-container">
-                <img src="./intro.png" alt="Main UI" className="image" />
+                <img src="./topic.png" alt="Main UI" className="image" />
                 <div className="description">
                   <p>
                     Provide a theme for the poem. 
@@ -38,7 +38,7 @@ const TutorialPopUp = () => {
               </div>
 
               <div className="image-container">
-                <img src="./topic.png" alt="Choose your topic" className="image" />
+                <img src="./start.png" alt="Choose your topic" className="image" />
                 <div className="description">
                   <p>
                     The AI then writes the first line.
@@ -50,7 +50,7 @@ const TutorialPopUp = () => {
               </div>
 
               <div className="image-container">
-                <img src="./done.png" alt="Communicate with the AI model" className="image" />
+                <img src="./discussion.png" alt="Communicate with the AI model" className="image" />
                 <div className="description">
                   <p>
                     If you want to discuss with the AI, you can do that in the Dialogue box. 

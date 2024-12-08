@@ -14,20 +14,20 @@ const FeedbackForm = ({ }) => {
   const handleMetricsSubmit = () => {
     //Add finish call here
     setRatingSubmitted(true);
-    // taskService.finishTask(
-    //   {
-    //     "collaboration-metric": collaborationRating,
-    //     "ai-performance-metric": aiPerformanceRating,
-    //     "coordination-metric": coordinationRating,
-    //     "efficiency-metric": efficiencyRating
-    //   }
-    // )
+    taskService.finishTask(
+      {
+        "collaboration_metric": collaborationRating,
+        "ai_performance_metric": aiPerformanceRating,
+        "coordination_metric": coordinationRating,
+        "efficiency_metric": efficiencyRating
+      }
+    )
     console.log(
       {
-        "collaboration-metric": collaborationRating,
-        "ai-performance-metric": aiPerformanceRating,
-        "coordination-metric": coordinationRating,
-        "efficiency-metric": efficiencyRating
+        "collaboration_metric": collaborationRating,
+        "ai_performance_metric": aiPerformanceRating,
+        "coordination_metric": coordinationRating,
+        "efficiency_metric": efficiencyRating
       }
     )
   }

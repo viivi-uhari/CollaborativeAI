@@ -88,7 +88,10 @@ class ModelHandler(model_handler_pb2_grpc.ModelHandlerServicer):
             "task_name": task_name,
             "model": modelID,
             "timeStamp": submitted_time,
-            "rating": rating,
+            "collaboration_metric": rating["collaboration_metric"],
+            "ai_performance_metric": rating["ai_performance_metric"],
+            "coordination_metric": rating["coordination_metric"],
+            "efficiency_metric": rating["efficiency_metric"],
         }
 
         if not os.environ.get("ATLAS_URI", None) == None:
