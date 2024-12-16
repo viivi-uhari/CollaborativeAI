@@ -5,10 +5,8 @@ const Rules = () => {
       <ol>
         <li>Take turns with AI to complete a task </li>
         <li>At the end, rate AI’s performance </li>
-        <li>You will be then disclosed which AI model you worked with (WIP)</li>
+        <li>You will be then disclosed which AI model you worked with</li>
       </ol> <br/>
-      <h2>🏆 Leaderboard </h2>
-      <p>We collect human votes to compute a leaderboard for LLMs</p> <br/>
       <h2>📝 Task list</h2>
     </div>
   );

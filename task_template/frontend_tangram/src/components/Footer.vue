@@ -3,19 +3,17 @@
     <div className="acknowledge-section">
       <h2>Acknowledgement</h2>
       <br></br>
-      <p>Humane-AI Net (European project ….)</p>
-      <p>AI Builder …</p>
-      <p>placeholder</p>
-    </div>
-    <div className="bug-report-section">  
-      <h2>Bug Report</h2>
-      <br></br>
-      <p>Report bugs to: <a href="mailto:bugs@example.com">xxx.yyy@aalto.fi</a></p>
-    </div>
-    <div className="terms-section">
-      <h2>Terms of Service</h2>
-      <br></br>
-      <p>Read our <a href="/#">Terms of Service</a></p>
+      <p>
+        This work was funded by the European Union Horizon 2020 
+        Research and Innovation Programme as part of the Humane-AI-net 
+        project, under grant agreement number 952026. 
+      </p> <br></br>
+      <p>
+        <strong>Humane-AI Net: </strong><a href="https://www.humane-ai.eu/" target="_blank">https://www.humane-ai.eu/</a>
+      </p> <br></br>
+      <p>
+        <strong>AI Builder: </strong><a href="https://www.ai4europe.eu/ai-builder" target="_blank">https://www.ai4europe.eu/ai-builder</a>
+      </p>
     </div>
     <div className="logo-section">
       <img src="../assets/image1.png" alt="Project Logo" />
@@ -35,8 +33,7 @@ export default {
   color: white;
   padding: 50px;
   display: flex;
-  justify-content: space-around;
-  align-items: flex-start;
+  justify-content: space-between
 }
 
 .footer-container h2,
@@ -44,14 +41,18 @@ export default {
   margin-bottom: 10px;
 }
 
+.footer-container img {
+  max-width: 100%;
+  height: auto;
+}
+
 .footer-container h2 {
   font-size: 20px;
 }
 
-.acknowledge-section,
-.bug-report-section,
-.terms-section {
+.acknowledge-section{
   flex: 1;
+  max-width: 600px;
   margin-right: 20px;
   padding-right: 20px;
 }

@@ -3,6 +3,13 @@
   padding: 0px;
 }
 
+body,html {
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+}
+
 *:disabled {
   opacity: 1;
   cursor: not-allowed;
@@ -48,7 +55,7 @@ a:active {
   display: flex;
   justify-content: space-between; 
   align-items: center; 
-  height: 100px; 
+  height: 100%;
   padding: 20px;
 }
 
@@ -74,6 +81,8 @@ a:active {
 .card-list {
   margin: 10px;
   padding: 5px;
+  height: 573px;
+  min-height: 600px;
   margin-bottom: 50px;
 }
 
@@ -85,8 +94,22 @@ a:active {
   padding: 10px;
 }
 
+@media (max-width: 600px) {
+  .card-list-inner-border  {
+    flex-direction: column;
+    align-items: center;
+  }
+  .card-container {
+    width: 200px;
+  }
+  .card-img {
+    height: 50px;
+    width: 50px;
+  }
+}
+
 .card-container {
-  width: 300px;
+  width: 250px;
   border-radius: 20px;
   box-shadow: 0px 10px 8px #999;
   display: flex;
@@ -101,6 +124,7 @@ a:active {
 .card-container:hover {
   border: 2px solid blue;
   transition: all ease-in-out 0.2s;
+  cursor: pointer;
 }
 
 .card-img {
@@ -164,8 +188,7 @@ a:active {
   color: white;
   padding: 50px;
   display: flex;
-  justify-content: space-around;
-  align-items: flex-start;
+  justify-content: space-between;
 }
 
 .footer-container h2,
@@ -177,10 +200,14 @@ a:active {
   font-size: 20px;
 }
 
-.acknowledge-section,
-.bug-report-section,
-.terms-section {
+.footer-container img {
+  max-width: 100%;
+  height: auto;
+}
+
+.acknowledge-section {
   flex: 1;
+  max-width: 600px;
   margin-right: 20px;
   padding-right: 20px;
 }

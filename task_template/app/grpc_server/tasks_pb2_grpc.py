@@ -5,31 +5,23 @@ import warnings
 
 import grpc_server.tasks_pb2 as tasks__pb2
 
-GRPC_GENERATED_VERSION = "1.64.1"
+GRPC_GENERATED_VERSION = '1.68.1'
 GRPC_VERSION = grpc.__version__
-EXPECTED_ERROR_RELEASE = "1.65.0"
-SCHEDULED_RELEASE_DATE = "June 25, 2024"
 _version_not_supported = False
 
 try:
     from grpc._utilities import first_version_is_lower
-
-    _version_not_supported = first_version_is_lower(
-        GRPC_VERSION, GRPC_GENERATED_VERSION
-    )
+    _version_not_supported = first_version_is_lower(GRPC_VERSION, GRPC_GENERATED_VERSION)
 except ImportError:
     _version_not_supported = True
 
 if _version_not_supported:
-    warnings.warn(
-        f"The grpc package installed is at version {GRPC_VERSION},"
-        + f" but the generated code in tasks_pb2_grpc.py depends on"
-        + f" grpcio>={GRPC_GENERATED_VERSION}."
-        + f" Please upgrade your grpc module to grpcio>={GRPC_GENERATED_VERSION}"
-        + f" or downgrade your generated code using grpcio-tools<={GRPC_VERSION}."
-        + f" This warning will become an error in {EXPECTED_ERROR_RELEASE},"
-        + f" scheduled for release on {SCHEDULED_RELEASE_DATE}.",
-        RuntimeWarning,
+    raise RuntimeError(
+        f'The grpc package installed is at version {GRPC_VERSION},'
+        + f' but the generated code in tasks_pb2_grpc.py depends on'
+        + f' grpcio>={GRPC_GENERATED_VERSION}.'
+        + f' Please upgrade your grpc module to grpcio>={GRPC_GENERATED_VERSION}'
+        + f' or downgrade your generated code using grpcio-tools<={GRPC_VERSION}.'
     )
 
 
@@ -43,29 +35,30 @@ class taskServiceStub(object):
             channel: A grpc.Channel.
         """
         self.startTask = channel.unary_stream(
-            "/taskService/startTask",
-            request_serializer=tasks__pb2.Empty.SerializeToString,
-            response_deserializer=tasks__pb2.modelRequirements.FromString,
-            _registered_method=True,
-        )
+                '/taskService/startTask',
+                request_serializer=tasks__pb2.Empty.SerializeToString,
+                response_deserializer=tasks__pb2.modelRequirements.FromString,
+                _registered_method=True)
         self.runTask = channel.unary_stream(
-            "/taskService/runTask",
-            request_serializer=tasks__pb2.Empty.SerializeToString,
-            response_deserializer=tasks__pb2.taskRequest.FromString,
-            _registered_method=True,
-        )
+                '/taskService/runTask',
+                request_serializer=tasks__pb2.Empty.SerializeToString,
+                response_deserializer=tasks__pb2.taskRequest.FromString,
+                _registered_method=True)
         self.finishTask = channel.unary_stream(
-            "/taskService/finishTask",
-            request_serializer=tasks__pb2.Empty.SerializeToString,
-            response_deserializer=tasks__pb2.taskMetrics.FromString,
-            _registered_method=True,
-        )
+                '/taskService/finishTask',
+                request_serializer=tasks__pb2.Empty.SerializeToString,
+                response_deserializer=tasks__pb2.taskMetrics.FromString,
+                _registered_method=True)
         self.getModelResponse = channel.unary_unary(
-            "/taskService/getModelResponse",
-            request_serializer=tasks__pb2.modelAnswer.SerializeToString,
-            response_deserializer=tasks__pb2.Empty.FromString,
-            _registered_method=True,
-        )
+                '/taskService/getModelResponse',
+                request_serializer=tasks__pb2.modelAnswer.SerializeToString,
+                response_deserializer=tasks__pb2.Empty.FromString,
+                _registered_method=True)
+        self.receiveModelInfo = channel.unary_unary(
+                '/taskService/receiveModelInfo',
+                request_serializer=tasks__pb2.modelInfo.SerializeToString,
+                response_deserializer=tasks__pb2.Empty.FromString,
+                _registered_method=True)
 
 
 class taskServiceServicer(object):
@@ -74,79 +67,87 @@ class taskServiceServicer(object):
     def startTask(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details("Method not implemented!")
-        raise NotImplementedError("Method not implemented!")
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
 
     def runTask(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details("Method not implemented!")
-        raise NotImplementedError("Method not implemented!")
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
 
     def finishTask(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details("Method not implemented!")
-        raise NotImplementedError("Method not implemented!")
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
 
     def getModelResponse(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details("Method not implemented!")
-        raise NotImplementedError("Method not implemented!")
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def receiveModelInfo(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
 
 
 def add_taskServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
-        "startTask": grpc.unary_stream_rpc_method_handler(
-            servicer.startTask,
-            request_deserializer=tasks__pb2.Empty.FromString,
-            response_serializer=tasks__pb2.modelRequirements.SerializeToString,
-        ),
-        "runTask": grpc.unary_stream_rpc_method_handler(
-            servicer.runTask,
-            request_deserializer=tasks__pb2.Empty.FromString,
-            response_serializer=tasks__pb2.taskRequest.SerializeToString,
-        ),
-        "finishTask": grpc.unary_stream_rpc_method_handler(
-            servicer.finishTask,
-            request_deserializer=tasks__pb2.Empty.FromString,
-            response_serializer=tasks__pb2.taskMetrics.SerializeToString,
-        ),
-        "getModelResponse": grpc.unary_unary_rpc_method_handler(
-            servicer.getModelResponse,
-            request_deserializer=tasks__pb2.modelAnswer.FromString,
-            response_serializer=tasks__pb2.Empty.SerializeToString,
-        ),
+            'startTask': grpc.unary_stream_rpc_method_handler(
+                    servicer.startTask,
+                    request_deserializer=tasks__pb2.Empty.FromString,
+                    response_serializer=tasks__pb2.modelRequirements.SerializeToString,
+            ),
+            'runTask': grpc.unary_stream_rpc_method_handler(
+                    servicer.runTask,
+                    request_deserializer=tasks__pb2.Empty.FromString,
+                    response_serializer=tasks__pb2.taskRequest.SerializeToString,
+            ),
+            'finishTask': grpc.unary_stream_rpc_method_handler(
+                    servicer.finishTask,
+                    request_deserializer=tasks__pb2.Empty.FromString,
+                    response_serializer=tasks__pb2.taskMetrics.SerializeToString,
+            ),
+            'getModelResponse': grpc.unary_unary_rpc_method_handler(
+                    servicer.getModelResponse,
+                    request_deserializer=tasks__pb2.modelAnswer.FromString,
+                    response_serializer=tasks__pb2.Empty.SerializeToString,
+            ),
+            'receiveModelInfo': grpc.unary_unary_rpc_method_handler(
+                    servicer.receiveModelInfo,
+                    request_deserializer=tasks__pb2.modelInfo.FromString,
+                    response_serializer=tasks__pb2.Empty.SerializeToString,
+            ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-        "taskService", rpc_method_handlers
-    )
+            'taskService', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
-    server.add_registered_method_handlers("taskService", rpc_method_handlers)
+    server.add_registered_method_handlers('taskService', rpc_method_handlers)
 
 
-# This class is part of an EXPERIMENTAL API.
+ # This class is part of an EXPERIMENTAL API.
 class taskService(object):
     """Missing associated documentation comment in .proto file."""
 
     @staticmethod
-    def startTask(
-        request,
-        target,
-        options=(),
-        channel_credentials=None,
-        call_credentials=None,
-        insecure=False,
-        compression=None,
-        wait_for_ready=None,
-        timeout=None,
-        metadata=None,
-    ):
+    def startTask(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
         return grpc.experimental.unary_stream(
             request,
             target,
-            "/taskService/startTask",
+            '/taskService/startTask',
             tasks__pb2.Empty.SerializeToString,
             tasks__pb2.modelRequirements.FromString,
             options,
@@ -157,26 +158,23 @@ class taskService(object):
             wait_for_ready,
             timeout,
             metadata,
-            _registered_method=True,
-        )
+            _registered_method=True)
 
     @staticmethod
-    def runTask(
-        request,
-        target,
-        options=(),
-        channel_credentials=None,
-        call_credentials=None,
-        insecure=False,
-        compression=None,
-        wait_for_ready=None,
-        timeout=None,
-        metadata=None,
-    ):
+    def runTask(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
         return grpc.experimental.unary_stream(
             request,
             target,
-            "/taskService/runTask",
+            '/taskService/runTask',
             tasks__pb2.Empty.SerializeToString,
             tasks__pb2.taskRequest.FromString,
             options,
@@ -187,26 +185,23 @@ class taskService(object):
             wait_for_ready,
             timeout,
             metadata,
-            _registered_method=True,
-        )
+            _registered_method=True)
 
     @staticmethod
-    def finishTask(
-        request,
-        target,
-        options=(),
-        channel_credentials=None,
-        call_credentials=None,
-        insecure=False,
-        compression=None,
-        wait_for_ready=None,
-        timeout=None,
-        metadata=None,
-    ):
+    def finishTask(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
         return grpc.experimental.unary_stream(
             request,
             target,
-            "/taskService/finishTask",
+            '/taskService/finishTask',
             tasks__pb2.Empty.SerializeToString,
             tasks__pb2.taskMetrics.FromString,
             options,
@@ -217,26 +212,23 @@ class taskService(object):
             wait_for_ready,
             timeout,
             metadata,
-            _registered_method=True,
-        )
+            _registered_method=True)
 
     @staticmethod
-    def getModelResponse(
-        request,
-        target,
-        options=(),
-        channel_credentials=None,
-        call_credentials=None,
-        insecure=False,
-        compression=None,
-        wait_for_ready=None,
-        timeout=None,
-        metadata=None,
-    ):
+    def getModelResponse(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
         return grpc.experimental.unary_unary(
             request,
             target,
-            "/taskService/getModelResponse",
+            '/taskService/getModelResponse',
             tasks__pb2.modelAnswer.SerializeToString,
             tasks__pb2.Empty.FromString,
             options,
@@ -247,5 +239,31 @@ class taskService(object):
             wait_for_ready,
             timeout,
             metadata,
-            _registered_method=True,
-        )
+            _registered_method=True)
+
+    @staticmethod
+    def receiveModelInfo(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/taskService/receiveModelInfo',
+            tasks__pb2.modelInfo.SerializeToString,
+            tasks__pb2.Empty.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)

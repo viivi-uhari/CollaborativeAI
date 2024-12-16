@@ -54,6 +54,10 @@ export default {
   emits: ['submit', 'update:inputText'],
   methods: {
     sendRequest(event: KeyboardEvent | MouseEvent) {
+      if (!this.queryText.trim()) {
+        alert("Please write a message before sending");
+        return;
+      }
       event.preventDefault()
       this.$emit('submit')
     },

@@ -53,8 +53,12 @@ class Poetry(Task):
         """
         # This could include an image, but for this task, we currently don't supply one
         logger.info(request)
+        linetag = "COMMENT" if request.inputData["comment"] else "NEWLINE"
+        poemline = f"POEM : {json.dumps(request.inputData['poem'])}"
+        newline = f"{linetag} : {request.text}"
+
         return TaskRequest(
-            text=f"[POEM_LINE] : {request.text} \n[COMMENT_LINE] : {request.inputData['commentData']}",
+            text=f"{poemline} \n{newline}",
             system=self.get_system_prompt(request.objective),
             image=None,
         )

@@ -2,10 +2,9 @@
   <div class="flex flex-column align-content-between h-screen">
     <div class="taskview-header">
       <Header />
-      <h1>{{ task.title }}</h1>
       <TaskDescription />
-      <div v-if="currentInteraction.objective">
-        The current Objective is: {{ currentInteraction.objective }}
+      <div v-if="currentInteraction.objective" class="tangram-objective">
+        <strong>The current Objective is: </strong>{{ currentInteraction.objective }}
       </div>
       <div v-else>
         Describe what should be built with the tangram pieces
@@ -28,6 +27,17 @@
     <Footer />
   </div>
 </template>
+
+<style scoped>
+  .taskview-header {
+    height: 100%;
+  }
+  .tangram-objective {
+    margin-top: 30px;
+    height: 60px;
+    font-size: large;
+  }
+</style>
 
 <script lang="ts">
 import ScrollPanel from 'primevue/scrollpanel'

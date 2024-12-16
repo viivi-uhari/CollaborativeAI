@@ -56,11 +56,16 @@ message modelRequirements {
     string sessionID = 3;
 }
 
-
 // the metrics Json (a json object properly formatted for the metrics)
 message metricsJson { 
     string metrics = 1;   
     string modelID = 2;
+}
+
+
+message modelInfo {
+    string modelName = 1;    
+    string sessionID = 2;
 }
 
 message Empty {
@@ -69,7 +74,7 @@ message Empty {
 
 service ModelHandler {
     rpc startTask(modelRequirements) returns (Empty); 
-    rpc finishTask(taskMetrics) returns (metricsJson); 
+    rpc finishTask(taskMetrics) returns (modelInfo); 
     rpc sendToModel(taskRequest) returns (modelRequest); 
     rpc returnToTask(modelAnswer) returns (modelAnswer); 
     rpc registerModel(modelDefinition) returns (Empty); 
@@ -81,6 +86,7 @@ service taskService {
     rpc runTask(Empty) returns (stream taskRequest); 
     rpc finishTask(Empty) returns (stream taskMetrics);
     rpc getModelResponse(modelAnswer) returns (Empty);
+    rpc receiveModelInfo(modelInfo) returns (Empty);
 }
 
 

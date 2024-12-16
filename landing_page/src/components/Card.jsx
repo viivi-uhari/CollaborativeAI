@@ -1,7 +1,16 @@
 const Card = ({card}) => {
+
+  const handleTaskClick = () => {
+    window.open(card.task_link, "_blank");
+  };
+
+  const handleCodeClick = () => {
+    window.open(card.code_link, "_blank");
+  };
+
   return (
-    <div className="card-container">
-      <img src={card.link} alt={card.name} className="card-img"/>
+    <div className="card-container" onClick={handleTaskClick}>
+      <img src={card.link} alt={card.name} className="card-img" title={card.image_credit}/>
       <h2 className="card-name">{card.name}</h2>
       <div className="card-description">
         <ul>
@@ -11,14 +20,8 @@ const Card = ({card}) => {
         </ul>
       </div>
       <div className="card-btn-group">
-        <div className="task-btn-wrapper">
-          <a className="task-btn" type="button" href={card.task_link} style={{color: "rgb(176, 124, 124)"}}>
-            <i className="fa fa-play"></i>       
-          </a>
-          <p className="task-link-text">Launch task</p>
-        </div>
         <div className="code-btn-wrapper">
-          <a className="code-btn" type="button" href={card.code_link} style={{color: "rgb(176, 124, 124)"}} >
+          <a className="code-btn" onClick={handleCodeClick} style={{color: "rgb(176, 124, 124)"}} >
             <i className="fa fa-code"></i>
           </a>
           <p className="code-link-text">View code</p>

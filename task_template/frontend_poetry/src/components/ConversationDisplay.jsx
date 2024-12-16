@@ -1,20 +1,21 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import ConversationItem from "./ConversationItem";
 import taskService from '../services/task'
 import { lengthLimit } from '../utils/config';
 
-const ConversationDisplay = ({ toggleFinish, messages, addMessage }) => {
+const ConversationDisplay = ({ isLoading, setIsLoading, theme, isDisabled, messages, addMessage }) => {
   // const [newMessage, setNewMessage] = useState("");
-  const [newLine, setNewLine] = useState("");
   const [newComment, setNewComment] = useState("");
-  const [isFinishClicked, setIsFinishClicked] = useState(false);
-  const [isDisabled, setIsDisabled] = useState(false);
-  const [theme, setTheme] = useState("");
   const [isLengthReached, setIsLengthReached] = useState(false);
+
+  const messagesRef = useRef(null);
 
   //Check if the length of the text has reached the line limit yet
   useEffect(() => {
     setIsLengthReached(messages.filter(msg => msg.text !== "" && msg.text !== null).length === lengthLimit)
+    if (messagesRef.current) {
+      messagesRef.current.scrollTop = messagesRef.current.scrollHeight;
+    }    
   }, [messages])
   
   function parsePoetryAndComment(input) {
@@ -24,7 +25,7 @@ const ConversationDisplay = ({ toggleFinish, messages, addMessage }) => {
 
     // Trim the input to remove leading/trailing whitespace
     input = input.trim();
-
+    console.log(input)
     // Check if the input starts with a '[' character
     if (input.startsWith('[')) {
         // Find the closing ']' character
@@ -43,7 +44,7 @@ const ConversationDisplay = ({ toggleFinish, messages, addMessage }) => {
         comment = input;
     }
 
-    console.log("Parsed: ", poetryLine, ", ", comment)
+    // console.log("Parsed: ", poetryLine, ", ", comment)
 
     return { poetryLine, comment };
 }
@@ -61,82 +62,41 @@ function checkAndAddMessage(sender, text, comment, type) {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-
-    checkAndAddMessage("user", newLine, newComment,"dialogue");   
+    if (!newComment.trim()) {
+      return;
+    }
+    setIsLoading(true);
+    checkAndAddMessage("user", null, newComment,"dialogue");   
 
     if (isLengthReached) {
       newComment += " The poem is finished. Do NOT add a new poetry line.";
     }
 
     taskService
-        .submitUserInput({inputData: { commentData: newComment}, text: newLine, ojective: theme})
+        .submitUserInput({
+          inputData: { 
+            comment: true,
+            poem: messages
+          }, 
+          text: newComment, 
+          ojective: theme
+        })
         .then((returnedResponse) => {
           let parsed = parsePoetryAndComment(returnedResponse.text)
           checkAndAddMessage("ai", parsed.poetryLine, parsed.comment,"dialogue")
+          setIsLoading(false)
         })
         .catch((error) => {
           console.log(error)
         });
-        setNewLine("");
-        setNewComment("");
+    setNewComment("");
   };
-
-  const chooseTheme = (event) => {
-    if (!theme.trim()) {
-      alert("Please enter a theme");
-      return;
-    }
-    event.preventDefault();
-    setIsDisabled(true);
-    
-    //Generate the first AI poem line after setting the theme, it works based on how the prompt is set up
-    taskService
-      .submitUserInput({
-        inputData: { commentData: ""},
-        text: "",
-        objective: theme
-      })
-      .then((returnedResponse) => {
-        let parsed = parsePoetryAndComment(returnedResponse.text)
-        checkAndAddMessage("ai", parsed.poetryLine, parsed.comment, "dialogue")
-      })
-      .catch((error) => {
-        console.log(error)
-      });
-  };
-
-  const toggleFinishButton = () => {
-    toggleFinish();
-    setIsFinishClicked(!isFinishClicked);
-  }
 
   return (
     <div className="chat-space-wrapper">
       <h2>Discussion with AI</h2>
       <div className="chat-space">
-        <div>
-          <form onSubmit={chooseTheme} className="theme-input">
-            <input 
-                  type="text" 
-                  disabled={isDisabled}
-                  placeholder="Set a theme for the poem"
-                  value={theme}
-                  className={isDisabled ? "disabled" : ""}
-                  onChange={(event) => setTheme(event.target.value)}
-            />
-            <button 
-                type="button"
-                disabled={isDisabled}
-                className={isDisabled ? "disabled" : ""}
-                onClick={chooseTheme}
-                style={{
-                  backgroundColor: "#4caf50"
-                }}>
-                Submit 
-            </button>
-          </form>
-        </div>
-        <div className="messages">
+        <div className="messages" ref={messagesRef}>
           {messages
             .filter(msg => msg.comment !== "" && msg.comment !== null)
             .map((msg, index) => (
@@ -144,52 +104,29 @@ function checkAndAddMessage(sender, text, comment, type) {
             ))
           }
         </div>
+        {isLoading && <div>Waiting for response...</div>} 
         {isLengthReached && 
         <span 
           style={{
             "color" : "#FF0000"
           }}>
-          Thank you. Here is our final poem. Please click Finish to rate it!
+          The poem reached the length limit. Please click "Rate task" to rate it
         </span>
         }
         <div className="form-wrapper">
-          <form onSubmit={handleSubmit}>
-            <div className="input-form">  
-              <textarea 
-                value={newLine}
-                disabled={isLengthReached}
-                className={isLengthReached ? "disabled" : ""}
-                onChange={(event) => setNewLine(event.target.value)}
-                placeholder="Add a line to the poem" 
-              />
-              <textarea 
-                value={newComment}
-                disabled={isLengthReached}
-                className={isLengthReached ? "disabled" : ""}
-                onChange={(event) => setNewComment(event.target.value)} 
-                placeholder="Send a message to the AI" 
-              />
-            </div>
+          <form onSubmit={handleSubmit} className="input-form">
+            <input 
+              value={newComment}
+              disabled={isLengthReached || !isDisabled || isLoading}
+              onChange={(event) => setNewComment(event.target.value)} 
+              placeholder="Send a message to the AI" 
+            />
+            <button type="submit" 
+              disabled={isLengthReached || !isDisabled || isLoading}
+              onClick={handleSubmit}> 
+              Send
+            </button>
           </form>
-          <div className="button-group">
-              <button type="submit" 
-                style={{
-                  backgroundColor: "#4caf50"
-                }}
-                disabled={isLengthReached}
-                className={isLengthReached ? "disabled" : ""}
-                onClick={handleSubmit}> 
-                Submit
-              </button>
-              <button type="submit" className="finish-button" 
-                style={{
-                  backgroundColor: isFinishClicked ? "#f44336" : "#6eb4ff",
-                  "cursor": isFinishClicked ? "not-allowed" : "pointer"
-                }}
-                onClick={toggleFinishButton}> 
-                {isFinishClicked ? "Cancel" : "Finish"}
-              </button>
-            </div>
         </div>
       </div>
     </div>

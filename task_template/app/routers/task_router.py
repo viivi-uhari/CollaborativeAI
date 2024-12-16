@@ -212,5 +212,10 @@ async def finish(
     """
     finishObj = {"sessionID": session.id, "metrics": str(request.metrics)}
     queue_handler.finish_queue.put(finishObj)
+    while not session.id in queue_handler.model_info:
+        await asyncio.sleep(1)
+    modelinfo = queue_handler.get_model_info(session.id)    
+    # Clear the model info
+    queue_handler.clear_session(session.id)
     clear_session(source_request)
-    return {"response": "session cleared"}
+    return {"modelInfo": modelinfo}

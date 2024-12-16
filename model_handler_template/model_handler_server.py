@@ -22,7 +22,7 @@ port = 8061
 
 DB_NAME = "task_rating"
 COLLECTION_NAME = "informal"
-if os.environ.get("USE_ATLAS", "True") == "True":
+if not os.environ.get("ATLAS_URI", None) == None:
     atlas_client = AtlasClient(os.environ["ATLAS_URI"], DB_NAME)
     rating_collection = atlas_client.get_collection(COLLECTION_NAME)
     atlas_client.ping()
@@ -88,17 +88,20 @@ class ModelHandler(model_handler_pb2_grpc.ModelHandlerServicer):
             "task_name": task_name,
             "model": modelID,
             "timeStamp": submitted_time,
-            "rating": rating,
+            "collaboration_metric": rating["collaboration_metric"],
+            "ai_performance_metric": rating["ai_performance_metric"],
+            "coordination_metric": rating["coordination_metric"],
+            "efficiency_metric": rating["efficiency_metric"],
         }
 
-        if os.environ.get("USE_ATLAS", "True") == "True":
+        if not os.environ.get("ATLAS_URI", None) == None:
             rating_collection.insert_one(new_metric)
 
         # Break the model assignment after sending the metrics
         del self.assignment_list[taskMetrics.sessionID]
 
-        return model_handler_pb2.metricsJson(
-            metrics=taskMetrics.metrics, modelID=modelID
+        return model_handler_pb2.modelInfo(
+            modelName=modelID, sessionID=taskMetrics.sessionID
         )
 
     def sendToModel(self, request, context):

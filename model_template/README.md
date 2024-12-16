@@ -19,9 +19,6 @@ The messages along with their fields are:
     - `modelID`: A string representing which model this request is for
     - `sessionID`: An ID of the session that generated this resource
     - `messageID`: An ID of the individual message sent, to be able to answer to this message (if multiple messages are sent simutaneously)
-  - `metricsJson`:
-    - `metrics`: A String that is alredy formatted and just needs to be put into the models log, so that it can be interpreted by AIBuilder for the leaderboard
-    - `modelID`: A string representing which model this request is for
 - Outgoing Messages:
   - `modelDefinition`:
     - `needs_text`: A Bool indicating whether the model needs text for processing
@@ -44,7 +41,6 @@ Those contain:
 - `registerModel` : A Service which is called with an empty request on startup and need to send one single message contiaining the `modelDefinition`. This definition indicates the capailities of the model (i.e. if it can process images and text, and if it needs images/text for processing, or, if false, if it can work without them, one should always be prvided). Along with the deifnition, the model needs to specify a model ID which it can use to determine whether a future request is for this model or not.
 - `predict` : A Service that receives requests for the model to perform a prediction with. The request is accompanied by a `sessionID` which is required in the response and a `modelID`. The latter is an indicator whether this message is for the current model. If the `modelID` provided does not fit the ID it provided it should do nothing
 - `sendPrediction` This service should send messages of type `modelResponse` for each successfully handled `modelRequest`. These `modelAnswers` need to contain the `sessionID` that was provided in the request in order to allow them to be asssociated with the correct model
-- `publishMetrics`: this endpoint receives a `modelMetrics` message and then, either handles it, if the contained `modelID` matches this models `modelID` or ignors it.
 
 ## Implementation
 
@@ -74,8 +70,6 @@ For security reasons, you will have to provide your secrets to the AI Builder te
 An object of type `AIModel` (i.e. the model you need to implement) needs to provide the following three methods:
 
 - Methods:
-  - `publish_metrics(metrics_json: str)`:
-    - A Method that publishes (i.e. prints) the given metrics to the container log
   - `async get_response(message: TaskInput) -> TaskOutput`:
     - A asynchronous method that performs the handling of the input, processing it by the actual model and returning a TaskOutput that can then be sent on.
   - `get_model_definition() -> model_pb2.modelDefinition`:

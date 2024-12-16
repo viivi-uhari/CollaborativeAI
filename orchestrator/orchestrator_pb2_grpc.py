@@ -5,10 +5,8 @@ import warnings
 
 import orchestrator_pb2 as orchestrator__pb2
 
-GRPC_GENERATED_VERSION = '1.64.1'
+GRPC_GENERATED_VERSION = '1.68.1'
 GRPC_VERSION = grpc.__version__
-EXPECTED_ERROR_RELEASE = '1.65.0'
-SCHEDULED_RELEASE_DATE = 'June 25, 2024'
 _version_not_supported = False
 
 try:
@@ -18,15 +16,12 @@ except ImportError:
     _version_not_supported = True
 
 if _version_not_supported:
-    warnings.warn(
+    raise RuntimeError(
         f'The grpc package installed is at version {GRPC_VERSION},'
         + f' but the generated code in orchestrator_pb2_grpc.py depends on'
         + f' grpcio>={GRPC_GENERATED_VERSION}.'
         + f' Please upgrade your grpc module to grpcio>={GRPC_GENERATED_VERSION}'
         + f' or downgrade your generated code using grpcio-tools<={GRPC_VERSION}.'
-        + f' This warning will become an error in {EXPECTED_ERROR_RELEASE},'
-        + f' scheduled for release on {SCHEDULED_RELEASE_DATE}.',
-        RuntimeWarning
     )
 
 
@@ -47,7 +42,7 @@ class ModelHandlerStub(object):
         self.finishTask = channel.unary_unary(
                 '/ModelHandler/finishTask',
                 request_serializer=orchestrator__pb2.taskMetrics.SerializeToString,
-                response_deserializer=orchestrator__pb2.metricsJson.FromString,
+                response_deserializer=orchestrator__pb2.modelInfo.FromString,
                 _registered_method=True)
         self.sendToModel = channel.unary_unary(
                 '/ModelHandler/sendToModel',
@@ -110,7 +105,7 @@ def add_ModelHandlerServicer_to_server(servicer, server):
             'finishTask': grpc.unary_unary_rpc_method_handler(
                     servicer.finishTask,
                     request_deserializer=orchestrator__pb2.taskMetrics.FromString,
-                    response_serializer=orchestrator__pb2.metricsJson.SerializeToString,
+                    response_serializer=orchestrator__pb2.modelInfo.SerializeToString,
             ),
             'sendToModel': grpc.unary_unary_rpc_method_handler(
                     servicer.sendToModel,
@@ -181,7 +176,7 @@ class ModelHandler(object):
             target,
             '/ModelHandler/finishTask',
             orchestrator__pb2.taskMetrics.SerializeToString,
-            orchestrator__pb2.metricsJson.FromString,
+            orchestrator__pb2.modelInfo.FromString,
             options,
             channel_credentials,
             insecure,
@@ -303,6 +298,11 @@ class taskServiceStub(object):
                 request_serializer=orchestrator__pb2.modelAnswer.SerializeToString,
                 response_deserializer=orchestrator__pb2.Empty.FromString,
                 _registered_method=True)
+        self.receiveModelInfo = channel.unary_unary(
+                '/taskService/receiveModelInfo',
+                request_serializer=orchestrator__pb2.modelInfo.SerializeToString,
+                response_deserializer=orchestrator__pb2.Empty.FromString,
+                _registered_method=True)
 
 
 class taskServiceServicer(object):
@@ -332,6 +332,12 @@ class taskServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def receiveModelInfo(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_taskServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -353,6 +359,11 @@ def add_taskServiceServicer_to_server(servicer, server):
             'getModelResponse': grpc.unary_unary_rpc_method_handler(
                     servicer.getModelResponse,
                     request_deserializer=orchestrator__pb2.modelAnswer.FromString,
+                    response_serializer=orchestrator__pb2.Empty.SerializeToString,
+            ),
+            'receiveModelInfo': grpc.unary_unary_rpc_method_handler(
+                    servicer.receiveModelInfo,
+                    request_deserializer=orchestrator__pb2.modelInfo.FromString,
                     response_serializer=orchestrator__pb2.Empty.SerializeToString,
             ),
     }
@@ -463,6 +474,33 @@ class taskService(object):
             target,
             '/taskService/getModelResponse',
             orchestrator__pb2.modelAnswer.SerializeToString,
+            orchestrator__pb2.Empty.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def receiveModelInfo(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/taskService/receiveModelInfo',
+            orchestrator__pb2.modelInfo.SerializeToString,
             orchestrator__pb2.Empty.FromString,
             options,
             channel_credentials,
