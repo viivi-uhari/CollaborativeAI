@@ -1,4 +1,4 @@
-from typing import Any, List, Optional, Union
+from typing import Any, List, Optional, Union, Literal
 from pydantic import BaseModel, ConfigDict
 
 
@@ -34,10 +34,11 @@ class TextMessage(OpenAIMessage):
     model_config = ConfigDict(extra="ignore")
 
 class Message(BaseModel):
-    role: str
+    role: str 
     content: Union[str, List[Union[ImageMessage, TextMessage]]]
     model_config = ConfigDict(extra="ignore")
     
-class OpenAIChatBaseModel(BaseModel):
-    messages: Optional[List[Message]] = None
-    model_config = ConfigDict(extra="ignore")
+class InputMessage(Message):
+    role: Literal["tool", "user", "assistant"] 
+
+

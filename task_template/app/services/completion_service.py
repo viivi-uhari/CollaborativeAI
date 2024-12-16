@@ -5,16 +5,17 @@ from models import (
     ModelResponse,
     TaskRequirements,
     TaskMetrics,   
-    TaskRequest         
+    TaskRequest,
+    OpenAIChatBaseRequest        
 )
 from routers.router_models import (
     ConversationItem,    
-    SessionData,
-    OpenAIChatBaseModel,
+    SessionData,    
     TextMessage,
     ImageMessage,
     Message,
-    ImageURL
+    ImageURL,
+    OpenAIMessageBasedRequest
 )
 from routers.session import get_session, clear_session
 from typing import Dict, List
@@ -40,6 +41,7 @@ class CompletionService:
     def build_model_request(
         self, request: TaskDataRequest, history: List[ConversationItem]
     ) -> grpc_models.taskRequest:
+        # Ask the task to generate the Request
         currentElement = self.task.generate_model_request(request)
         grpc_taskRequest = grpc_models.taskRequest()
         # Extend the history by the current request.
@@ -57,11 +59,13 @@ class CompletionService:
         grpc_taskRequest.request = json.dumps([message.model_dump() for message in messages])
         return grpc_taskRequest
 
-    def build_model_request_from_open_AI_request(self,messages : OpenAIChatBaseModel):
+    def build_model_request_from_open_AI_request(self,request : OpenAIMessageBasedRequest) -> grpc_models.taskRequest:
+        messageRequest = self.task.generate_model_request(request)
         grpc_taskRequest = grpc_models.taskRequest()   
-        grpc_taskRequest.request = json.dumps(messages.model_dump()["messages"])
+        grpc_taskRequest.request = json.dumps(messageRequest.model_dump()["messages"])
         return grpc_taskRequest
 
+    
     def build_open_AI_response( self, response: grpc_models.modelAnswer, messageID : str):
             data = ModelResponse.model_validate_json(response.answer)            
             choices = [
@@ -87,14 +91,21 @@ class CompletionService:
                 "system_fingerprint": messageID,
             }
             return openAIResponse
-        
+    
+    def interpret_model_response_openAI(self, response: grpc_models.modelAnswer) -> TaskDataResponse:
+        """
+        This function is used to interpret the model response for the OpenAI model.
+        This is for openAI models, which do not store the history on the server.
+        """
+        # Return an unfiltered data response. This is what comes back from the completions endpoint.
+        # That endpoint assumes all processing to be done in the frontend.
+        answer = ModelResponse.model_validate_json(response.answer)
+        return self.task.process_model_answer(answer)
 
     def interpret_model_response(
         self, response: grpc_models.modelAnswer, history: List[ConversationItem]
     ) -> TaskDataResponse:
         # Load the json
-        logger.info(response)
-        logger.info(response.answer)
         data = ModelResponse.model_validate_json(response.answer)
         history.append({"role": "assistant", "content": data.text})
         return self.task.process_model_answer(data)

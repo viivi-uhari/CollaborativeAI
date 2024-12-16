@@ -5,12 +5,13 @@ from models import (
     ModelResponse,
     TaskRequirements,
     TaskMetrics,
+    OpenAIBasedDataRequest
 )
 from routers.router_models import (
     ConversationItem,
     TaskRequest,
     SessionData,
-    OpenAIChatBaseModel,
+    
 )
 from routers.session import get_session, clear_session
 from typing import Dict, List, Annotated
@@ -30,15 +31,15 @@ from uuid import uuid4
 
 @task_router.post("/completions")
 async def chat_completion_endpoint(
-    task_data: OpenAIChatBaseModel, 
+    task_data: OpenAIBasedDataRequest, 
     task_handler: Annotated[CompletionService, Depends(CompletionService)],
     session: SessionData = Depends(get_session)
-):
+) -> TaskDataResponse:
     """
-    Generate prompt endpoint:
-    process pieces' data and plug them into the prompt
+    More "openAI" like endpoint, which takes a set of messages along with additional input data. 
+    NOTE: the Messages are not allowed to contain a SYSTEM message, as the system message has to be added
+    during task processing IN the server as to not allow free use of an endpoint for general chatting!
     """
-    history = session.history
     sessionID = session.id
     messageID = str(uuid4())
     task_props = task_handler.get_requirements()
@@ -72,7 +73,7 @@ async def chat_completion_endpoint(
             await asyncio.sleep(1)
         else:
             logger.info("Supplying response")
-            openAIResponse = task_handler.build_open_AI_response(answer, messageID)
+            openAIResponse = task_handler.interpret_model_response_openAI(answer)
             return openAIResponse
 
 
@@ -81,7 +82,7 @@ async def process_task_data(
     task_data: TaskDataRequest, 
     task_handler: Annotated[CompletionService, Depends(CompletionService)],
     session: SessionData = Depends(get_session)
-):
+) -> TaskDataResponse:
     """Generate prompt endpoint:
     process pieces' data and plug them into the prompt
     """
