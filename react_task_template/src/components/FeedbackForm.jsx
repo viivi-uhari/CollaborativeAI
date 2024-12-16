@@ -3,8 +3,7 @@ import taskService from '../services/task'
 
 const colors = ["#b71c1c", "#f44336", "#ff9800", "#ffeb3b", "#009688", "#81c784", "#4caf50"];
 
-const FeedbackForm = ({ }) => {
-  const [ratingSubmitted, setRatingSubmitted] = useState(false);
+const FeedbackForm = ({ isRatingSubmitted, setIsRatingSubmitted }) => {
   const [collaborationRating, setCollaborationRating] = useState(null);
   const [aiPerformanceRating, setAiPerformanceRating] = useState(null);
   const [coordinationRating, setCoordinationRating] = useState(null);
@@ -12,17 +11,8 @@ const FeedbackForm = ({ }) => {
 
 
   const handleMetricsSubmit = () => {
-    //Add finish call here
-    setRatingSubmitted(true);
+    setIsRatingSubmitted(true);
     taskService.finishTask(
-      {
-        "collaboration_metric": collaborationRating,
-        "ai_performance_metric": aiPerformanceRating,
-        "coordination_metric": coordinationRating,
-        "efficiency_metric": efficiencyRating
-      }
-    )
-    console.log(
       {
         "collaboration_metric": collaborationRating,
         "ai_performance_metric": aiPerformanceRating,
@@ -116,13 +106,13 @@ const FeedbackForm = ({ }) => {
           </div>
         </div>
       </div>
-      {ratingSubmitted 
+      {isRatingSubmitted 
         ? <div className="after-rating-submitted">
             <h4>Thank you! The model that you worked with was GPT-4o.</h4>
             <button type="submit" className="reset-button" onClick={() => window.location.reload()}> Restart </button>
           </div>
         : <div>
-            <button type="submit" className="submit-button" onClick={() => handleMetricsSubmit()}> Submit </button>
+            <button type="submit" className="submit-rating-button" onClick={() => handleMetricsSubmit()}> Submit </button>
           </div>
       }
     </div>
