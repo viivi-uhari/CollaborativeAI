@@ -6,7 +6,8 @@ from models import (
     TaskRequirements,
     TaskMetrics,   
     TaskRequest,
-    OpenAIChatBaseRequest        
+    OpenAIBasedDataRequest,
+    OpenAIBasedRequest        
 )
 from routers.router_models import (
     ConversationItem,    
@@ -15,7 +16,7 @@ from routers.router_models import (
     ImageMessage,
     Message,
     ImageURL,
-    OpenAIMessageBasedRequest
+    
 )
 from routers.session import get_session, clear_session
 from typing import Dict, List
@@ -47,7 +48,7 @@ class CompletionService:
         # Extend the history by the current request.
         logger.info(currentElement.text)                
         # Now, convert this into the grpc request
-        messages = [Message(role="user", content=element.text) for element in history]
+        messages = [Message(role="user", content=element.content) for element in history]
         currentMessage = Message(role="user", content=[TextMessage(type="text", text=currentElement.text)])
 
         if currentElement.image:
@@ -59,7 +60,7 @@ class CompletionService:
         grpc_taskRequest.request = json.dumps([message.model_dump() for message in messages])
         return grpc_taskRequest
 
-    def build_model_request_from_open_AI_request(self,request : OpenAIMessageBasedRequest) -> grpc_models.taskRequest:
+    def build_model_request_from_open_AI_request(self,request : OpenAIBasedDataRequest) -> grpc_models.taskRequest:
         messageRequest = self.task.generate_model_request(request)
         grpc_taskRequest = grpc_models.taskRequest()   
         grpc_taskRequest.request = json.dumps(messageRequest.model_dump()["messages"])
@@ -107,5 +108,5 @@ class CompletionService:
     ) -> TaskDataResponse:
         # Load the json
         data = ModelResponse.model_validate_json(response.answer)
-        history.append({"role": "assistant", "content": data.text})
+        history.append(ConversationItem(role="assistant", content=data.text))
         return self.task.process_model_answer(data)
