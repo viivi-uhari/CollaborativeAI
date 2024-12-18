@@ -14,7 +14,7 @@ import queue
 from data_models import TaskInput
 import logging
 import logging.config
-
+import json 
 logging.config.fileConfig("logging.conf", disable_existing_loggers=False)
 
 logger = logging.getLogger("app")
@@ -67,7 +67,7 @@ class ModelServicer(model_pb2_grpc.ModelServicer):
     async def do_prediction(self, data: model_pb2.modelRequest):
         try:
             logger.info(data.request)
-            input = TaskInput.model_validate_json(data.request)
+            input = TaskInput(messages=json.loads(data.request))
             logger.info("Sending request to model")
             logger.info(input)
             result = await self.ai_model.get_response(input)

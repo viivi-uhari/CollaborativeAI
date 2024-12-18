@@ -12,10 +12,7 @@ The messages along with their fields are:
 
 - Incoming Messages
   - `modelRequest`
-    - `request` : A string represnting a json object with the following fields:
-      - `text` : An array of messages with a syntax resembling OpenAI messages. Each message has a field `role` and a field `content` where role can be either `"assistant"` or `"user"`
-      - `image`: a base64 encoded image.
-      - `system`: A String representing a system message to the model (i.e. the task description)
+    - `request` : A string representing a json object with messages in OpenAI message format, including a system message.
     - `modelID`: A string representing which model this request is for
     - `sessionID`: An ID of the session that generated this resource
     - `messageID`: An ID of the individual message sent, to be able to answer to this message (if multiple messages are sent simutaneously)

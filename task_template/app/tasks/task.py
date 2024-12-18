@@ -10,6 +10,5 @@ elif os.environ.get("TASK_NAME") == "openai":
     task = openai_task.OpenAITask()
 elif os.environ.get("TASK_NAME") == "gesture":
     task = gesture.Gesture()
-
 else:
     task = poetry.Poetry()

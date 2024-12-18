@@ -5,15 +5,17 @@ from models import (
     ModelResponse,
     TaskRequirements,
     TaskMetrics,
+    OpenAIBasedDataRequest
 )
 from routers.router_models import (
     ConversationItem,
     TaskRequest,
     SessionData,
-    OpenAIChatBaseModel,
+    
 )
 from routers.session import get_session, clear_session
-from typing import Dict, List
+from typing import Dict, List, Annotated
+from services.completion_service import CompletionService
 from tasks.task_interface import Task
 import asyncio
 import logging
@@ -24,65 +26,28 @@ from datetime import datetime
 logger = logging.getLogger(__name__)
 task_router = APIRouter(prefix="/api/v1/task")
 
-
-class TaskRouter:
-    def _init__(self):
-        pass
-
-    def set_Task(self, task: Task):
-        self.task = task
-
-    def get_requirements(self) -> TaskRequirements:
-        return self.task.get_requirements()
-
-    def build_model_request(
-        self, request: TaskDataRequest, history: List[ConversationItem]
-    ) -> grpc_models.taskRequest:
-        currentElement = self.task.generate_model_request(request)
-        grpc_taskRequest = grpc_models.taskRequest()
-        # Extend the history by the current request.
-        logger.info(currentElement.text)
-        history.append(ConversationItem(role="user", content=currentElement.text))
-        # Now, we convert this into the taskRequest
-        currentRequestObject = TaskRequest(
-            text=history, image=currentElement.image, system=currentElement.system
-        )
-        grpc_taskRequest.request = currentRequestObject.model_dump_json()
-        return grpc_taskRequest
-
-    def interpret_model_response(
-        self, response: grpc_models.modelAnswer, history: List[ConversationItem]
-    ) -> TaskDataResponse:
-        # Load the json
-        logger.info(response)
-        logger.info(response.answer)
-        data = ModelResponse.model_validate_json(response.answer)
-        history.append({"role": "assistant", "content": data.text})
-        return self.task.process_model_answer(data)
-
-
-task_handler = TaskRouter()
-
 from uuid import uuid4
 
 
 @task_router.post("/completions")
 async def chat_completion_endpoint(
-    task_data: OpenAIChatBaseModel, session: SessionData = Depends(get_session)
-):
-    """Generate prompt endpoint:
-    process pieces' data and plug them into the prompt
+    task_data: OpenAIBasedDataRequest, 
+    task_handler: Annotated[CompletionService, Depends(CompletionService)],
+    session: SessionData = Depends(get_session)
+) -> TaskDataResponse:
     """
-    history = session.history
+    More "openAI" like endpoint, which takes a set of messages along with additional input data. 
+    NOTE: the Messages are not allowed to contain a SYSTEM message, as the system message has to be added
+    during task processing IN the server as to not allow free use of an endpoint for general chatting!
+    """
     sessionID = session.id
     messageID = str(uuid4())
     task_props = task_handler.get_requirements()
     startRequest = grpc_models.modelRequirements()
     startRequest.sessionID = sessionID
-    # Since we don't know, this will only work with models,
-    # that can use text and images.
-    startRequest.needs_text = True
-    startRequest.needs_image = True
+    startRequest.needs_text = task_props.needs_text
+    startRequest.needs_image = task_props.needs_image
+
     logger.info(startRequest)
     if not sessionID in queue_handler.response_queues:
         queue_handler.start_queue.put(startRequest)
@@ -93,32 +58,8 @@ async def chat_completion_endpoint(
     # Submit the task to the model
     logger.info("Task started, submitting to model")
 
-    # get the messages that have a role of system from the task_data
-    system_messages = [
-        message for message in task_data.messages if message.role == "system"
-    ]
-    converted_task_data = TaskDataRequest(
-        text="", image=None, objective="", inputData=None
-    )
-    converted_task_data.objective = system_messages[0].content
-    # get the last message
-    last_message = task_data.messages[-1]
-    # extract image and text parts from the last message
-    # we can only handle one message.
-    text_messages = [
-        ConversationItem(content=message, role=last_message.role)
-        for message in last_message.content
-        if message.type == "text"
-    ]
-    # we simply combine everything with newlines...
-    converted_task_data.text = "\n".join([message.text for message in text_messages])
-    image_messages = [
-        message for message in last_message.content if message.type == "image"
-    ]
-    if len(image_messages) > 0:
-        converted_task_data.image = image_messages[0].url
-
-    model_request = task_handler.build_model_request(converted_task_data, history)
+    # get the messages that have a role of system from the task_data    
+    model_request = task_handler.build_model_request_from_open_AI_request(task_data)
     # Add the session ID to the model request
     model_request.sessionID = sessionID
     model_request.messageID = messageID
@@ -132,36 +73,16 @@ async def chat_completion_endpoint(
             await asyncio.sleep(1)
         else:
             logger.info("Supplying response")
-            update = task_handler.interpret_model_response(answer, history)
-            choices = [
-                {
-                    "index": 0,
-                    "logpobs": None,
-                    "finish_reason": "stop",
-                    "message": {"role": "assistant", "content": update.text},
-                }
-            ]
-            openAIResponse = {
-                "id": "chatcmpl-123456",
-                "object": "chat.completion",
-                # timestamp in ms
-                "created": datetime.now().timestamp(),
-                "model": "unknown",
-                "choices": choices,
-                "usage": {
-                    "prompt_tokens": 1,
-                    "completion_tokens": 1,
-                    "total_tokens": 2,
-                },
-                "system_fingerprint": messageID,
-            }
+            openAIResponse = task_handler.interpret_model_response_openAI(answer)
             return openAIResponse
 
 
 @task_router.post("/process")
 async def process_task_data(
-    task_data: TaskDataRequest, session: SessionData = Depends(get_session)
-):
+    task_data: TaskDataRequest, 
+    task_handler: Annotated[CompletionService, Depends(CompletionService)],
+    session: SessionData = Depends(get_session)
+) -> TaskDataResponse:
     """Generate prompt endpoint:
     process pieces' data and plug them into the prompt
     """
