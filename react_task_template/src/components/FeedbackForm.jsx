@@ -3,7 +3,7 @@ import taskService from '../services/task'
 
 const colors = ["#b71c1c", "#f44336", "#ff9800", "#ffeb3b", "#009688", "#81c784", "#4caf50"];
 
-const FeedbackForm = ({ isRatingSubmitted, setIsRatingSubmitted }) => {
+const FeedbackForm = ({ viewPointRef, isRatingSubmitted, setIsRatingSubmitted }) => {
   const [collaborationRating, setCollaborationRating] = useState(null);
   const [aiPerformanceRating, setAiPerformanceRating] = useState(null);
   const [coordinationRating, setCoordinationRating] = useState(null);
@@ -25,7 +25,7 @@ const FeedbackForm = ({ isRatingSubmitted, setIsRatingSubmitted }) => {
   return (
     <div className="feedback-container">
       <h2>Please rate your experience based on the below metric</h2> <br></br>
-      <div className="rating-container">
+      <div className="rating-container" ref={viewPointRef}>
         <div className="collaboration-metric">
           <h3>"We collaborated well with the AI."</h3>
           <div className="rating-selector">

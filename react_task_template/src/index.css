@@ -46,7 +46,7 @@ a:active {
   display: flex;
   justify-content: space-between; 
   align-items: center; 
-  height: 100%; 
+  height: 79px; 
   padding: 20px;
 }
 
@@ -61,8 +61,19 @@ a:active {
 
 .main-interaction {
   display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: calc(100vh - 234px);
   padding: 20px;
-  min-height: 700px;
+  position: relative;
+}
+
+.main-interaction-overlay {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  background: rgba(0, 0, 0, 0.05);
 }
 
 .finish-btn-wrapper {
@@ -73,7 +84,7 @@ a:active {
 }
 
 .finish-btn {
-  margin-left: 5px;
+  margin-top: 10px;
   font-size: larger;
   padding: 5px;
   height: 75px;
