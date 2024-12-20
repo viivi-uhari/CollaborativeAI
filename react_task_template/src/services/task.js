@@ -6,10 +6,9 @@ const finishTask = (rating) => {
   const ratingjson = {
     metrics: {
       rating: rating, 
-      task_name: "poetry_task" //change this to your task name
+      task_name: "placeholder" //change this to your task name
     }
   }
-  console.log(ratingjson)
   axios
     .post(`${baseUrl}/finish`, ratingjson)
     .then((response) => {
