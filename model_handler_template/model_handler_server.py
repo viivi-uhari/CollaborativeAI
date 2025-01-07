@@ -70,6 +70,13 @@ class ModelHandler(model_handler_pb2_grpc.ModelHandlerServicer):
 
     def finishTask(self, request, context):
         taskMetrics = request
+        # This would happen if "finish task" is called before "start task"
+        # At this point no model was selected, since nothing has happened yet..
+        # There is no point in storing the metrics in the db, since there was no model...
+        if taskMetrics.sessionID not in self.assignment_list:
+            return model_handler_pb2.modelInfo(
+                modelName="No model assigned", sessionID=taskMetrics.sessionID
+            )
         modelID = self.assignment_list[taskMetrics.sessionID]
 
         # Metrics
