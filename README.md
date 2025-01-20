@@ -47,19 +47,26 @@ To test things locally and see if they work, we provide a docker compose file al
 
 To run locally you will need docker installed!
 
-To run, you need docker installed.  
-You also need the following environment variables set:
+In addition to docker, you will need to set three environment variables in a .env file in the source folder (you can use .env_exmaple as a template):
 
-- `OPENAI_API_KEY` - a openAI access key.
-- `SSL_KEY` - a valid openssl certficate key
-- `SSL_CERTIFICATE` - a valid openssl certificate
+- TASK_DOCKERFILE: This refers to the dockerfile of the Task you want to test.
+  - There are currently 3 options: `Dockerfile_poetry`, `Dockerfile_tangram` and `Dockerfile_gesture`.
+- MODEL: Refers to the model that is supposed to be used. There are currently 5 "default" models.
+  - 1. aalto: A model using the Aalto APIs. This model requires you to use an Aalto OpenAI API key and be on the Aalto network
+  - 2. aalto_image: Similar to aalto but has image processing capabilities
+  - 3. openai: the GPT4_turbo model (your key needs to be an OpenAI API key)
+  - 4. openai_image: the GPT4o-vision model with image processing capabilities (your key needs to be an OpenAI API key)
+  - 5. o1mini: the GPT4o-mini model (your key needs to be an OpenAI API key)
+- OPENAI_API_KEY: Your OPENAI (Or Aalto Azure) API key for the model.
+- NGINX_HTTPS_PORT: Default is 443 (normal HTTPS port). If you run docker/podman rootless you will need to change this port to a port above 1000 as ports below 1000 are reserved to system processes (i.e. need root permissions).
 
-The template model currently uses an Aalto specific endpoint for computation.
-You will likely need to change the model used in `model_template/model.py` to an OpenAI model and use that for testing.
+You can then run the system by running `docker compose up`
 
-We provide two tasks that can be used, either a poetry task or a tangram task. To run them call:
-`docker compose -f docker-compose_tangram.yaml up --build` for the tangram task and  
-`docker compose -f docker-compose_poetry.yaml up --build` for the poetry task respectively
-only one of the tasks can be run at the same time.
+If code has changed, you will need to run `docker compose up --build` to update the current code.
 
-After that, the frontend should be accessible via https://localhost:8062.
+The frontend will then be reachable at `https://localhost`.
+
+If you had to change the `NGINX_HTTPS_PORT`, the address where the frontend is run changes to `https://localhost:NGINX_HTTPS_PORT/` instead of `https://localhost`
+
+NOTE: When connecting, your system will likely complain, that the certificates provided are not valid. Since this is for local development we provide some self signed certificates in the repo. Most browsers allow continuing by clicking something like "accept the risk".
+DO NOT REUSE THESE CERTIFICATES/KEYS IF YOU DEPLOY THE SYSTEM OUTSIDE OF LOCAL DEVELOPMENT.
