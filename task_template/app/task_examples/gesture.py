@@ -1,7 +1,6 @@
 import logging
 import tasks.tangram_models as tangram_models
-from typing import Any, List
-import json
+import os
 from tasks.task_interface import Task
 from models import (
     TaskDataRequest,
@@ -12,6 +11,9 @@ from models import (
 )
 
 logger = logging.getLogger(__name__)
+current_folder = os.path.dirname(os.path.abspath(__file__))
+with open(os.path.join(current_folder, "gesture_prompt.txt"), "r") as f:
+    system_prompt = f.read()
 
 
 class Gesture(Task):
@@ -20,9 +22,7 @@ class Gesture(Task):
         """Generate response endpoint:
         generate the response based on given prompt and store the conversation
         in the history of the session (based on the session_id cookie)
-        """
-
-        system_prompt = open("/usr/project/task_examples/gesture_prompt.txt", "r").read()
+        """    
         return system_prompt
 
     def process_model_answer(self, answer: ModelResponse) -> TaskDataResponse:

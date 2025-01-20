@@ -25,16 +25,18 @@ class ImageURL(BaseModel):
     url: str
 
 class ImageMessage(OpenAIMessage):
+    type: Literal["image_url"]
     image_url: ImageURL
     model_config = ConfigDict(extra="ignore")
 
 
 class TextMessage(OpenAIMessage):
+    type: Literal["text"]
     text: str
     model_config = ConfigDict(extra="ignore")
 
 class Message(BaseModel):
-    role: str 
+    role: Literal["tool", "user", "assistant", "system"] 
     content: Union[str, List[Union[ImageMessage, TextMessage]]]
     model_config = ConfigDict(extra="ignore")
     

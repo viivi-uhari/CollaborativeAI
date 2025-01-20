@@ -1,21 +1,20 @@
 import logging
 from typing import Any, List
 import json
-from tasks.task_interface import Task
+from tasks.task_interface import Task, OpenAITask
 from models import (
     TaskDataRequest,
     TaskRequest,
     TaskDataResponse,
     ModelResponse,
     TaskRequirements,
+    OpenAIBasedDataRequest,
+    OpenAIBasedRequest
 )
 
 logger = logging.getLogger(__name__)
 
-
-class Poetry(Task):
-
-    def get_system_prompt(self, objective: str) -> str:
+def get_system_prompt(objective: str) -> str:
         """Generate response endpoint:
         generate the response based on given prompt and store the conversation
         in the history of the session (based on the session_id cookie)
@@ -43,6 +42,9 @@ class Poetry(Task):
             """
         return system_prompt
 
+class Poetry(Task):
+
+
     def process_model_answer(self, answer: ModelResponse) -> TaskDataResponse:
         # Again, we ignore the potential image here...
         return TaskDataResponse(text=answer.text)
@@ -59,9 +61,30 @@ class Poetry(Task):
 
         return TaskRequest(
             text=f"{poemline} \n{newline}",
-            system=self.get_system_prompt(request.objective),
+            system=get_system_prompt(request.objective),
             image=None,
         )
+
+    def get_requirements(self) -> TaskRequirements:
+        return TaskRequirements(needs_text=True, needs_image=False)
+    
+class PoetryOpenAI(OpenAITask):
+
+
+    def process_model_answer_openAI(self, answer: ModelResponse) -> TaskDataResponse:
+        # Again, we ignore the potential image here...        
+        return TaskDataResponse(text=answer.text)
+
+    def generate_model_request_openAI(self, request: OpenAIBasedDataRequest) -> OpenAIBasedRequest:
+        """Generate prompt endpoint:
+        process pieces' data and plug them into the prompt
+        """
+        # Add the system prompt (which is not allowed from the frontend)
+        system_message = get_system_prompt(request.objective)
+        messages = [{"role" : "system", "content" : system_message}]
+        messages.extend([element for element in request.userMessages])
+        return OpenAIBasedRequest(messages=messages)
+        
 
     def get_requirements(self) -> TaskRequirements:
         return TaskRequirements(needs_text=True, needs_image=False)
