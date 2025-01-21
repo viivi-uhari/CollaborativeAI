@@ -46,8 +46,7 @@ class CompletionService:
         # Ask the task to generate the Request
         currentElement = self.task.generate_model_request(request)
         grpc_taskRequest = grpc_models.taskRequest()
-        # Extend the history by the current request.
-        logger.info(currentElement.text)                
+        # Extend the history by the current request.        
         # Now, convert this into the grpc request
         messages = [Message(role="system", content=currentElement.system)]
         messages.extend([Message(role="user", content=element.content) for element in history])

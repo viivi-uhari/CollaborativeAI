@@ -35,7 +35,6 @@ class ModelServicer(model_pb2_grpc.ModelServicer):
 
     def publishMetrics(self, request, context):
         logger.info("Publishing metrics")
-        logger.info(request)
         if self.ai_model.get_model_definition().modelID != request.modelID:
             if self.testing:
                 self.discard_queue.put(request)
@@ -48,8 +47,7 @@ class ModelServicer(model_pb2_grpc.ModelServicer):
         return model_pb2.Empty()
 
     def predict(self, request, context):
-        logger.info("Predicting")
-        logger.info(request)
+        logger.info("Predicting")        
         if self.ai_model.get_model_definition().modelID != request.modelID:
             logger.info("Wrong model, skipping")
             if self.testing:
@@ -66,13 +64,10 @@ class ModelServicer(model_pb2_grpc.ModelServicer):
 
     async def do_prediction(self, data: model_pb2.modelRequest):
         try:
-            logger.info(data.request)
             input = TaskInput(messages=json.loads(data.request))
-            logger.info("Sending request to model")
-            logger.info(input)
+            logger.info("Sending request to model")            
             result = await self.ai_model.get_response(input)
-            logger.info("Got response from model")
-            logger.info(result)
+            logger.info("Got response from model")            
             modelAnswer = model_pb2.modelAnswer()
             modelAnswer.answer = result.model_dump_json()
             modelAnswer.sessionID = data.sessionID
@@ -118,7 +113,6 @@ class ModelServicer(model_pb2_grpc.ModelServicer):
 
     def registerModel(self, request, context):
         logger.info("Registering model")
-        logger.info(request)
         # Lets allow this for now.
         if self.called > 0:
             logger.info(

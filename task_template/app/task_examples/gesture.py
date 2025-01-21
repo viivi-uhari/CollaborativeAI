@@ -1,5 +1,4 @@
 import logging
-import tasks.tangram_models as tangram_models
 import os
 from tasks.task_interface import Task
 from models import (
