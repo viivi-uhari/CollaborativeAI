@@ -3,7 +3,7 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import FinishButton from './components/FinishButton';
 import FeedbackForm from "./components/FeedbackForm";
-import Dialogue from "./components/Dialogue";
+import Workspace from "./components/Workspace";
 import ConversationDisplay from "./components/ConversationDisplay"
 import "./index.css";
 
@@ -33,7 +33,7 @@ const App = () => {
         {(isRatingSubmitted || isFinishClicked) && (
           <div className="main-interaction-overlay"> </div>
         )}
-        <Dialogue />
+        <Workspace />
         <ConversationDisplay />
       </div>
       <FinishButton isFinishClicked={isFinishClicked} isRatingSubmitted={isRatingSubmitted} toggleFinish={toggleFinish} />

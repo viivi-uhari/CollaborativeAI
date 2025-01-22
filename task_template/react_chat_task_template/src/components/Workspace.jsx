@@ -1,4 +1,4 @@
-const Dialogue = () => {
+const Workspace = () => {
   return (
     <div className="dialogue-wrapper">
       <h2>Dialogue</h2>
@@ -11,4 +11,4 @@ const Dialogue = () => {
   );
 };
 
-export default Dialogue;
+export default Workspace;

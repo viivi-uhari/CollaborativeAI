@@ -1,6 +1,6 @@
 # The ReactJS frontend - the chat workspace version(for students) 
 
-In here, you will find the description of this react task template, all its components and what you should keep in mind while using this as a baseline for inserting your own task. This version is a more confined one since it follows the structure of a workspace-chat structure: the workspace to the left presents the collaborative work between you and the AI while the chat space to the right shows the current conversation.**There are only 3 places that you need to modify. which are explained in section I, II, and III**
+In here, you will find the description of this react task template, all its components and what you should keep in mind while using this as a baseline for inserting your own task. This version is a more confined one since it follows the structure of a workspace-chat structure: the workspace to the left presents the collaborative work between you and the AI while the chat space to the right shows the current conversation.**There are only 3 places that you need to modify. which are explained in section I, III, and IV**
 
 ## I. The environment file:
 In the file [.env_example](../../.env_example), all the needed environment variables are listed. The details of these variables are [here](../../README.md#local-testing).
@@ -16,17 +16,20 @@ The two API calls are located inside the file [task.js](src/services/task.js):
 
 ## IV. Child components: 
 All the child components are located [here](src/components). You don't need to modify anything inside them, but here is a quick run-through:
-
-### 1. FeedbackForm [link](src/components/FeedbackForm.jsx):
+### 1. ConversationalDisplay [link](src/components/ConversationDisplay.jsx)
+This is the space where the conversation between you and the AI model occurs. Your job is to modify this component to fit the task you're making. 
+### 2. Workspace [link](src/components/Workspace.jsx)
+This is the space where the collaborative work is displayed. Your job is to modify this component to fit the task you're making. 
+### 3. FeedbackForm [link](src/components/FeedbackForm.jsx):
 This is the feedback form component, which appears When the `Finish` button is clicked. When the rating is submitted, it calls the `finishTask` function inside the file [task.js](src/services/task.js) to store the rating to the database.
 
-### 2. FinishButton [link](src/components/FinishButton.jsx):
+### 4. FinishButton [link](src/components/FinishButton.jsx):
 This component is the `Finish` button shown in the page. Clicking it will show the `FeedbackForm`
 
-### 3. Footer [link](src/components/Footer.jsx):
+### 5. Footer [link](src/components/Footer.jsx):
 This component serves as the Footer for this web application.
 
-### 4. Header [link](src/components/Header.jsx):
+### 6. Header [link](src/components/Header.jsx):
 This component serves as the Header for this web application.
 
 ## V. How to run:
