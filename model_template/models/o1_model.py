@@ -14,8 +14,8 @@ model_definition = model_pb2.modelDefinition()
 model_definition.needs_text = True
 model_definition.needs_image = False
 model_definition.can_text = True
-model_definition.can_image = False
-model_definition.modelID = "o1-mini"
+model_definition.can_image = True
+model_definition.modelID = "o1"
 
 
 class OpenAIImageModel(AIModel):
@@ -27,15 +27,10 @@ class OpenAIImageModel(AIModel):
 
     async def get_response(self, message: TaskInput) -> TaskOutput:
         model = ChatOpenAI(
-            model="o1-mini",
+            model="o1",
             max_tokens=4096,
         )              
-        ai_messages = message.model_dump()["messages"]
-        for ai_message in ai_messages:
-            if ai_message["role"] == "system":
-                # o1mini does not understand system messages
-                ai_message["role"] = "user"                
-        AIresponse = model.invoke(ai_messages)
+        AIresponse = model.invoke(message.model_dump()["messages"])
         print(f"AIresponse: {AIresponse.content}")
         taskResponse = TaskOutput()
         taskResponse.text = AIresponse.content
