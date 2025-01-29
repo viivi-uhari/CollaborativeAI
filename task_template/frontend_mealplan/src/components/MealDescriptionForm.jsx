@@ -56,15 +56,12 @@ const MealDescriptionForm = ({ mealDescription, setMealDescription, isDisabled, 
     taskService
       .submitUserInput({
         inputData: { 
-          comment: true,
-          poem: []
         },
         text: "Recommend a weekly mealplan",
         objective: mealDescription
       })
       .then((returnedResponse) => {
-        let parsed = parsePoetryAndComment(returnedResponse.text)
-        checkAndAddMessage("ai", parsed.poetryLine, parsed.comment, "dialogue")
+        console.log(returnedResponse)
         setIsLoading(false)
       })
       .catch((error) => {
