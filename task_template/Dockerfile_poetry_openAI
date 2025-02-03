@@ -40,6 +40,5 @@ USER appuser
 EXPOSE 8062
 EXPOSE 8061
 ENV TASK_NAME poetry_openai
-ENV OPENAI_API_KEY="PROVIDE_EXERNALLY"
 # Need to change this into a script file, which also generates the secret keys... 
 CMD ["sh", "entrypoint.sh"]

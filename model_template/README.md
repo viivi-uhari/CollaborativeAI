@@ -45,25 +45,23 @@ We provide a sample implementation of a model server in the model_server.py clas
 
 ### Models:
 
-For simplicty, we have defined three pydantic models, that we use for interaction between the model server and the actual model implementation in the data_models class:
+For simplicty, we have defined three pydantic models, that we use for interaction between the model server and the actual model implementation in the `data_models.py` package:
 
-- `TaskMessage`, a class with two fields:
+- `Message`, a class with two fields:
+
   - `role` : A String indicating the role that generated the element (either "user" for the participant or "assistant" for the ai )
-  - `content`: the content of the message
+  - `content`: the content of the message ( similar to openAI specifications)
+
 - `TaskInput`, a class defining the input to a task
-
-  - `text` : a List of `TaskMessage` objects (representing the textual history)
-  - `image` : a string base64 encoded image
-  - `system` : The system message describing the task to solve
-
+  - `messages` : a List of `Message` objects (this includes the history, in order)
 - `TaskOutput`, a class defining the input to a task
   - `text` : a String with the model answer
   - `image` : a string base64 encoded image of the model answer (can be None)
 
 ### Interface
 
-The server provided handles most iteractions necessary for integration into the AIBuilder framework. To deploy a model you will need to implement the `AIModel` interface as defined in `models/basemodel.py`. To create a container using this model you will then need to define the `ai_model` field in the `model.py` module to be your model.
-For security reasons, you will have to provide your secrets to the AI Builder team, and import them using environment variables.  
+The server provided handles most iteractions necessary for integration into the AIBuilder framework. To deploy a model you will need to implement the `AIModel` interface as defined in `models/basemodel.py`. To create a container using this model you will then need to define the `ai_model` field in the `model.py` module to be your model or use the environment variable `MODEL` to select the model, which can be set in the `.env` file.
+If your model is to be deployed on the AIBuilder interface and used on the online arena, secrets will need to be provided to the AIBuilder team to be able to set them up for the container running online.
 An object of type `AIModel` (i.e. the model you need to implement) needs to provide the following three methods:
 
 - Methods:

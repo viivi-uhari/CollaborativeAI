@@ -64,6 +64,9 @@ class CompletionService:
         return grpc_taskRequest
 
     def build_model_request_from_open_AI_request(self,request : OpenAIBasedDataRequest) -> grpc_models.taskRequest:
+        for message in request.userMessages:
+            if message.role == "system":
+                raise ValueError("System messages are not allowed in the openAI request")
         messageRequest = self.task.generate_model_request_openAI(request)
         grpc_taskRequest = grpc_models.taskRequest()   
         grpc_taskRequest.request = json.dumps(messageRequest.model_dump()["messages"])

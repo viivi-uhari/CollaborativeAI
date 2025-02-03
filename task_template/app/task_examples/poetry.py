@@ -69,7 +69,7 @@ class Poetry(Task):
         return TaskRequirements(needs_text=True, needs_image=False)
     
 class PoetryOpenAI(OpenAITask):
-
+    """ Implementation of the Poetry Task as an OpenAI like task"""
 
     def process_model_answer_openAI(self, answer: ModelResponse) -> TaskDataResponse:
         # Again, we ignore the potential image here...        
