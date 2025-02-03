@@ -41,7 +41,6 @@ class AaltoModel(AIModel):
         )
 
         AIresponse = model.invoke(message.model_dump()["messages"])
-        print(f"AIresponse: {AIresponse.content}")
         taskResponse = TaskOutput()
         taskResponse.text = AIresponse.content
         return taskResponse

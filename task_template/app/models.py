@@ -1,6 +1,6 @@
 from typing import Any, List, Optional
 from pydantic import BaseModel, Field, ConfigDict
-from routers.router_models import InputMessage
+from routers.router_models import InputMessage, Message
 
 class TaskDataRequest(BaseModel):
     text: Optional[str] = None
@@ -20,12 +20,12 @@ class TaskRequest(BaseModel):
 
 class OpenAIBasedRequest(BaseModel):
     # The messages that the model should process
-    messages: Optional[List[Any]] = None
+    messages: Optional[List[Message]] = None
     # The model configuration
     model_config = ConfigDict(extra="ignore")
 
 class OpenAIBasedDataRequest(BaseModel):
-    userMessages: Optional[List[InputMessage]] = None
+    userMessages: Optional[List[InputMessage]] = []
     objective: Optional[str] = None
     inputData: Optional[Any] = None
     model_config = ConfigDict(extra="ignore")

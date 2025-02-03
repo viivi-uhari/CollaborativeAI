@@ -32,7 +32,6 @@ class TaskServicer(tasks_pb2_grpc.taskServiceServicer):
                 else:
                     job = self.queue_handler.start_queue.get()
                     logger.info("Starting task with data:")
-                    logger.info(job)
                     self.queue_handler.add_response_queue(job.sessionID)                    
                     yield job
 
@@ -51,7 +50,6 @@ class TaskServicer(tasks_pb2_grpc.taskServiceServicer):
                     await asyncio.sleep(1)
                 else:
                     job = self.queue_handler.task_queue.get(timeout=0.1)
-                    logger.info(job)
                     yield job
 
             except Exception as e:
@@ -70,7 +68,7 @@ class TaskServicer(tasks_pb2_grpc.taskServiceServicer):
                     await asyncio.sleep(1)
                 else:
                     data = self.queue_handler.finish_queue.get(timeout=0.1)
-                    logger.info("Finishing tasktask")
+                    logger.info("Finishing task")
                     job = tasks_pb2.taskMetrics()
                     job.sessionID = data["sessionID"]
                     job.metrics = data["metrics"]
