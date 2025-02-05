@@ -1,6 +1,6 @@
 # The ReactJS frontend - the light version (for students) 
 
-In here, you will find the description of this react task template, all its components and what you should keep in mind while using this as a baseline for inserting your own task. This version allows complete freedom to students to create any kind of tasks they want as long as it are/can be exported to HTML to be added to the template.**There are only 3 places that you need to modify. which are explained in section I, II, and III**
+In here, you will find the description of this react task template, all its components and what you should keep in mind while using this as a baseline for inserting your own task. This version allows complete freedom to students to create any kind of tasks they want as long as it can be put into the template (iframe, HTML, React codes,...).**There are only 3 places that you need to modify. which are explained in section I, II, and III**
 
 ## I. The environment file:
 In the file [.env_example](../../.env_example), all the needed environment variables are listed. The details of these variables are [here](../../README.md#local-testing).
