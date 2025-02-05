@@ -12,7 +12,7 @@ RUN pip3 install --no-cache-dir --upgrade -r requirements.txt
 
 # Install NVM and node
 COPY get_nvm.sh .
-ENV NODE_VERSION 18.12.1
+ENV NODE_VERSION 18.18.0
 ENV NVM_DIR /usr/local/nvm
 ENV TASK_NAME tangram
 # The node version here might need to be adapted over time!
@@ -40,6 +40,5 @@ USER appuser
 EXPOSE 8062
 EXPOSE 8061
 
-ENV OPENAI_API_KEY="PROVIDE_EXERNALLY"
 # Need to change this into a script file, which also generates the secret keys... 
 CMD ["sh", "entrypoint.sh"]

@@ -8,6 +8,8 @@ elif model_to_use == "openai":
     ai_model = OpenAIModel()
 elif model_to_use == "o1mini":    
     ai_model = o1mini()
+elif model_to_use == "o1":    
+    ai_model = o1()
 elif model_to_use == "aalto":    
     ai_model = AaltoModel()
 else:    

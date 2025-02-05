@@ -1,9 +1,9 @@
-# The ReactJS frontend (for students) 
+# The ReactJS frontend - the light version (for students) 
 
-In here, you will find the description of this react task template, all its components and what you should keep in mind while using this as a baseline for inserting your own task. **There are only 3 places that you need to modify. which are explained in section I, II, and III**
+In here, you will find the description of this react task template, all its components and what you should keep in mind while using this as a baseline for inserting your own task. This version allows complete freedom to students to create any kind of tasks they want as long as it are/can be exported to HTML to be added to the template.**There are only 3 places that you need to modify. which are explained in section I, II, and III**
 
 ## I. The environment file:
-In the file [.env.example](../.env.example), all the needed environment variables are listed. The details of these variables are [here](../README.md#Local-testing).
+In the file [.env_example](../../.env_example), all the needed environment variables are listed. The details of these variables are [here](../../README.md#local-testing).
 
 ## II. Root component: 
 The root component of this frontend is [App.jsx](src/App.jsx) which serves as the entrypoint for the application. **This is the place where you put your task/task component:**
@@ -11,7 +11,11 @@ The root component of this frontend is [App.jsx](src/App.jsx) which serves as th
 You need to put your task inside the `<div className="main-interaction">`, where the placeholder `"Your task goes here"` is. It is recommended to create a React component for your own task, then import it and put it inside the div.
 
 ## III. API calls:
-The API call function `finishTask` is located in the file [task.js](src/services/task.js). It receives the user's rating as the parameter, sends it to the model through a post request to the `/api/v1/task/finish` endpoint. **Please change the value of `task_name` inside `ratingjson` to the name of your task so that the rating are stored correctly in the database**
+The two API calls are located inside the file [task.js](src/services/task.js):
+- **`finishTask`**: it receives the user's rating as the parameter, sends it to the model through a post request to the `/api/v1/task/finish` endpoint. **Please change the value of `task_name` inside `ratingjson` to the name of your task so that the rating are stored correctly in the database**
+
+- **`submitUserInput`**: it receives the user's message as the parameter, sends it to the model through a post request to the `/api/v1/task/process` endpoint, and returns the model's response.
+
 
 ## IV. Child components: 
 All the child components are located [here](src/components). You don't need to modify anything inside them, but here is a quick run-through:

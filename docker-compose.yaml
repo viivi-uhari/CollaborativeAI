@@ -4,14 +4,10 @@ services:
     build:
       context: ./task_template
       dockerfile: ${TASK_DOCKERFILE}
-    ports:
-      - 0.0.0.0:8070:8061
     networks:
       - mynetwork
   model_template:
     build: ./model_template
-    ports:
-      - 0.0.0.0:8072:8061
     networks:
       - mynetwork
     environment:
@@ -19,8 +15,6 @@ services:
       - OPENAI_API_KEY=${OPENAI_API_KEY}
   model_handler_template:
     build: ./model_handler_template
-    ports:
-      - 0.0.0.0:8071:8061
     networks:
       - mynetwork
     environment:

@@ -1,47 +1,26 @@
-# CollaborativeAI Frontend
+# The ReactJS frontend
 
-This frontend consists of a vue framework using primevue for components and primeflex for layouting.
-It provides a general framework and task specific parts that can easily be adapted for a specific task.
+In here, you will find the description of this react task template, all its components and what you should keep in mind while using this as a baseline for inserting your own task. **There are only 2 places that you need to modify. which are explained in section I and II**
 
-General Structure:
+## I. Root component: 
+The root component of this frontend is [App.jsx](src/App.jsx) which serves as the entrypoint for the application. **This is the place where you put your task/task component:**
 
-src/components - General components
-src/tasks - Task Components and data, one folder for each task. Folder needs to contain a "Component.vue" and a "types.ts" file, which will be used for the respective task.
-src/stores - All stores
-src/views - all SPA views (mainly Welcome and Tasks)
+You need to put your task inside the `<div className="main-interaction">`, where the placeholder `"Your task goes here"` is. It is recommended to create a React component for your own task, then import it and put it inside the div.
 
-## Component modifications
+## II. API calls:
+The API call function `finishTask` is located in the file [task.js](src/services/task.js). It receives the user's rating as the parameter, sends it to the model through a post request to the `/api/v1/task/finish` endpoint. **Please change the value of `task_name` inside `ratingjson` to the name of your task so that the rating are stored correctly in the database**
 
-The idea is to have a general chat on the right hand side (handled in src/components/ConversationDisplay.vue with inputs in `src/tasks/Interaction.vue`) and a task specific component (in `src/tasks/Workspace.vue`) on the right.
-Interaction.vue emits a `submit` event with the user input. This activates the submission process. During submission the `getSubmissionData` function from the Workspace component is queried and needs to provide additional data necessary for the submission (if any).
-Overall these are the two components you can easily modify to provide images from the workspace, or other data from there.   
+## III. Child components: 
+All the child components are located [here](src/components). You don't need to modify anything inside them, but here is a quick run-through:
 
-## Project Setup
+### 1. FeedbackForm [link](src/components/FeedbackForm.jsx):
+This is the feedback form component, which appears When the `Finish` button is clicked. When the rating is submitted, it calls the `finishTask` function inside the file [task.js](src/services/task.js) to store the rating to the database.
 
-```sh
-npm install
-```
+### 2. FinishButton [link](src/components/FinishButton.jsx):
+This component is the `Finish` button shown in the page. Clicking it will show the `FeedbackForm`
 
-### Compile and Hot-Reload for Development
+### 3. Footer [link](src/components/Footer.jsx):
+This component serves as the Footer for this web application.
 
-```sh
-npm run dev
-```
-
-### Type-Check, Compile and Minify for Production
-
-```sh
-npm run build
-```
-
-### Run Unit Tests with [Vitest](https://vitest.dev/)
-
-```sh
-npm run test:unit
-```
-
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-npm run lint
-```
+### 4. Header [link](src/components/Header.jsx):
+This component serves as the Header for this web application.

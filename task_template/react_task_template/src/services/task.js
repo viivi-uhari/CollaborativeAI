@@ -2,6 +2,11 @@ import axios from 'axios'
 
 const baseUrl = "/api/v1/task"
 
+const submitUserInput = (newUserMessage) => {
+  const request = axios.post(`${baseUrl}/process`, newUserMessage)
+  return request.then(response => response.data)
+}
+
 const finishTask = (rating) => {
   const ratingjson = {
     metrics: {
@@ -20,5 +25,6 @@ const finishTask = (rating) => {
 }
 
 export default { 
-  finishTask
+  finishTask,
+  submitUserInput
 }
