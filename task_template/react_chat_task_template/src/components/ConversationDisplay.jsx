@@ -1,9 +1,9 @@
 const ConversationDisplay = () => {
   return (
     <div className="chat-space-wrapper">
-      <h2>Workspace</h2>
+      <h2>Conversation</h2>
       <div className="chat-space">
-        Workspace
+        Conversation
       </div>
     </div>
   );

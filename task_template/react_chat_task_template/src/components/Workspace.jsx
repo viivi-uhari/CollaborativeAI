@@ -1,10 +1,10 @@
 const Workspace = () => {
   return (
     <div className="dialogue-wrapper">
-      <h2>Dialogue</h2>
+      <h2>Workspace</h2>
       <div className="dialogue">
         <div className="dialogue-content">
-          Dialogue
+          Workspace
         </div>
       </div>
     </div>
