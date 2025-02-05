@@ -367,3 +367,135 @@ a:active {
   flex-direction: column;
 }
 
+.dialogue-poem {
+  text-align: center;
+  padding: 10px;
+  margin: 5px 0;
+  border-radius: 10px;
+}
+
+.dialogue-content {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.user-dialogue {
+  background-color: #e1f5fe;
+}
+
+.ai-dialogue {
+  background-color: #ffe0b2;
+}
+
+
+.input-form {
+  display: flex;
+  flex-direction: row;
+  align-self: center;
+}
+
+.input-form textarea {
+  flex-grow: 1;
+  margin: 5px;
+  width: 100%;
+  min-width: 600px;
+}
+
+.input-form input {
+  flex: 1;
+  padding: 10px;
+  flex-grow: 1;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+}
+
+.input-form input:disabled {
+  cursor: not-allowed;
+}
+
+.input-form button {
+  padding: 10px;
+  margin-left: 10px;
+  border: none;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+  border-radius: 5px;
+  height: 50px;
+  min-width: 50px;
+  background-color: #4caf50;
+}
+
+.input-form button:hover {
+  opacity: 0.9;
+}
+
+.input-form button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.user-dialogue {
+  background-color: #e1f5fe;
+}
+
+.ai-dialogue {
+  background-color: #ffe0b2;
+}
+
+.messages {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.message {
+  padding: 10px;
+  margin: 5px 0;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex-wrap: wrap;
+  max-width: 70%;
+  word-wrap: break-word
+}
+
+.user-message {
+  background-color: #e1f5fe;
+  align-self: flex-end;
+  text-align: left;
+}
+
+.ai-message {
+  background-color: #ffe0b2;
+  align-self: flex-start;
+  text-align: left;
+}
+
+.avatar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 40px; 
+  height: 40px; 
+  border-radius: 50%;
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+  margin: 10px;
+}
+
+.avatar-ai {
+  background-color: #007BFF;
+  align-self: flex-start;
+}
+
+.avatar-user {
+  background-color: #28A745;
+  align-self: flex-end;
+}

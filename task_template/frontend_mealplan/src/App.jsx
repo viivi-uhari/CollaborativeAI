@@ -11,8 +11,14 @@ import TutorialPopUp from './components/TutorialPopUp';
 import "./index.css";
 
 const App = () => {
-  const [messages, setMessages] = useState([]);
+  // const [messages, setMessages] = useState([
+  //   { sender: "user", text: "", comment: "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.", type: "dialogue"},
+  //   { sender: "ai", text: "", comment: "If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text.", type: "dialogue"},
+  //   { sender: "user", text: "", comment: "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.", type: "dialogue"},
+  //   { sender: "ai", text: "", comment: "If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text.", type: "dialogue"},
+  // ]);  
   const [isFinished, setIsFinished] = useState(false); 
+  const [messages, setMessages] = useState([])
   const [isFinishClicked, setIsFinishClicked] = useState(false);
   const [isRatingSubmitted, setIsRatingSubmitted] = useState(false);
   const [isDisabled, setIsDisabled] = useState(false);
@@ -41,14 +47,14 @@ const App = () => {
     <>
       <Header />
       <TaskDescription />
-      <TutorialPopUp />
-      <MealDescriptionForm mealDescription={mealDescription} setMealDescription={setMealDescription} isDisabled={isDisabled} setIsDisabled={setIsDisabled} setIsLoading={setIsLoading} addMessage={addMessage}/>
+      {/* <TutorialPopUp /> */}
+      <MealDescriptionForm mealDescription={mealDescription} setMealDescription={setMealDescription} messages={messages} isDisabled={isDisabled} setIsDisabled={setIsDisabled} setIsLoading={setIsLoading} addMessage={addMessage}/>
       <div className="main-interaction">
         {(isRatingSubmitted || isFinishClicked) && (
           <div className="main-interaction-overlay"> </div>
         )}
-        <Dialogue />
-        <ConversationDisplay />
+        <Dialogue isLoading={isLoading} setIsLoading={setIsLoading} mealDescription={mealDescription} messages={messages} addMessage={addMessage} />
+        <ConversationDisplay isLoading={isLoading} setIsLoading={setIsLoading} mealDescription={mealDescription} isDisabled={isDisabled} messages={messages} addMessage={addMessage} />
       </div>
       <FinishButton isFinishClicked={isFinishClicked} isRatingSubmitted={isRatingSubmitted} toggleFinish={toggleFinish} />
       {isFinished && <FeedbackForm viewPointRef={viewPointRef} isRatingSubmitted={isRatingSubmitted} setIsRatingSubmitted={setIsRatingSubmitted}/>}

@@ -13,5 +13,7 @@ elif currentTask == "gesture":
     task = gesture.Gesture()
 elif currentTask == "poetry_openai":
     task = poetry.PoetryOpenAI()
+elif currentTask == "mealplan":
+    task = mealplan.Mealplan()
 else:
     task = poetry.Poetry()

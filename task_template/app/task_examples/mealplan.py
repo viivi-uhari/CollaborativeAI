@@ -1,5 +1,6 @@
 import logging
 from tasks.task_interface import Task
+import json
 from models import (
     TaskDataRequest,
     TaskRequest,
@@ -19,14 +20,15 @@ class Mealplan(Task):
         in the history of the session (based on the session_id cookie)
         """
 
-        system_prompt = f"""You take the role of a dietary expert and a good chef.
-            You are working together with a user to iteratively create a meal plan. 
-            The description of the diet are provbided by the user as follows : {objective}
-            You will get a message from the user in the form MESSAGE: MESSAGE is the message that the user provide
-            and it is wrapped inside square brackets. Your answer is your meal plan recommendation based on the description 
-            provided by the user. Your answer must be a json string, and it should comply to the requirements given by the
-            user such as amount of days, number of meals, nutritional values, dietary restriction. 
-            In each of those day, the details of the meals must be presented.
+        system_prompt = f"""You are working together with a user to create a mealplan. 
+            The description of the meal plan may include duration, dietary restrictions, location, nutritional 
+            goals, and other preferences and you must follow it. The description is as follows: {objective}
+            You will get a message from the user in the form COMMENT_LINE: COMMENT_LINE is the comment made by the user.
+            Your answer must take the user's comment into consideration.
+            Your meal plan must be wrapped inside square brackets, along with some comments about the meal plan that 
+            you gave: (example: "[<the recommended meal plan>] <the comment>").
+            If the user ask a question, you answer it as a comment.
+            You are curious, and always ready and eager to ask the user question if needed.
             """
         return system_prompt
 
@@ -36,8 +38,12 @@ class Mealplan(Task):
 
     def generate_model_request(self, request: TaskDataRequest) -> TaskRequest:
         logger.info(request)
+        linetag = "COMMENT" if request.inputData["comment"] else "NEWPLAN"
+        plan = f"PLANS : {json.dumps(request.inputData['plans'])}"
+        newplan = f"{linetag} : {request.text}"
+
         return TaskRequest(
-            text=f"[COMMENT] : {request.text}",
+            text=f"{plan} \n{newplan}",
             system=self.get_system_prompt(request.objective),
             image=None,
         )

@@ -25,6 +25,6 @@ const finishTask = (rating) => {
 }
 
 export default { 
+  submitUserInput,
   finishTask,
-  submitUserInput
 }

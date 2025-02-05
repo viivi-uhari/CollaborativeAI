@@ -1,9 +1,9 @@
 import taskService from '../services/task'
 
-const MealDescriptionForm = ({ mealDescription, setMealDescription, isDisabled, setIsDisabled, setIsLoading, addMessage }) => {
+const MealDescriptionForm = ({ mealDescription, setMealDescription, messages, isDisabled, setIsDisabled, setIsLoading, addMessage }) => {
   function parsePoetryAndComment(input) {
     // Initialize variables to store the parsed parts
-    let poetryLine = "";
+    let mealPlan = "";
     let comment = "";
   
     // Trim the input to remove leading/trailing whitespace
@@ -16,7 +16,7 @@ const MealDescriptionForm = ({ mealDescription, setMealDescription, isDisabled, 
         
         // If a closing ']' is found, extract the poetry line
         if (endBracketIndex !== -1) {
-            poetryLine = input.substring(1, endBracketIndex).trim();
+            mealPlan = input.substring(1, endBracketIndex).trim();
             // Extract the comment part if there is any text after the closing ']'
             if (endBracketIndex + 1 < input.length) {
                 comment = input.substring(endBracketIndex + 1).trim();
@@ -27,9 +27,9 @@ const MealDescriptionForm = ({ mealDescription, setMealDescription, isDisabled, 
         comment = input;
     }
   
-    // console.log("Parsed: ", poetryLine, ", ", comment)
+    // console.log("Parsed: ", mealPlan, ", ", comment)
   
-    return { poetryLine, comment };
+    return { mealPlan, comment };
   }
   
   function checkAndAddMessage(sender, text, comment, type) {
@@ -43,7 +43,7 @@ const MealDescriptionForm = ({ mealDescription, setMealDescription, isDisabled, 
     }
   }
 
-  const setmealDescription = (event) => {
+  const chooseMealDescription = (event) => {
     if (!mealDescription.trim()) {
       alert("Please enter the description of your preferred meal plan");
       return;
@@ -52,16 +52,19 @@ const MealDescriptionForm = ({ mealDescription, setMealDescription, isDisabled, 
     setIsDisabled(true);
     setIsLoading(true);
 
-    //Generate the first AI poem line after setting the meal description, it works based on how the prompt is set up
     taskService
       .submitUserInput({
-        inputData: { 
+        inputData: {
+          comment: true,
+          plans: []
         },
-        text: "Recommend a weekly mealplan",
+        text: "Give me a meal plan based on the description",
         objective: mealDescription
       })
       .then((returnedResponse) => {
+        let parsed = parsePoetryAndComment(returnedResponse.text)
         console.log(returnedResponse)
+        checkAndAddMessage("ai", parsed.mealPlan, parsed.comment, "dialogue")
         setIsLoading(false)
       })
       .catch((error) => {
@@ -72,12 +75,13 @@ const MealDescriptionForm = ({ mealDescription, setMealDescription, isDisabled, 
   return (
     <>
       <div className='meal-description-wrapper'>
-        <form onSubmit={setmealDescription} className="meal-description-input">
-          <label> <h3>Set your meal plan description</h3></label>
-          <input 
-            type="text" 
+        <form onSubmit={chooseMealDescription} className="meal-description-input">
+          <h3 style={{"max-width": "200px"}}>Tell me your meal plan description </h3>
+          <textarea 
+            type="text"
+            style={{"min-width": "180px", "min-height": "80px"}}
             disabled={isDisabled}
-            placeholder="Tell me about your preffered food or meal"
+            placeholder="What kind of meal plan would you like to have?"
             value={mealDescription}
             onChange={(event) => setMealDescription(event.target.value)}
           />
@@ -85,7 +89,7 @@ const MealDescriptionForm = ({ mealDescription, setMealDescription, isDisabled, 
             type="button"
             disabled={isDisabled}
             className="meal-description-submit-btn"
-            onClick={setmealDescription}>
+            onClick={chooseMealDescription}>
             Submit 
           </button>
         </form>
