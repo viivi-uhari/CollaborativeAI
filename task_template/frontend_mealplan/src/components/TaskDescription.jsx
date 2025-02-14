@@ -6,7 +6,7 @@ const TaskDescription = () => {
       <ol>
         <li>Provide your meal plan description.</li>
         <li>The AI then gives you a recommended meal plan.</li>
-        <li>If you want to discuss with the AI about the meal plan, you can do that in the Workspace box.</li>
+        <li>If you want to discuss with the AI about the meal plan, you can do that in the Conversation box.</li>
         <li>When you are sastified with the meal plan. please then rate your experience with the AI.</li>
       </ol>
     </div>

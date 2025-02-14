@@ -63,7 +63,6 @@ const MealDescriptionForm = ({ mealDescription, setMealDescription, messages, is
       })
       .then((returnedResponse) => {
         let parsed = parsePoetryAndComment(returnedResponse.text)
-        console.log(returnedResponse)
         checkAndAddMessage("ai", parsed.mealPlan, parsed.comment, "dialogue")
         setIsLoading(false)
       })
@@ -76,10 +75,10 @@ const MealDescriptionForm = ({ mealDescription, setMealDescription, messages, is
     <>
       <div className='meal-description-wrapper'>
         <form onSubmit={chooseMealDescription} className="meal-description-input">
-          <h3 style={{"max-width": "200px"}}>Tell me your meal plan description </h3>
+          <h3 style={{"maxWidth": "200px"}}>Tell me your meal plan description </h3>
           <textarea 
             type="text"
-            style={{"min-width": "180px", "min-height": "80px"}}
+            style={{"minWidth": "180px", "minHeight": "80px"}}
             disabled={isDisabled}
             placeholder="What kind of meal plan would you like to have?"
             value={mealDescription}

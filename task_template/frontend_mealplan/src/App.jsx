@@ -11,12 +11,6 @@ import TutorialPopUp from './components/TutorialPopUp';
 import "./index.css";
 
 const App = () => {
-  // const [messages, setMessages] = useState([
-  //   { sender: "user", text: "", comment: "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.", type: "dialogue"},
-  //   { sender: "ai", text: "", comment: "If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text.", type: "dialogue"},
-  //   { sender: "user", text: "", comment: "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.", type: "dialogue"},
-  //   { sender: "ai", text: "", comment: "If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text.", type: "dialogue"},
-  // ]);  
   const [isFinished, setIsFinished] = useState(false); 
   const [messages, setMessages] = useState([])
   const [isFinishClicked, setIsFinishClicked] = useState(false);

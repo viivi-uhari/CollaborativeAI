@@ -19,7 +19,6 @@ const ConversationDisplay = ({ isLoading, setIsLoading, mealDescription, isDisab
 
     // Trim the input to remove leading/trailing whitespace
     input = input.trim();
-    console.log(input)
     // Check if the input starts with a '[' character
     if (input.startsWith('[')) {
         // Find the closing ']' character
@@ -73,6 +72,7 @@ function checkAndAddMessage(sender, text, comment, type) {
         })
         .then((returnedResponse) => {
           let parsed = parsePoetryAndComment(returnedResponse.text)
+          console.log(parsed)
           checkAndAddMessage("ai", parsed.mealPlan, parsed.comment,"dialogue")
           setIsLoading(false)
         })
@@ -84,7 +84,7 @@ function checkAndAddMessage(sender, text, comment, type) {
 
   return (
     <div className="chat-space-wrapper">
-      <h2>Workspace</h2>
+      <h2>Conversation</h2>
       <div className="chat-space">
         <div className="messages" ref={messagesRef}>
           {messages
@@ -99,12 +99,12 @@ function checkAndAddMessage(sender, text, comment, type) {
           <form onSubmit={handleSubmit} className="input-form">
             <input 
               value={newComment}
-              // disabled={!isDisabled || isLoading}
+              disabled={!isDisabled || isLoading}
               onChange={(event) => setNewComment(event.target.value)} 
               placeholder="Send a message to the AI" 
             />
             <button type="submit" 
-              // disabled={!isDisabled || isLoading}
+              disabled={!isDisabled || isLoading}
               onClick={handleSubmit}> 
               Send
             </button>

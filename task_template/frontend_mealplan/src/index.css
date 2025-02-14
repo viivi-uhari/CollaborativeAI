@@ -368,9 +368,9 @@ a:active {
 }
 
 .dialogue-poem {
-  text-align: center;
-  padding: 10px;
-  margin: 5px 0;
+  text-align: left;
+  padding: 25px;
+  margin: 5px;
   border-radius: 10px;
 }
 
