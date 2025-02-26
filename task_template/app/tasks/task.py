@@ -1,7 +1,14 @@
 import os
 
 # define the Task
-from task_examples import poetry, tangram, gesture, openai_task, mealplan
+from task_examples import (
+    poetry,
+    tangram,
+    gesture,
+    openai_task,
+    mealplan,
+    tangram_openai,
+)
 
 currentTask = os.environ.get("TASK_NAME")
 
@@ -15,5 +22,7 @@ elif currentTask == "poetry_openai":
     task = poetry.PoetryOpenAI()
 elif currentTask == "mealplan":
     task = mealplan.Mealplan()
+elif currentTask == "tangram_openai":
+    task = tangram_openai.Tangram()
 else:
     task = poetry.Poetry()
