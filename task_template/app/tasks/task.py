@@ -8,6 +8,7 @@ from task_examples import (
     openai_task,
     mealplan,
     tangram_openai,
+    recipe
 )
 
 currentTask = os.environ.get("TASK_NAME")
@@ -24,5 +25,7 @@ elif currentTask == "mealplan":
     task = mealplan.Mealplan()
 elif currentTask == "tangram_openai":
     task = tangram_openai.Tangram()
+elif currentTask == "recipe":
+    task = recipe.Recipe()
 else:
     task = poetry.Poetry()

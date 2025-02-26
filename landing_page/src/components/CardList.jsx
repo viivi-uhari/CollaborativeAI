@@ -23,6 +23,16 @@ const CardList = () => {
       code_link:
         "https://github.com/AaltoRSE/CollaborativeAI/tree/main/task_template/frontend_poetry",
     },
+    {
+      name: "Mealplan task",
+      description: ["Plan your meals with AI"],
+      link: "",
+      image_credit:
+        "Image credit: Image by anonymous; CC BY-ND 4.0; https://emojis.sh/emoji/tangram-8F7UHXt",
+      task_link: "",
+      code_link:
+        "https://github.com/AaltoRSE/CollaborativeAI/tree/main/task_template/frontend_mealplan",
+    }
   ]);
 
   return (
