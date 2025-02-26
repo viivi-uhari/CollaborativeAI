@@ -12,7 +12,7 @@ RUN pip3 install --no-cache-dir --upgrade -r requirements.txt
 
 # Install NVM and node
 COPY get_nvm.sh .
-ENV NODE_VERSION 18.12.1
+ENV NODE_VERSION 22.11.0
 ENV NVM_DIR /usr/local/nvm
 ENV TASK_NAME tangram_openai
 # The node version here might need to be adapted over time!
@@ -24,7 +24,7 @@ RUN mkdir -p $NVM_DIR && ./get_nvm.sh  \
 ENV NODE_PATH $NVM_DIR/versions/node/v$NODE_VERSION/lib/node_modules
 ENV PATH      $NVM_DIR/versions/node/v$NODE_VERSION/bin:$PATH
 # COPY frontend code
-COPY ./react_task_template ./frontend
+COPY ./tangram_openai ./frontend
 # Install frontend, clear dist folder
 RUN cd frontend && npm install && npm run build && ls && pwd && mv dist ../ && cd .. && rm -r frontend
 # COPY backend code
