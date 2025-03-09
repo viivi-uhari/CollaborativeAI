@@ -42,7 +42,8 @@ class Mealplan(Task):
                         "Dinner": "Rinderroulade - rolled beef steak, with potato salad."
                     }}
             }}
-            Reminder, the mealplan must be a JSON.
+            Remember the recipe must be a valid JSON, wrapped inside squared brackets, follows by the comment.
+            Do not add redundant string such as "```json", "```", or equivalent. Only add the comment after the recipe.
             If the user ask a question, you answer it as a comment.
             You are curious, and always ready and eager to ask the user question if needed."""
         return system_prompt
