@@ -72,6 +72,7 @@ function checkAndAddMessage(sender, text, comment, type) {
         })
         .then((returnedResponse) => {
           let parsed = parsePoetryAndComment(returnedResponse.text)
+          console.log(returnedResponse)
           console.log(parsed)
           checkAndAddMessage("ai", parsed.recipe, parsed.comment,"dialogue")
           setIsLoading(false)
