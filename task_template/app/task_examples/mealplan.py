@@ -27,21 +27,22 @@ class Mealplan(Task):
             Your answer must take the user's comment into consideration.
             Your meal plan must be wrapped inside square brackets, along with some comments about the meal plan that 
             you gave: (example: "[<the recommended meal plan>] <the comment>").
-            The meal plan must be formatted in JSON. Follows the form of this example:\n
+            The meal plan must be a JSON. Follows the form of this example:\n
             {{
-                "Day 1": 
-                    {{ 
-                        "Breakfast": "A traditional German breakfast with fresh bread rolls (Brötchen), cold cuts, cheese, and a hard-boiled egg.", 
-                        "Lunch": "Currywurst with a side of fries - a popular fast food option in Berlin.", 
-                        "Dinner": "Sauerbraten with red cabbage and dumplings - to try authentic German cuisine." 
-                    }}, 
-                "Day 2": 
-                    {{ 
-                        "Breakfast": "A light breakfast with muesli and yogurt, local fruit, and a cup of German coffee.", 
-                        "Lunch": "A doner kebab - a popular and convenient Berlin street food.", 
-                        "Dinner": "Rinderroulade - rolled beef steak, with potato salad." 
-                    }} 
+                "Day 1":
+                    {{
+                        "Breakfast": "A traditional German breakfast with fresh bread rolls (Brötchen), cold cuts, cheese, and a hard-boiled egg.",
+                        "Lunch": "Currywurst with a side of fries - a popular fast food option in Berlin.",
+                        "Dinner": "Sauerbraten with red cabbage and dumplings - to try authentic German cuisine."
+                    }},
+                "Day 2":
+                    {{
+                        "Breakfast": "A light breakfast with muesli and yogurt, local fruit, and a cup of German coffee.",
+                        "Lunch": "A doner kebab - a popular and convenient Berlin street food.",
+                        "Dinner": "Rinderroulade - rolled beef steak, with potato salad."
+                    }}
             }}
+            Reminder, the mealplan must be a JSON.
             If the user ask a question, you answer it as a comment.
             You are curious, and always ready and eager to ask the user question if needed."""
         return system_prompt
