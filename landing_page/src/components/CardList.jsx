@@ -9,7 +9,7 @@ const CardList = () => {
       link: "./tg.png",
       image_credit:
         "Image credit: Image by anonymous; CC BY-ND 4.0; https://emojis.sh/emoji/tangram-8F7UHXt",
-      task_link: "https://arena-tangram1-arena-tangram.node01.ki-lab.nrw/",
+      task_link: "https://tangram-arena-m41-tangram-arena.node01.ki-lab.nrw",
       code_link:
         "https://github.com/AaltoRSE/CollaborativeAI/tree/main/task_template/frontend_tangram",
     },
@@ -18,11 +18,21 @@ const CardList = () => {
       description: ["Write a short poem with AI"],
       link: "./pt.png",
       image_credit:
-        "Image credit: Image by e_s ekaterina_s; CC BY-ND 4.0; hitps://emoiis.sh/emoji/a-feather-quill-and-an-open-scroll-IZrNcJ6eFQ",
-      task_link: "https://arena-poetry1-arena-poetry.node01.ki-lab.nrw",
+        "Image credit: Image by e_s ekaterina_s; CC BY-ND 4.0; https://emoiis.sh/emoji/a-feather-quill-and-an-open-scroll-IZrNcJ6eFQ",
+      task_link: "https://poetry-task-arena1-poetry-arena-m4.node01.ki-lab.nrw",
       code_link:
         "https://github.com/AaltoRSE/CollaborativeAI/tree/main/task_template/frontend_poetry",
     },
+    {
+      name: "Mealplan task",
+      description: ["Plan your meals with AI"],
+      link: "./mp.png",
+      image_credit:
+        "Image credit: Image by carladanielewic; CC BY-ND 4.0; https://www.emojis.com/emoji/meal-plan-paper-d99RHsRlOSD",
+      task_link: "https://mealplan-task1-mealplan-arena.node01.ki-lab.nrw",
+      code_link:
+        "https://github.com/AaltoRSE/CollaborativeAI/tree/main/task_template/frontend_mealplan",
+    }
   ]);
 
   return (
