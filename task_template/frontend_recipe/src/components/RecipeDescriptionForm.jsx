@@ -76,9 +76,8 @@ const RecipeDescriptionForm = ({ recipeDescription, setRecipeDescription, messag
       <div className='recipe-description-wrapper'>
         <form onSubmit={chooseRecipeDescription} className="recipe-description-input">
           <h3 style={{"maxWidth": "200px"}}>Which recipe do you need </h3>
-          <textarea 
+          <input 
             type="text"
-            style={{"minWidth": "180px", "minHeight": "80px"}}
             disabled={isDisabled}
             placeholder="What recipe do you want"
             value={recipeDescription}

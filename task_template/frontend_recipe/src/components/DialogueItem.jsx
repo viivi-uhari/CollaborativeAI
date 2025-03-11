@@ -6,19 +6,21 @@ const DialogueItem = ({ message, style }) => {
   return (
     <>
       <div className={`dialogue-poem ${messageClass}`}>
-        <b>Recipe name: </b>{parsedJSON.name} <br></br>
+        <b>Recipe name: </b>{parsedJSON.name} <br></br><br></br>
         <b>Ingredients: </b> <br></br>
-          <ol>
-            {Object.entries(parsedJSON.ingredients).map(([key, value]) => (
-              <li key={key}>{key}: {value}</li>
-            ))}
-          </ol>
+        <ol>
+          {Object.entries(parsedJSON.ingredients).map(([key, value]) => (
+            <li key={key}>{key}: {value}</li>
+          ))}
+        </ol>
+        <br></br>
         <b>Instruction: </b> <br></br>
         <ol>
           {Object.entries(parsedJSON.instruction).map(([key, step]) => (
             <li key={key}>{step}</li>
           ))}
         </ol>
+        <br></br>
         <b>Number of serving: </b>{parsedJSON.servings} <br></br>
         <b>Prep time: </b>{parsedJSON.prep_time}. <br></br>
         <b>Cook time: </b>{parsedJSON.cook_time}. <br></br>
