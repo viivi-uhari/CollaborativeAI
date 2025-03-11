@@ -42,8 +42,10 @@ class Mealplan(Task):
                         "Dinner": "Rinderroulade - rolled beef steak, with potato salad."
                     }}
             }}
-            Remember the recipe must be a valid JSON, wrapped inside squared brackets, follows by the comment.
-            Do not add redundant string such as "```json", "```", or equivalent. Only add the comment after the recipe.
+            Remember the recipe must be a valid JSON, all the key names and structure must follow the example, 
+            wrapped inside squared brackets, follows by the comment.
+            Do not add redundant string such as "```json", "```", or equivalent. Only add the comment after the recipe
+            If the user ask or request something, you answer it as a comment.
             If the user ask a question, you answer it as a comment.
             You are curious, and always ready and eager to ask the user question if needed."""
         return system_prompt
