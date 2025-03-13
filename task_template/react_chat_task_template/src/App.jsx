@@ -4,7 +4,9 @@ import Footer from "./components/Footer";
 import FinishButton from './components/FinishButton';
 import FeedbackForm from "./components/FeedbackForm";
 import Workspace from "./components/Workspace";
-import ConversationDisplay from "./components/ConversationDisplay"
+import ConversationDisplay from "./components/ConversationDisplay";
+import TaskDescription from './components/TaskDescription';
+import ThemeForm from './components/ThemeForm';
 import "./index.css";
 
 const App = () => {
@@ -12,6 +14,12 @@ const App = () => {
   const [isFinishClicked, setIsFinishClicked] = useState(false);
   const [isRatingSubmitted, setIsRatingSubmitted] = useState(false);
   const viewPointRef = useRef(null);
+
+  const [topic, setTopic] = useState("");
+  const [format, setFormat] = useState("");
+  const [number, setNumber] = useState(1);
+  const [isDisabled, setIsDisabled] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   
   useEffect(() => {
     if (isFinished) {
@@ -29,6 +37,15 @@ const App = () => {
   return (
     <>
       <Header />
+      <TaskDescription/>
+      <ThemeForm 
+        topic={topic} setTopic={setTopic} 
+        format={format} setFormat={setFormat} 
+        number={number} setNumber={setNumber} 
+        isDisabled={isDisabled} 
+        setIsDisabled={setIsDisabled} 
+        setIsLoading={setIsLoading}
+      />
       <div className="main-interaction">
         {(isRatingSubmitted || isFinishClicked) && (
           <div className="main-interaction-overlay"> </div>
