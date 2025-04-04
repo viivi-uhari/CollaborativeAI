@@ -9,8 +9,12 @@ import TaskDescription from './components/TaskDescription';
 import VisualWarning from './components/VisualWarning';
 import TopicSummary from './components/TopicSummary';
 import TopicForm from './components/TopicForm';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import Modal from 'react-modal';
 import constants from './constants/constants';
 import "./index.css";
+import ModalWarning from './components/ModalWarning';
 
 const App = () => {
   const [isFinished, setIsFinished] = useState(false); 
@@ -26,6 +30,13 @@ const App = () => {
 
   const [references, setReferences] = useState([]);
   const [comments, setComments] = useState([]);
+
+  const [currentWarning, setWarning] = useState(null);
+  const [modalIsOpen, setIsOpen] = React.useState(true);
+
+  function closeModal() {
+    setIsOpen(false);
+  }
   
   useEffect(() => {
     if (isFinished) {
@@ -39,7 +50,8 @@ const App = () => {
     setIsFinished(!isFinished);
     setIsFinishClicked(!isFinishClicked);
   }
-  
+
+  console.log(currentWarning);
   return (
     <>
       <Header />
@@ -54,7 +66,12 @@ const App = () => {
         setReferences={setReferences}
       />}
       {isDisabled && <TopicSummary topic={topic} format={format} number={number}/>}
-      <VisualWarning/>
+       <VisualWarning
+        modalIsOpen={modalIsOpen}
+        closeModal={closeModal}
+        currentWarning={currentWarning}
+        setWarning={setWarning}/>
+      
       <div className="main-interaction">
         {(isRatingSubmitted || isFinishClicked) && (
           <div className="main-interaction-overlay"> </div>
