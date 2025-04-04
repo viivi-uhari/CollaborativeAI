@@ -3,10 +3,13 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import FinishButton from './components/FinishButton';
 import FeedbackForm from "./components/FeedbackForm";
-import Workspace from "./components/Workspace";
+import Dialogue from "./components/Dialogue";
 import ConversationDisplay from "./components/ConversationDisplay";
 import TaskDescription from './components/TaskDescription';
-import ThemeForm from './components/ThemeForm';
+import VisualWarning from './components/VisualWarning';
+import TopicSummary from './components/TopicSummary';
+import TopicForm from './components/TopicForm';
+import constants from './constants/constants';
 import "./index.css";
 
 const App = () => {
@@ -15,11 +18,14 @@ const App = () => {
   const [isRatingSubmitted, setIsRatingSubmitted] = useState(false);
   const viewPointRef = useRef(null);
 
-  const [topic, setTopic] = useState("");
+  const [topic, setTopic] = useState(constants.topics[0]);
   const [format, setFormat] = useState("");
   const [number, setNumber] = useState(1);
   const [isDisabled, setIsDisabled] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
+  const [references, setReferences] = useState([]);
+  const [comments, setComments] = useState([]);
   
   useEffect(() => {
     if (isFinished) {
@@ -38,20 +44,35 @@ const App = () => {
     <>
       <Header />
       <TaskDescription/>
-      <ThemeForm 
+      {!isDisabled && <TopicForm 
         topic={topic} setTopic={setTopic} 
         format={format} setFormat={setFormat} 
         number={number} setNumber={setNumber} 
         isDisabled={isDisabled} 
         setIsDisabled={setIsDisabled} 
         setIsLoading={setIsLoading}
-      />
+        setReferences={setReferences}
+      />}
+      {isDisabled && <TopicSummary topic={topic} format={format} number={number}/>}
+      <VisualWarning/>
       <div className="main-interaction">
         {(isRatingSubmitted || isFinishClicked) && (
           <div className="main-interaction-overlay"> </div>
         )}
-        <Workspace />
-        <ConversationDisplay />
+        <Dialogue isLoading={isLoading} setIsLoading={setIsLoading} references={references}/>
+        <ConversationDisplay
+          topic={topic}
+          format={format}
+          number={number}
+          isDisabled={isDisabled} 
+          setIsDisabled={setIsDisabled} 
+          isLoading={isLoading} 
+          setIsLoading={setIsLoading}
+          comments={comments}
+          setComments={setComments}
+          references={references}
+          setReferences={setReferences}
+        />
       </div>
       <FinishButton isFinishClicked={isFinishClicked} isRatingSubmitted={isRatingSubmitted} toggleFinish={toggleFinish} />
       {isFinished && <FeedbackForm viewPointRef={viewPointRef} isRatingSubmitted={isRatingSubmitted} setIsRatingSubmitted={setIsRatingSubmitted}/>}
