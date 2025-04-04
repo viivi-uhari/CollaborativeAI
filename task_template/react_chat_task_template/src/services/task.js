@@ -35,6 +35,20 @@ function parseAIResponse(input) {
   return { references, comment };
 }
 
+const checkForJSON = (referencesBlock) => {
+  return referencesBlock.includes("number") 
+  && referencesBlock.includes("title")
+  && referencesBlock.includes("citation")
+  && referencesBlock.includes("summary")
+  && referencesBlock.includes("publisher")
+  && referencesBlock.includes("link")
+}
+
+const parseFinalList = (referencesBlock) => {
+  const finalList = referencesBlock.slice(1, -1);
+  return finalList;
+}
+
 const finishTask = (rating) => {
   const ratingjson = {
     metrics: {
@@ -55,5 +69,7 @@ const finishTask = (rating) => {
 export default { 
   finishTask,
   parseAIResponse,
-  submitUserInput
+  submitUserInput,
+  checkForJSON,
+  parseFinalList
 }

@@ -1,7 +1,7 @@
 import taskService from "../services/task"
 import constants from "../constants/constants";
 
-const TopicForm = ({ topic, setTopic, format, setFormat, number, setNumber, isDisabled, setIsDisabled, setIsLoading, setReferences }) => {
+const TopicForm = ({ topic, setTopic, format, setFormat, number, setNumber, isDisabled, setIsDisabled, setIsLoading, setReferences, addComment }) => {
 
   const chooseTopic = (event) => {
     if (!topic.trim()) {
@@ -21,8 +21,16 @@ const TopicForm = ({ topic, setTopic, format, setFormat, number, setNumber, isDi
         })
         .then((returnedResponse) => {
           let parsed = taskService.parseAIResponse(returnedResponse.text);
-          let references = JSON.parse(parsed.references);
-          setReferences(references);
+          console.log(returnedResponse.text);
+          const referencesBlock = parsed.references;
+          const commentBlock = parsed.comment;
+          if (referencesBlock) {
+            let references = JSON.parse(referencesBlock);
+            setReferences(references);
+          }
+          if (commentBlock) {
+            addComment({ sender: "ai", comment: commentBlock });
+          }
           setIsLoading(false);
         })
         .catch((error) => {

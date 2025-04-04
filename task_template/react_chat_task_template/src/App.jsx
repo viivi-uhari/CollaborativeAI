@@ -9,8 +9,12 @@ import TaskDescription from './components/TaskDescription';
 import VisualWarning from './components/VisualWarning';
 import TopicSummary from './components/TopicSummary';
 import TopicForm from './components/TopicForm';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import Modal from 'react-modal';
 import constants from './constants/constants';
 import "./index.css";
+import ModalWarning from './components/ModalWarning';
 
 const App = () => {
   const [isFinished, setIsFinished] = useState(false); 
@@ -26,6 +30,14 @@ const App = () => {
 
   const [references, setReferences] = useState([]);
   const [comments, setComments] = useState([]);
+  const [finalList, setFinalList] = useState([]);
+
+  const [currentWarning, setWarning] = useState(null);
+  const [modalIsOpen, setIsOpen] = React.useState(true);
+
+  function closeModal() {
+    setIsOpen(false);
+  }
   
   useEffect(() => {
     if (isFinished) {
@@ -35,11 +47,15 @@ const App = () => {
     }
   }, [isFinished]);
 
+  const addComment = (comment) => {
+    setComments(previousComments => previousComments.concat(comment));
+  };
+
   const toggleFinish = () => {
     setIsFinished(!isFinished);
     setIsFinishClicked(!isFinishClicked);
   }
-  
+
   return (
     <>
       <Header />
@@ -52,14 +68,20 @@ const App = () => {
         setIsDisabled={setIsDisabled} 
         setIsLoading={setIsLoading}
         setReferences={setReferences}
+        addComment={addComment}
       />}
       {isDisabled && <TopicSummary topic={topic} format={format} number={number}/>}
-      <VisualWarning/>
+       <VisualWarning
+        modalIsOpen={modalIsOpen}
+        closeModal={closeModal}
+        currentWarning={currentWarning}
+        setWarning={setWarning}/>
+      
       <div className="main-interaction">
         {(isRatingSubmitted || isFinishClicked) && (
           <div className="main-interaction-overlay"> </div>
         )}
-        <Dialogue isLoading={isLoading} setIsLoading={setIsLoading} references={references}/>
+        <Dialogue isLoading={isLoading} setIsLoading={setIsLoading} references={references} finalList={finalList}/>
         <ConversationDisplay
           topic={topic}
           format={format}
@@ -69,9 +91,10 @@ const App = () => {
           isLoading={isLoading} 
           setIsLoading={setIsLoading}
           comments={comments}
-          setComments={setComments}
           references={references}
           setReferences={setReferences}
+          addComment={addComment}
+          setFinalList={setFinalList}
         />
       </div>
       <FinishButton isFinishClicked={isFinishClicked} isRatingSubmitted={isRatingSubmitted} toggleFinish={toggleFinish} />
