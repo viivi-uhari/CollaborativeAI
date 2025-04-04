@@ -1,7 +1,8 @@
 import { useEffect, useRef } from 'react';
 import DialogueItem from "./DialogueItem";
+import FinalList from './FinalList';
 
-const Dialogue = ({ isLoading, references }) => {
+const Dialogue = ({ isLoading, references, finalList }) => {
   const referencesRef = useRef(null);
 
   console.log(references);
@@ -17,8 +18,9 @@ const Dialogue = ({ isLoading, references }) => {
       <h2>References</h2>
       <div className="dialogue">
         <div className="dialogue-content" ref={referencesRef}>
-        {references
-          .map((reference, index) => (
+        {finalList.length > 0 ?
+          <FinalList finalList={finalList}/>
+          : references.map((reference, index) => (
             <DialogueItem key={index} reference={reference}/>
         ))}
         </div>

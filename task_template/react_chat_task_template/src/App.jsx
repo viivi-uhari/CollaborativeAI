@@ -30,6 +30,7 @@ const App = () => {
 
   const [references, setReferences] = useState([]);
   const [comments, setComments] = useState([]);
+  const [finalList, setFinalList] = useState([]);
 
   const [currentWarning, setWarning] = useState(null);
   const [modalIsOpen, setIsOpen] = React.useState(true);
@@ -46,12 +47,15 @@ const App = () => {
     }
   }, [isFinished]);
 
+  const addComment = (comment) => {
+    setComments(previousComments => previousComments.concat(comment));
+  };
+
   const toggleFinish = () => {
     setIsFinished(!isFinished);
     setIsFinishClicked(!isFinishClicked);
   }
 
-  console.log(currentWarning);
   return (
     <>
       <Header />
@@ -64,6 +68,7 @@ const App = () => {
         setIsDisabled={setIsDisabled} 
         setIsLoading={setIsLoading}
         setReferences={setReferences}
+        addComment={addComment}
       />}
       {isDisabled && <TopicSummary topic={topic} format={format} number={number}/>}
        <VisualWarning
@@ -76,7 +81,7 @@ const App = () => {
         {(isRatingSubmitted || isFinishClicked) && (
           <div className="main-interaction-overlay"> </div>
         )}
-        <Dialogue isLoading={isLoading} setIsLoading={setIsLoading} references={references}/>
+        <Dialogue isLoading={isLoading} setIsLoading={setIsLoading} references={references} finalList={finalList}/>
         <ConversationDisplay
           topic={topic}
           format={format}
@@ -86,9 +91,10 @@ const App = () => {
           isLoading={isLoading} 
           setIsLoading={setIsLoading}
           comments={comments}
-          setComments={setComments}
           references={references}
           setReferences={setReferences}
+          addComment={addComment}
+          setFinalList={setFinalList}
         />
       </div>
       <FinishButton isFinishClicked={isFinishClicked} isRatingSubmitted={isRatingSubmitted} toggleFinish={toggleFinish} />

@@ -344,6 +344,15 @@ a:active {
   text-decoration: underline;
 }
 
+.final-reference-list {
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: start;
+  text-align: start;
+  gap: 15px;
+}
+
 .avatar {
   display: flex;
   justify-content: center;

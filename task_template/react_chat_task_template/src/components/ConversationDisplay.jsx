@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import ConversationItem from "./ConversationItem";
 import taskService from '../services/task'
 
-const ConversationDisplay = ({ topic, format, number, isLoading, setIsLoading, isDisabled, comments, setComments, references, setReferences }) => {
+const ConversationDisplay = ({ topic, format, number, isLoading, setIsLoading, isDisabled, comments, addComment, references, setReferences, setFinalList }) => {
   const [newComment, setNewComment] = useState("");
   const commentsRef = useRef(null);
 
@@ -11,10 +11,6 @@ const ConversationDisplay = ({ topic, format, number, isLoading, setIsLoading, i
       commentsRef.current.scrollTop = commentsRef.current.scrollHeight;
     }    
   }, [comments])
-
-  const addComment = (comment) => {
-    setComments(previousComments => previousComments.concat(comment));
-  };
 
   const replaceReferences = (newReferences) => {
     const oldReferences = JSON.parse(JSON.stringify(references));
@@ -44,14 +40,22 @@ const ConversationDisplay = ({ topic, format, number, isLoading, setIsLoading, i
         })
         .then((returnedResponse) => {
           let parsed = taskService.parseAIResponse(returnedResponse.text)
-          // if references
-          let newReferences = JSON.parse(parsed.references);
-          let comment = parsed.comment;
           console.log(returnedResponse.text);
-          console.log(comment);
-
-          replaceReferences(newReferences);
-          addComment({ sender: "ai", comment: comment });
+          const referencesBlock = parsed.references;
+          const commentBlock = parsed.comment;
+          if (referencesBlock) {
+            if (taskService.checkForJSON(referencesBlock)) {
+              let newReferences = JSON.parse(referencesBlock);
+              replaceReferences(newReferences);
+            } else {
+              console.log(referencesBlock);
+              console.log(JSON.parse(referencesBlock));
+              setFinalList(JSON.parse(referencesBlock));
+            }
+          }
+          if (commentBlock) {
+            addComment({ sender: "ai", comment: commentBlock });
+          }
           setIsLoading(false)
         })
         .catch((error) => {
