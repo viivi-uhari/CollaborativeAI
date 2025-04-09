@@ -9,9 +9,8 @@ const DialogueItem = ({ reference }) => {
             <p className="reference-detail">{reference.citation}</p>
             <p className="reference-detail" id="reference-summary"><b>Summary:</b>{reference.summary}</p> 
             <div className="reference-metadata">
-              <p className="reference-detail"><strong>{"Published in: "}</strong>{reference.publisher}</p> 
-              <p className="reference-detail"><strong>{"Citations: "}</strong>{reference.number_of_citations}</p> 
-              <p className="reference-detail"><strong>{"Link: "}</strong><a href={reference.link}>{reference.link}</a></p> 
+              <p className="reference-detail"><strong>{"Published in: "}</strong>{reference.publisher}</p>
+              <p className="reference-detail"><strong>{"Link: "}</strong><a href={reference.link} target="_blank">{reference.link}</a></p> 
             </div>
           </div>
       </div>
