@@ -556,9 +556,39 @@ a:active {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 10px;
-  padding: 20px;
-  margin-bottom: 30px;
+  margin: 0px 10px 30px 10px;
+  padding: 10px 20px 20px 20px;
+  text-align: center;
+  gap: 15px;
+}
+
+.feedback-container h3 {
+  line-height: 30px;
+}
+
+.feedback-container p {
+  margin-top: 10px;
+  max-width: 600px;
+}
+
+.feedback-container a {
+  color: initial;
+  background-color: transparent;
+  text-decoration: none;
+  word-break: break-all;
+  font-size: 18px;
+}
+
+.feedback-container a:visited {
+  color: rgb(76, 70, 163);
+  background-color: transparent;
+  text-decoration: none;
+}
+
+.feedback-container a:hover {
+  color: rgb(76, 70, 163);
+  background-color: transparent;
+  text-decoration: underline;
 }
 
 .rating-container {

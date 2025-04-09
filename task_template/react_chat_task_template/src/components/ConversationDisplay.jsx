@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import ConversationItem from "./ConversationItem";
 import taskService from '../services/task'
 
-const ConversationDisplay = ({ topic, format, number, isLoading, setIsLoading, isDisabled, comments, addComment, references, setReferences, setFinalList }) => {
+const ConversationDisplay = ({ topic, format, number, isLoading, setIsLoading, isDisabled, comments, addComment, references, setReferences, setFinalList, setIsFinished, isFinished }) => {
   const [newComment, setNewComment] = useState("");
   const commentsRef = useRef(null);
 
@@ -51,6 +51,7 @@ const ConversationDisplay = ({ topic, format, number, isLoading, setIsLoading, i
               console.log(referencesBlock);
               console.log(JSON.parse(referencesBlock));
               setFinalList(JSON.parse(referencesBlock));
+              setIsFinished(true);
             }
           }
           if (commentBlock) {
@@ -80,12 +81,12 @@ const ConversationDisplay = ({ topic, format, number, isLoading, setIsLoading, i
           <form onSubmit={handleSubmit} className="input-form">
             <input 
               value={newComment}
-              disabled={!isDisabled || isLoading}
+              disabled={!isDisabled || isLoading || isFinished}
               onChange={(event) => setNewComment(event.target.value)} 
               placeholder="Send a message to the AI" 
             />
             <button type="submit" 
-              disabled={!isDisabled || isLoading}
+              disabled={!isDisabled || isLoading || isFinished}
               onClick={handleSubmit}> 
               Send
             </button>

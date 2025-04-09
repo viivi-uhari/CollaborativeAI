@@ -1,8 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import Header from "./components/Header";
 import Footer from "./components/Footer";
-import FinishButton from './components/FinishButton';
-import FeedbackForm from "./components/FeedbackForm";
+import Feedback from "./components/Feedback";
 import Dialogue from "./components/Dialogue";
 import ConversationDisplay from "./components/ConversationDisplay";
 import TaskDescription from './components/TaskDescription';
@@ -10,15 +9,11 @@ import VisualWarning from './components/VisualWarning';
 import TopicSummary from './components/TopicSummary';
 import TopicForm from './components/TopicForm';
 import React from 'react';
-import ReactDOM from 'react-dom';
-import Modal from 'react-modal';
 import constants from './constants/constants';
 import "./index.css";
-import ModalWarning from './components/ModalWarning';
 
 const App = () => {
-  const [isFinished, setIsFinished] = useState(false); 
-  const [isFinishClicked, setIsFinishClicked] = useState(false);
+  const [isFinished, setIsFinished] = useState(false);
   const [isRatingSubmitted, setIsRatingSubmitted] = useState(false);
   const viewPointRef = useRef(null);
 
@@ -35,6 +30,9 @@ const App = () => {
   const [currentWarning, setWarning] = useState(null);
   const [modalIsOpen, setIsOpen] = React.useState(true);
 
+  const [elapsedTime, setElapsedTime] = useState(0);
+  const timerRef = useRef(null);
+
   function closeModal() {
     setIsOpen(false);
   }
@@ -47,14 +45,24 @@ const App = () => {
     }
   }, [isFinished]);
 
+  useEffect(() => {
+    timerRef.current = setInterval(() => {
+      setElapsedTime(prev => prev + 1);
+    }, 1000);
+
+    return () => clearInterval(timerRef.current);
+  }, []);
+
+  useEffect(() => {
+    if (isFinished && timerRef.current) {
+      clearInterval(timerRef.current);
+      console.log("Timer stopped at:", elapsedTime, "seconds");
+    }
+  }, [isFinished]);
+
   const addComment = (comment) => {
     setComments(previousComments => previousComments.concat(comment));
   };
-
-  const toggleFinish = () => {
-    setIsFinished(!isFinished);
-    setIsFinishClicked(!isFinishClicked);
-  }
 
   return (
     <>
@@ -76,11 +84,7 @@ const App = () => {
         closeModal={closeModal}
         currentWarning={currentWarning}
         setWarning={setWarning}/>
-      
       <div className="main-interaction">
-        {(isRatingSubmitted || isFinishClicked) && (
-          <div className="main-interaction-overlay"> </div>
-        )}
         <Dialogue isLoading={isLoading} setIsLoading={setIsLoading} references={references} finalList={finalList}/>
         <ConversationDisplay
           topic={topic}
@@ -95,10 +99,11 @@ const App = () => {
           setReferences={setReferences}
           addComment={addComment}
           setFinalList={setFinalList}
+          setIsFinished={setIsFinished}
+          isFinished={isFinished}
         />
       </div>
-      <FinishButton isFinishClicked={isFinishClicked} isRatingSubmitted={isRatingSubmitted} toggleFinish={toggleFinish} />
-      {isFinished && <FeedbackForm viewPointRef={viewPointRef} isRatingSubmitted={isRatingSubmitted} setIsRatingSubmitted={setIsRatingSubmitted}/>}
+      {isFinished && <Feedback elapsedTime={elapsedTime}/>}
       <Footer />
     </>
   );
