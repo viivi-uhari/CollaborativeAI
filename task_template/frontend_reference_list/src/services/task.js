@@ -7,19 +7,16 @@ const submitUserInput = (newUserMessage) => {
   return request.then(response => response.data)
 }
 
-function parseAIResponse(input) {
+const parseAIResponse = (input) => {
   // Initialize variables to store the parsed parts
   let references = "";
   let comment = "";
-
   // Trim the input to remove leading/trailing whitespace
   input = input.trim();
-
   // Check if the input starts with a '[' character
   if (input.startsWith('[')) {
       // Find the closing ']' character
       let endBracketIndex = input.indexOf(']');
-      
       // If a closing ']' is found, extract the references
       if (endBracketIndex !== -1) {
         references = input.substring(0, endBracketIndex + 1).trim();
@@ -33,20 +30,6 @@ function parseAIResponse(input) {
       comment = input;
   }
   return { references, comment };
-}
-
-const checkForJSON = (referencesBlock) => {
-  return referencesBlock.includes("number") 
-  && referencesBlock.includes("title")
-  && referencesBlock.includes("citation")
-  && referencesBlock.includes("summary")
-  && referencesBlock.includes("publisher")
-  && referencesBlock.includes("link")
-}
-
-const parseFinalList = (referencesBlock) => {
-  const finalList = referencesBlock.slice(1, -1);
-  return finalList;
 }
 
 const finishTask = (rating) => {
@@ -69,7 +52,5 @@ const finishTask = (rating) => {
 export default { 
   finishTask,
   parseAIResponse,
-  submitUserInput,
-  checkForJSON,
-  parseFinalList
+  submitUserInput
 }

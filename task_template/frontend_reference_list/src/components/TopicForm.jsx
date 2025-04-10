@@ -1,7 +1,30 @@
 import taskService from "../services/task"
-import constants from "../constants/constants";
+import { topics } from "../utils/config";
 
-const TopicForm = ({ topic, setTopic, format, setFormat, number, setNumber, isDisabled, setIsDisabled, setIsLoading, setReferences, addComment }) => {
+const TopicForm = ({ 
+    topic, setTopic, 
+    format, setFormat, 
+    number, setNumber, 
+    isDisabled, setIsDisabled, 
+    setIsLoading, setReferences, addComment 
+  }) => {
+
+  const checkAndHandleResponse = (referencesBlock, commentBlock) => {
+    referencesBlock = (typeof referencesBlock === 'string' && referencesBlock.trim()) ? referencesBlock : null;
+    commentBlock = (typeof commentBlock === 'string' && commentBlock.trim()) ? commentBlock : null;
+
+    if (referencesBlock === null && commentBlock === null) {
+      console.log("no message");
+    } else {
+      if (referencesBlock) {
+        let references = JSON.parse(referencesBlock);
+        setReferences(references);
+      }
+      if (commentBlock) {
+        addComment({ sender: "ai", comment: commentBlock });
+      }
+    }
+  }
 
   const chooseTopic = (event) => {
     if (!topic.trim()) {
@@ -13,29 +36,22 @@ const TopicForm = ({ topic, setTopic, format, setFormat, number, setNumber, isDi
     setIsLoading(true);
 
     taskService
-        .submitUserInput({
-          inputData: {
-            comment: "",
-          },
-          objective: `Topic: ${topic}, citation format: ${format}, number of references: ${number}`
-        })
-        .then((returnedResponse) => {
-          let parsed = taskService.parseAIResponse(returnedResponse.text);
-          console.log(returnedResponse.text);
-          const referencesBlock = parsed.references;
-          const commentBlock = parsed.comment;
-          if (referencesBlock) {
-            let references = JSON.parse(referencesBlock);
-            setReferences(references);
-          }
-          if (commentBlock) {
-            addComment({ sender: "ai", comment: commentBlock });
-          }
-          setIsLoading(false);
-        })
-        .catch((error) => {
-          console.log(error)
-        });
+      .submitUserInput({
+        inputData: {
+          comment: "",
+        },
+        objective: `Topic: ${topic}, citation format: ${format}, number of references: ${number}`
+      })
+      .then((returnedResponse) => {
+        let parsed = taskService.parseAIResponse(returnedResponse.text);
+        const referencesBlock = parsed.references;
+        const commentBlock = parsed.comment;
+        checkAndHandleResponse(referencesBlock, commentBlock);
+        setIsLoading(false);
+      })
+      .catch((error) => {
+        console.log(error)
+      });
   };
 
   return (
@@ -52,7 +68,7 @@ const TopicForm = ({ topic, setTopic, format, setFormat, number, setNumber, isDi
               value={topic}
               onChange={(event) => setTopic(event.target.value)}
             >
-              {constants.topics
+              {topics
                 .map((topic, index) => ( 
                   <option key={index} value={topic}>{topic}</option>
               ))}

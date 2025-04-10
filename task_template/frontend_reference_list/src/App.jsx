@@ -9,15 +9,14 @@ import VisualWarning from './components/VisualWarning';
 import TopicSummary from './components/TopicSummary';
 import TopicForm from './components/TopicForm';
 import React from 'react';
-import constants from './constants/constants';
+import { topics } from "./utils/config";
 import "./index.css";
 
 const App = () => {
   const [isFinished, setIsFinished] = useState(false);
-  const [isRatingSubmitted, setIsRatingSubmitted] = useState(false);
   const viewPointRef = useRef(null);
 
-  const [topic, setTopic] = useState(constants.topics[0]);
+  const [topic, setTopic] = useState(topics[0]);
   const [format, setFormat] = useState("");
   const [number, setNumber] = useState(1);
   const [isDisabled, setIsDisabled] = useState(false);
@@ -40,7 +39,7 @@ const App = () => {
   useEffect(() => {
     if (isFinished) {
       if (viewPointRef.current) {
-        viewPointRef.current.scrollIntoView({ behavior: "smooth", block: "center"});
+        viewPointRef.current.scrollIntoView({ behavior: "smooth", block: "center" });
       }
     }
   }, [isFinished]);
@@ -83,7 +82,8 @@ const App = () => {
         modalIsOpen={modalIsOpen}
         closeModal={closeModal}
         currentWarning={currentWarning}
-        setWarning={setWarning}/>
+        setWarning={setWarning}
+      />
       <div className="main-interaction">
         <Dialogue isLoading={isLoading} setIsLoading={setIsLoading} references={references} finalList={finalList}/>
         <ConversationDisplay
@@ -104,7 +104,7 @@ const App = () => {
         />
       </div>
       {isFinished && <Feedback elapsedTime={elapsedTime}/>}
-      <Footer />
+      <Footer/>
     </>
   );
 };
