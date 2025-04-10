@@ -5,8 +5,6 @@ import FinalList from './FinalList';
 const Dialogue = ({ isLoading, references, finalList }) => {
   const referencesRef = useRef(null);
 
-  console.log(references);
-
   useEffect(() => {
     if (referencesRef.current) {
       referencesRef.current.scrollTop = referencesRef.current.scrollHeight;

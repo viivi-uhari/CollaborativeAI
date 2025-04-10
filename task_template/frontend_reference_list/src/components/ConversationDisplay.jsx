@@ -2,7 +2,14 @@ import { useState, useEffect, useRef } from 'react';
 import ConversationItem from "./ConversationItem";
 import taskService from '../services/task'
 
-const ConversationDisplay = ({ topic, format, number, isLoading, setIsLoading, isDisabled, comments, addComment, references, setReferences, setFinalList, setIsFinished, isFinished }) => {
+const ConversationDisplay = ({ 
+    topic, format, number, 
+    isLoading, setIsLoading, isDisabled, 
+    comments, addComment, 
+    references, setReferences, setFinalList, 
+    setIsFinished, isFinished 
+  }) => {
+    
   const [newComment, setNewComment] = useState("");
   const commentsRef = useRef(null);
 
@@ -12,14 +19,46 @@ const ConversationDisplay = ({ topic, format, number, isLoading, setIsLoading, i
     }    
   }, [comments])
 
+  const checkForNewReferences = (referencesBlock) => {
+    return referencesBlock.includes("number") 
+      && referencesBlock.includes("title")
+      && referencesBlock.includes("citation")
+      && referencesBlock.includes("summary")
+      && referencesBlock.includes("publisher")
+      && referencesBlock.includes("link")
+  }
+
   const replaceReferences = (newReferences) => {
     const oldReferences = JSON.parse(JSON.stringify(references));
     const replacementReferences = oldReferences.map(reference => {
       const replacementReference = newReferences.find(newReference => newReference.number === reference.number);
       return replacementReference ? replacementReference : reference;
     });
-    console.log(replacementReferences);
     setReferences(replacementReferences);
+  }
+
+  const checkAndHandleResponse = (referencesBlock, commentBlock) => {
+    referencesBlock = (typeof referencesBlock === 'string' && referencesBlock.trim()) ? referencesBlock : null;
+    commentBlock = (typeof commentBlock === 'string' && commentBlock.trim()) ? commentBlock : null;
+
+    if (referencesBlock === null && commentBlock === null) {
+      console.log("no message");
+    } else {
+      if (referencesBlock) {
+        let references = JSON.parse(referencesBlock);
+        setReferences(references);
+        if (checkForNewReferences(referencesBlock)) {
+          let newReferences = JSON.parse(referencesBlock);
+          replaceReferences(newReferences);
+        } else {
+          setFinalList(JSON.parse(referencesBlock));
+          setIsFinished(true);
+        }
+      }
+      if (commentBlock) {
+        addComment({ sender: "ai", comment: commentBlock });
+      }
+    }
   }
 
   const handleSubmit = (event) => {
@@ -29,39 +68,24 @@ const ConversationDisplay = ({ topic, format, number, isLoading, setIsLoading, i
     }
     addComment({ sender: "user", comment: newComment });
     setIsLoading(true);
-    console.log(comments);
 
     taskService
-        .submitUserInput({
-          inputData: {
-            comment: newComment,
-          },
-          objective: `Topic: ${topic}, citation format: ${format}, number of references: ${number}`
-        })
-        .then((returnedResponse) => {
-          let parsed = taskService.parseAIResponse(returnedResponse.text)
-          console.log(returnedResponse.text);
-          const referencesBlock = parsed.references;
-          const commentBlock = parsed.comment;
-          if (referencesBlock) {
-            if (taskService.checkForJSON(referencesBlock)) {
-              let newReferences = JSON.parse(referencesBlock);
-              replaceReferences(newReferences);
-            } else {
-              console.log(referencesBlock);
-              console.log(JSON.parse(referencesBlock));
-              setFinalList(JSON.parse(referencesBlock));
-              setIsFinished(true);
-            }
-          }
-          if (commentBlock) {
-            addComment({ sender: "ai", comment: commentBlock });
-          }
-          setIsLoading(false)
-        })
-        .catch((error) => {
-          console.log(error)
-        });
+      .submitUserInput({
+        inputData: {
+          comment: newComment,
+        },
+        objective: `Topic: ${topic}, citation format: ${format}, number of references: ${number}`
+      })
+      .then((returnedResponse) => {
+        let parsed = taskService.parseAIResponse(returnedResponse.text)
+        const referencesBlock = parsed.references;
+        const commentBlock = parsed.comment;
+        checkAndHandleResponse(referencesBlock, commentBlock);
+        setIsLoading(false)
+      })
+      .catch((error) => {
+        console.log(error)
+      });
     setNewComment("");
   };
 
