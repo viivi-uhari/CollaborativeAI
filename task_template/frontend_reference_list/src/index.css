@@ -71,7 +71,7 @@ a:active {
 
 .main-interaction {
   display: flex;
-  padding: 20px;
+  padding: 20px 20px 0px 20px;
 }
 
 @media (max-width: 600px) {
@@ -285,6 +285,34 @@ a:active {
   justify-content: center;
   align-items: center;
   gap: 10px
+}
+
+.bottom-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: flex-start;
+  margin: 0px 55px 35px 55px;
+}
+
+.bottom-filler {
+  width: 50px;
+}
+
+.feedback-filler {
+  width: 100%;
+}
+
+.modal-warning-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  border-radius: 100%;
+  background-color: #FEEED2;
+  border: none;
+  filter: drop-shadow(0px 4px 2px rgba(0, 0, 0, 0.25));
+  cursor: pointer;
 }
 
 .loading-text {
@@ -556,10 +584,10 @@ a:active {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 0px 10px 30px 10px;
-  padding: 10px 20px 20px 20px;
+  padding: 10px 0px 20px 0px;
   text-align: center;
   gap: 15px;
+  width: 100%;
 }
 
 .feedback-container h3 {

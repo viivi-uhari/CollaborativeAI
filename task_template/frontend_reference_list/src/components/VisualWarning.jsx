@@ -4,8 +4,9 @@ import TextualWarning from "./TextualWarning";
 
 const VisualWarning = ({ modalIsOpen, closeModal, currentWarning, setWarning }) => {
 
+  // One-in-five chance of displaying either a specific warning or no warning at all
   const getRandomInt = () => {
-    return Math.floor(Math.random() * 4);
+    return Math.floor(Math.random() * 5);
   }
 
   const getWarningComponent = () => {
@@ -25,6 +26,8 @@ const VisualWarning = ({ modalIsOpen, closeModal, currentWarning, setWarning }) 
         return <ModalWarning text={conciseWarning} modalIsOpen={modalIsOpen} closeModal={closeModal} />;
       case 3:
         return <ModalWarning text={explanatoryWarning} modalIsOpen={modalIsOpen} closeModal={closeModal} />;
+      case 4:
+          return <div/>; // No warning = control
       default:
         return null;
     }

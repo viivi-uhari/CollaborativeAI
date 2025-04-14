@@ -6,7 +6,8 @@ const TopicForm = ({
     format, setFormat, 
     number, setNumber, 
     isDisabled, setIsDisabled, 
-    setIsLoading, setReferences, addComment 
+    setIsLoading, setReferences, addComment,
+    openModal
   }) => {
 
   const checkAndHandleResponse = (referencesBlock, commentBlock) => {
@@ -34,6 +35,7 @@ const TopicForm = ({
     event.preventDefault();
     setIsDisabled(true);
     setIsLoading(true);
+    openModal();
 
     taskService
       .submitUserInput({

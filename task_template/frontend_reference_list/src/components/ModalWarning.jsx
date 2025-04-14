@@ -24,6 +24,7 @@ const ModalWarning = ({ text, modalIsOpen, closeModal }) => {
       border: 'none',
       filter: 'drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25))',
       padding: '25px 30px',
+      maxWidth: '500px',
       minWidth: '380px'
     },
   };
