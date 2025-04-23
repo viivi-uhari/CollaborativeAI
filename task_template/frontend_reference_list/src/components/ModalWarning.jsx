@@ -1,7 +1,7 @@
 import React from 'react';
 import Modal from 'react-modal';
 
-const ModalWarning = ({ text, modalIsOpen, closeModal }) => {
+const ModalWarning = ({ text, warningModalIsOpen, closeWarningModal }) => {
 
   const customStyles = {
     overlay: {
@@ -31,8 +31,8 @@ const ModalWarning = ({ text, modalIsOpen, closeModal }) => {
 
   return (
     <Modal
-      isOpen={modalIsOpen}
-      onRequestClose={closeModal}
+      isOpen={warningModalIsOpen}
+      onRequestClose={closeWarningModal}
       style={customStyles}
       contentLabel="Example Modal"
     >
@@ -51,7 +51,7 @@ const ModalWarning = ({ text, modalIsOpen, closeModal }) => {
       <button 
         type="button"
         className="topic-submit-btn"
-        onClick={closeModal}>
+        onClick={closeWarningModal}>
           I understand 
       </button>
     </Modal>

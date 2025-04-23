@@ -1,8 +1,10 @@
 export const topics = [
-  "The impact of social media on mental health",
-  "Misinformation and its effects on public trust in journalism",
-  "Renewable energy solutions for urban environments",
-  "The impact of remote work on productivity and work-life balance"
+  "Gamification in Education and Workplace Training",
+  "AI Tutors in Primary and Secondary Education",
+  "The Effectiveness of Influencer Marketing",
+  "The Impact of Facial Recognition on Marginalized Communities",
+  "The Rise of AI Music and Its Impact on Music Creation",
+  "The Psychology of Doomscrolling",
 ];
 
 export const conciseWarning = "AI responses may be inaccurate or misleading";
