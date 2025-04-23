@@ -1,5 +1,5 @@
 const TextualWarning = ({ text }) => {
-
+  console.log(text);
   return (
     <div className="textual-warning">
       <svg width="30" height="32" viewBox="0 0 30 32" fill="none" xmlns="http://www.w3.org/2000/svg">

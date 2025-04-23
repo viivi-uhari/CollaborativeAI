@@ -164,6 +164,38 @@ a:active {
   margin-left: 15px;
 }
 
+.id-info {
+  line-height: 22px;
+}
+
+.id-input {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+
+.id-input input {
+  font-size: 16px;
+  height: 30px;
+  border-radius: 10px;
+  margin: 5px;
+  padding: 10px;
+  overflow-y: auto;
+}
+
+.id-input label {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.error-message {
+  color: red;
+}
+
 .topic-input {
   display: flex;
   flex-direction: column;
@@ -600,7 +632,7 @@ a:active {
 }
 
 .feedback-container a {
-  color: initial;
+  color: rgb(76, 70, 163);
   background-color: transparent;
   text-decoration: none;
   word-break: break-all;
